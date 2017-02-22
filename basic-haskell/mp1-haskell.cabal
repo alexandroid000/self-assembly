@@ -1,0 +1,21 @@
+name:                mp1-haskell
+version:             0.1.0.0
+synopsis:            Ensure you know some basic Haskell!
+license:             NCSA
+build-type:          Simple
+cabal-version:       >=1.10
+
+library
+    hs-source-dirs:     app
+    ghc-options:        -threaded -rtsopts -with-rtsopts=-N
+    build-depends:      base
+    default-language:   Haskell2010
+
+test-suite test
+    type:               exitcode-stdio-1.0
+    other-modules:      Main
+    hs-source-dirs:     test , app
+    main-is:            Spec.hs
+    ghc-options:        -threaded -rtsopts -with-rtsopts=-N -main-is Spec.main
+    build-depends:      base
+    default-language:   Haskell2010
