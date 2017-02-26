@@ -1,5 +1,6 @@
 module Main where
-
+main :: IO()
+main = return()
 -- mytake
 -- don't forget to put the type declaration or you will lose points!
 --JunWu
@@ -26,8 +27,11 @@ inclist = undefined
 -- sumlist
 -- don't forget to put the type declaration or you will lose points!
 --Justin
-sumlist = undefined
-
+sumlist :: Num a => [a] -> a
+sumlist [] = error "Can't Sum an Empty List"
+sumlist[x] = x
+sumlist (x:xs) = x + sumlist xs
+	
 -- myzip
 -- don't forget to put the type declaration or you will lose points!
 myzip = undefined
@@ -76,7 +80,8 @@ inclist' = undefined
 -- sumlist'
 -- don't forget to put the type declaration or you will lose points!
 -- Justin
-sumlist' = undefined
+sumlist' :: Num a => [a] -> a
+sumlist' = foldr (+) 0
 
 data List a = Cons a (List a)
             | Nil
