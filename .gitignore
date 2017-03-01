@@ -1,0 +1,14 @@
+
+*.cache
+
+*.h
+
+basic-haskell/.stack-work/dist/x86_64-osx/Cabal-1.24.2.0/build/autogen/Paths_mp1_haskell.hs
+
+basic-haskell/.stack-work/dist/x86_64-osx/Cabal-1.24.2.0/setup-config
+
+basic-haskell/.stack-work/dist/x86_64-osx/Cabal-1.24.2.0/stack-cabal-mod
+
+basic-haskell/.stack-work/dist/x86_64-osx/Cabal-1.24.2.0/stack-config-cache
+
+*.yaml
