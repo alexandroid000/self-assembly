@@ -1,9 +1,12 @@
-module Main where
-main :: IO()
-main = return()
+module Main (main) where
+
+
+main :: IO ()
+main = return ()
+
+
 -- mytake
 -- don't forget to put the type declaration or you will lose points!
---JunWu
 mytake = undefined
 
 -- mydrop
@@ -12,7 +15,6 @@ mydrop = undefined
 
 -- rev
 -- don't forget to put the type declaration or you will lose points!
---JunWu
 rev = undefined
 
 -- app
@@ -21,24 +23,21 @@ app = undefined
 
 -- inclist
 -- don't forget to put the type declaration or you will lose points!
---Chris
-inclist = undefined
+-- inclist must add 1 to every element in array [a]
+inclist :: (Num a) => [a] -> [a]
+inclist [] = []
+inclist (x:xs) =  [x+1] ++ inclist xs
 
 -- sumlist
 -- don't forget to put the type declaration or you will lose points!
---Justin
-sumlist :: Num a => [a] -> a
-sumlist [] = error "Can't Sum an Empty List"
-sumlist[x] = x
-sumlist (x:xs) = x + sumlist xs
-	
+sumlist = undefined
+
 -- myzip
 -- don't forget to put the type declaration or you will lose points!
 myzip = undefined
 
 -- addpairs
 -- don't forget to put the type declaration or you will lose points!
--- John
 addpairs = undefined
 
 -- ones
@@ -51,7 +50,6 @@ nats = undefined
 
 -- fib
 -- don't forget to put the type declaration or you will lose points!
--- John
 fib = undefined
 
 -- add
@@ -60,12 +58,10 @@ add = undefined
 
 -- union
 -- don't forget to put the type declaration or you will lose points!
--- Austin
 union = undefined
 
 -- intersect
 -- don't forget to put the type declaration or you will lose points!
--- Austin
 intersect = undefined
 
 -- powerset
@@ -74,14 +70,13 @@ powerset = undefined
 
 -- inclist'
 -- don't forget to put the type declaration or you will lose points!
--- Chris
-inclist' = undefined
+inclist' :: (Num a) => [a] -> [a]
+inclist' x = map (+1) x
+
 
 -- sumlist'
 -- don't forget to put the type declaration or you will lose points!
--- Justin
-sumlist' :: Num a => [a] -> a
-sumlist' = foldr (+) 0
+sumlist' = undefined
 
 data List a = Cons a (List a)
             | Nil
@@ -109,11 +104,9 @@ eval = undefined
 list2cons' = undefined
 
 -- BinTree
--- Li
 
 -- sumTree
 -- don't forget to put the type declaration or you will lose points!
--- Li
 sumTree = undefined
 
 -- SimpVal
