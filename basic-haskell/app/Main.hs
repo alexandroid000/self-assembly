@@ -22,7 +22,9 @@ app = undefined
 -- inclist
 -- don't forget to put the type declaration or you will lose points!
 --Chris
-inclist = undefined
+inclist :: (Num a) => [a] -> [a]
+inclist [] = []
+inclist (x:xs) =  [x+1] ++ inclist xs
 
 -- sumlist
 -- don't forget to put the type declaration or you will lose points!
