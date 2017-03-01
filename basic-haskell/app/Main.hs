@@ -75,7 +75,8 @@ powerset = undefined
 -- inclist'
 -- don't forget to put the type declaration or you will lose points!
 -- Chris
-inclist' = undefined
+inclist' :: (Num a) => [a] -> [a]
+inclist' x = map (+1) x
 
 -- sumlist'
 -- don't forget to put the type declaration or you will lose points!
