@@ -4,7 +4,7 @@
 --   This code was written for my blog post on generating mazes:
 --   <http://jelv.is/blog/Generating Mazes with Inductive Graphs/>
 module Maze where
-
+import		 Data.Char
 import           DFS
 
 import           Control.Monad        (liftM)
@@ -45,13 +45,33 @@ grid width height = Graph.mkGraph nodes edges
                  n - n' == width ]
         wall n = let (y, x) = n `divMod` width in Wall (x, y)
 
-complete ::  Int -> Gr String String
-complete n = Graph.mkGraph nodes edges  
-  where nodes = [(node, "a") | node <- [0..n-1]]
-        edges = [(n, n', "b") |
-                 (n, _) <- nodes,
-                 (n', _) <- nodes,
-                 n - n' /= 0]
+-- The semantics of Haskell  are more or less the thing that is killing me about this assignement.
+--complete ::  Int -> Int -> Gr String()
+--complete n = Graph.mkGraph nodes edges  
+--  where nodes = [(node, randomIO :: IO Int `mod` k ) | node <- [0..n-1]] 
+--        edges = [(n, n', "b") |1
+--                 (n, _) <- nodes,
+--                 (n', _) <- nodes,
+--                 n - n' /= 0]
+
+labelgen :: [String]
+labelgen = map  stringrep ints
+  where ints = [1..]
+  	numofAs n = n `div` 26 :: Int 
+	lastletter n = chr ((n `mod` 26) + 96) :: Char
+	stringrep n = (replicate (numofAs n) 'a') ++ [lastletter n]	
+
+	 
+-- |Creates a collection of n nodes, with k different labels, witha about n/k node
+-- with each label (it may not divide equally).
+soup:: Int -> Int -> Gr String String
+soup n k = Graph.mkGraph nodes edges
+  where nodes = [(node, node `mod` k) | node <-[0..n-1]]
+	edges = []
+-- | Creates a graph of n nodes with label "a", with no connections.
+--uniformSoup:: Int -> Gr String()
+--uniformSoup n = soup n 0
+
 
 -- | Generates the random edge traversal of an n × m grid.
 generate :: MonadRandom m => Int -> Int -> m [Graph.LEdge Wall]
