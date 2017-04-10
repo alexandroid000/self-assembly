@@ -1,13 +1,13 @@
-#define DEBUG 0  //Set to 1 to print debug to serial, set to 0 to run normally
+#define DEBUG 1  //Set to 1 to print debug to serial, set to 0 to run normally
 //if 0, info topic will be advertised, an messages printed to that.
 #define ID "R1" //MODULE ID, should be unique for each ESP8266 chip to ensure topics are unique.  
 #define PRINTDEBUG(STR) \
   {  \
     if (DEBUG) Serial.println(STR); \ 
   }
-#include <ESP8266WiFi.h>
 #include <ros.h>
-#include <geometry_msgs/Pose.h>
+#include <ESP8266WiFi.h>
+#include <std_msgs/String.h>
 #include "ESP8266Hardware.h"
 #include "ros/node_handle.h"
 
@@ -16,18 +16,18 @@ ros::NodeHandle_<ESP8266Hardware> nh;
 long spinTime = 0;//time of last spin
 long pubTime = 0;
 
-char* ssid     = "";
+char* ssid     = "IllinoisNet_Guest";
 char* password = "";
-char* host = "192.168.";
+char* host = "172.16.187.111";
+byte mac[6];
 
 
-// POSE MSG
-geometry_msgs::Pose pose_msg;
+std_msgs::String string_msg;
 
 
 // declare publishers
-String poseName = String("Pose_")+String(ID);
-ros::Publisher pose(poseName.c_str(), &pose_msg);
+String myName = String("ESP_")+String(ID);
+ros::Publisher pub(myName.c_str(), &string_msg);
 
 //Flags for publishing
 int poseFlag = 0;
@@ -52,16 +52,30 @@ void connectWifi(const char* ssid, const char* password) {
     PRINTDEBUG("WiFi connected");
     PRINTDEBUG("IP address: ");
     PRINTDEBUG(WiFi.localIP());
+    WiFi.macAddress(mac);
+    Serial.print("MAC: ");
+    Serial.print(mac[5],HEX);
+    Serial.print(":");
+    Serial.print(mac[4],HEX);
+    Serial.print(":");
+    Serial.print(mac[3],HEX);
+    Serial.print(":");
+    Serial.print(mac[2],HEX);
+    Serial.print(":");
+    Serial.print(mac[1],HEX);
+    Serial.print(":");
+    Serial.println(mac[0],HEX);
   }
 }
 
 void setup() {
-  Serial.begin(115200);  //Start Serial
+  Serial.begin(9600);  //Start Serial
   delay(10);
+  Serial.println("setup begin");
   connectWifi(ssid, password); // Start WiFi
   // put your setup code here, to run once:
   nh.initNode(host);
-  nh.advertise(pose);
+  nh.advertise(pub);
 
   delay(10);
 
@@ -72,11 +86,8 @@ void setup() {
 void loop() {
 
    if(DEBUG){
-      pose_msg.orientation.x = 0.0;
-      pose_msg.orientation.y = 1.0;
-      pose_msg.orientation.z = 2.0;
-      pose_msg.orientation.w = 3.0;
-      pose.publish( &pose_msg );
+      string_msg.data = "debug in loop";
+      pub.publish( &string_msg );
       PRINTDEBUG("LOOP");
       nh.spinOnce();
    }
@@ -85,10 +96,7 @@ void loop() {
        //TODO: fix this, maybe go to interrupt model for serial?
        long curTime = millis(); 
        if(curTime-pubTime>50){
-           if(poseFlag == 1){
-              pose.publish( &pose_msg );
-              poseFlag = 0;
-           }
+           pub.publish( &string_msg );
            pubTime = curTime;  
        }
        curTime = millis();
