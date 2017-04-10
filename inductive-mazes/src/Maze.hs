@@ -45,6 +45,14 @@ grid width height = Graph.mkGraph nodes edges
                  n - n' == width ]
         wall n = let (y, x) = n `divMod` width in Wall (x, y)
 
+complete ::  Int -> Gr String String
+complete n = Graph.mkGraph nodes edges  
+  where nodes = [(node, "a") | node <- [0..n-1]]
+        edges = [(n, n', "b") |
+                 (n, _) <- nodes,
+                 (n', _) <- nodes,
+                 n - n' /= 0]
+
 -- | Generates the random edge traversal of an n × m grid.
 generate :: MonadRandom m => Int -> Int -> m [Graph.LEdge Wall]
 generate width height =
