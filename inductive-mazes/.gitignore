@@ -1,0 +1,14 @@
+# Emacs
+*~
+\#*\#
+
+# Cabal
+dist
+cabal-dev
+.cabal-sandbox
+cabal.sandbox.config
+
+# Stack
+.*.sw*
+stack.yaml
+.stack-work
