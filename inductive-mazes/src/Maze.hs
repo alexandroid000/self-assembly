@@ -53,6 +53,25 @@ complete n = Graph.mkGraph nodes edges
                  (n', _) <- nodes,
                  n - n' /= 0]
 
+mkLabels :: [String]
+mkLabels =
+    let alphabet = ['a'..'z']
+        alpha_strings = map (\a -> [a]) alphabet :: [String]
+        mkNext :: [String] -> [String]
+        mkNext letts = mconcat
+                [map (\l -> a:l) letts | a <- alphabet]
+    in mconcat $ iterate mkNext alpha_strings
+
+soup :: Int -> Int -> Gr String ()
+soup n k = Graph.mkGraph nodes edges
+  where m = n `div` k
+        label_set = take k mkLabels
+        labels = concat (map (replicate m) label_set)
+                 ++ (take (n `mod` k) label_set)
+        nodes = [(id, label)
+                | (id, label) <- zip [1..] labels]
+        edges = []
+
 -- | Generates the random edge traversal of an n × m grid.
 generate :: MonadRandom m => Int -> Int -> m [Graph.LEdge Wall]
 generate width height =
