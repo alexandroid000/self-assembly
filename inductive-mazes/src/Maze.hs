@@ -11,7 +11,7 @@ import           Control.Monad        (liftM)
 import           Control.Monad.Random (MonadRandom)
 
 import qualified Data.Graph.Inductive as Graph
-import           Data.Graph.Inductive (Gr)
+import           Data.Graph.Inductive (Gr, match)
 import qualified Data.List            as List
 import           Data.List            ((\\))
 
@@ -71,6 +71,10 @@ soup n k = Graph.mkGraph nodes edges
         nodes = [(id, label)
                 | (id, label) <- zip [1..] labels]
         edges = []
+
+
+getNeighbors :: Graph.Node -> Gr String () -> (Maybe (Graph.Context String ()), Gr String ())
+getNeighbors = match
 
 -- | Generates the random edge traversal of an n × m grid.
 generate :: MonadRandom m => Int -> Int -> m [Graph.LEdge Wall]
