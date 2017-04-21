@@ -73,8 +73,17 @@ soup n k = Graph.mkGraph nodes edges
         edges = []
 
 
+-- getNeighbors :: Graph.Node -> Gr String () -> Maybe [(Graph.Node, String)]
 getNeighbors :: Graph.Node -> Gr String () -> (Maybe (Graph.Context String ()), Gr String ())
 getNeighbors = match
+
+-- getLabel :: Graph.Node -> Gr String () -> String
+
+-- matchAny :: String -> Gr String () -> (Maybe (Graph.Context String ()), Gr String ())
+
+-- data Rule = Rule (Gr String () -> Gr String ())
+
+-- rule :: Gr String () -> Gr String () -> Rule
 
 -- | Generates the random edge traversal of an n × m grid.
 generate :: MonadRandom m => Int -> Int -> m [Graph.LEdge Wall]
