@@ -4,7 +4,7 @@ import random
 
 # Global Variables
 max_x = 20
-max_y = 20
+max_y = 10
 num_poly = 7
 
 
@@ -31,7 +31,7 @@ class Polyamino:
 poly = Polyamino(num_poly)
 
 # Initialize output string
-out_string = [[' ' for x in range(max_x)] for y in range(max_y)]
+out_string = [['.' for x in range(max_x)] for y in range(max_y)]
 
 # Populate output string
 for coor in poly.coors:
