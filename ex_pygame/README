@@ -1,0 +1,9 @@
+28 March 2018
+
+Commented tutorial of an example from the pygame home website (given below)
+https://www.pygame.org/docs/tut/ChimpLineByLine.html
+
+To run:
+  python chimp.py
+  Will not compile if chimp.bmp and fist.bmp are not in data file
+  
