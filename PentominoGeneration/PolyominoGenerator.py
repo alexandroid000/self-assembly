@@ -1,3 +1,26 @@
+# PolyominoGenerator.py (for use with Python 3)
+#
+# To run, use "python PolyominoGenerator.py n" where n is replaced
+# with the integer of the expected number of units in the polyomino.
+#
+# This program uses a lexicographic ordering to ensure the same 
+# configuration is only printed once (though symmetries and transformations
+# of configurations do appear). The program uses a recursive function that 
+# adds positive integers as "used" units, and uses negative integers to
+# enumerate locations for future units to be placed. Any negative integers
+# with magnitudes greater than the largest positive integer are changed to
+# -1 to signify that this location cannot be used for future units (this
+# is the basis for the lexicographic ordering).
+
+# TODO:
+# Minimize matrices before printing to remove unnecessary spaces.
+# Avoid printing symmetrical or transformed configurations that
+# are otherwise the same shape.
+# Add 6- and 8-sided configurations. This will be tricky, but
+# for hexagons at least, you can simply break them down to 
+# equilateral triangles. Octagons may have to use more advanced
+# graphics libraries(?) to check for overlap.
+
 # Importing modules
 from __future__ import print_function
 import sys
@@ -6,6 +29,8 @@ import sys
 class Polyomino:
 
     # Constructor function (copy constructor when a copy is used)
+    # num_blocks - Number of blocks in final configuration
+    # copy - Polyomino used as copy for self
     def __init__(self, num_blocks, copy=None):
 
         if copy is None:
@@ -33,9 +58,9 @@ class Polyomino:
                     self.array[i][j] = copy.array[i][j]
 
     # refreshSpaces() runs through the matrix and does the following:
-    #       - replaces zeroes next to positive numbers with negative integers
-    #       - for negative numbers whose magnitude is greater than the largest
-    #           number in the current arrangement, replaces with -1
+    #   - replaces zeroes next to positive numbers with negative integers
+    #   - for negative numbers whose magnitude is greater than the largest
+    #       number in the current arrangement, replaces with -1
     def refreshSpaces(self):
         negInt = -self.numInts-1
         for i in range(self.max):
