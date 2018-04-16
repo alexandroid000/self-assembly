@@ -24,13 +24,13 @@ class WeaselBot():
         self.movex = xspeed #assume initial velocity
         self.movey = yspeed
         #get dimensions of screen
-        w, h = pygame.display.get_surface().get_size()
-        self.x0pos = random.randint(0, 480)
-        self.y0pos = random.randint(0, 480)
+        self.wscreen, self.hscreen = pygame.display.get_surface().get_size()
+        self.x0pos = random.randint(0, self.wscreen-width)
+        self.y0pos = random.randint(0, self.hscreen-height)
         self._width = width #do not change
         self._height = height #do not change
         self._color = color
-        self.collision = 0
+        self.collision = False
 
     def draw(self, screen):
         BLACK = (  0,   0,   0) #temp, adjust so you can change color based instantation
@@ -41,9 +41,9 @@ class WeaselBot():
         self.x0pos = self.movex + self.x0pos
         self.y0pos = self.movey + self.y0pos
         #the if conditions shouldn't change as they determine a wall hit (robot is 20x20 and screen is 500x500)
-        if(self.x0pos < 0 or self.x0pos > 480):
+        if(self.x0pos < 0 or self.x0pos > (self.wscreen- self._width)):
             self.movex = -self.movex
-        if(self.y0pos < 0 or self.y0pos > 480):
+        if(self.y0pos < 0 or self.y0pos > (self.hscreen - self._height)):
             self.movey = -self.movey
 
 class WeaselBotsGroup():
@@ -53,15 +53,35 @@ class WeaselBotsGroup():
         self.listofweasels.append(bot)
     #handle collision here
     def update(self):
+        collisions = []
         for i in self.listofweasels:
-            i.movement()
+            #makes a list of collisions
+            if i.collision:
+                collisions.append(i)
+            #otherwise, procede normally
+            else:
+                i.movement()
+        #checks for collisions
+        for i in self.listofweasels:
+            for j in self.listofweasels:
+                if i == j or (i.collision == True and j.collision == True):
+                    break;
+                for jxpos in range(j.x0pos, j.x0pos+j._width):
+                    if i.x0pos <= jxpos <= i.x0pos+i._width:
+                        for jypos in range(j.y0pos, j.y0pos+j._height):
+                            if i.y0pos <= jypos <= i.y0pos+i._height:
+                                j.collision = True
+                                i.collision = True
+        if collisions:
+            pass;
+
     def draw(self, screen):
         for i in self.listofweasels:
             i.draw(screen)
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((500, 500))
+    screen = pygame.display.set_mode((400, 500))
     #fills in background
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -92,8 +112,6 @@ def main():
         screen.blit(background, (0, 0))
         weaselbots.draw(screen)
         pygame.display.flip()
-
-
 
 
     pygame.quit()
