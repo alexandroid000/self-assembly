@@ -7,6 +7,7 @@ from pygame.locals import *
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 #
 #
 # Functions
@@ -15,15 +16,13 @@ RED = (255, 0, 0)
     #Case 1: Hitting another WeaselBot
 
 
-#merges two objects into one
-#def collision_merge(WeaselBot one, WeaselBot two):
-    #create a new, merged object
-    #delete the previous two objects
+
 class WeaselBot():
     def __init__(self, screen, width, height, xspeed, yspeed, color):
         self.movex = xspeed #assume initial velocity
         self.movey = yspeed
         #get dimensions of screen
+        self.screen = screen
         self.wscreen, self.hscreen = pygame.display.get_surface().get_size()
         self.x0pos = random.randint(0, self.wscreen-width)
         self.y0pos = random.randint(0, self.hscreen-height)
@@ -46,6 +45,27 @@ class WeaselBot():
         if(self.y0pos < 0 or self.y0pos > (self.hscreen - self._height)):
             self.movey = -self.movey
 
+#merges two objects into one
+def collision_merge(collisions):
+    #create a new, merged object
+    #delete the previous two objects
+    bot1 = collisions[0]
+    bot2 = collisions[1]
+    width = bot1._width + bot2._width
+    height = bot1._height + bot2._height
+    #this is temporary before algorithm gets developed
+    xspeed = bot1.movex
+    yspeed = bot2.movey
+    mergedbot = WeaselBot(bot1.screen, width, height, xspeed, yspeed, BLUE)
+
+    mergedbot.x0pos = bot1.x0pos
+    mergedbot.y0pos = bot1.y0pos
+    if(mergedbot.x0pos > bot2.x0pos):
+        mergedbot.x0pos = bot2.x0pos
+    if(mergedbot.y0pos > bot2.y0pos):
+        mergedbot.y0pos = bot2.y0pos
+    return mergedbot
+
 class WeaselBotsGroup():
     def __init__(self):
         self.listofweasels = []
@@ -64,16 +84,25 @@ class WeaselBotsGroup():
         #checks for collisions
         for i in self.listofweasels:
             for j in self.listofweasels:
+                #makes sure they're not the same object and if collision has previously occured
                 if i == j or (i.collision == True and j.collision == True):
                     break;
+                #sees if x,y positions match
                 for jxpos in range(j.x0pos, j.x0pos+j._width):
                     if i.x0pos <= jxpos <= i.x0pos+i._width:
                         for jypos in range(j.y0pos, j.y0pos+j._height):
                             if i.y0pos <= jypos <= i.y0pos+i._height:
                                 j.collision = True
                                 i.collision = True
+        #if collisions occur, make a new weaselbot object and add it to the list
         if collisions:
-            pass;
+            mergedbot = collision_merge(collisions)
+            self.listofweasels.remove(collisions[0])
+            self.listofweasels.remove(collisions[1])
+            del collisions
+            self.listofweasels.append(mergedbot)
+
+            #call collision merge on objects
 
     def draw(self, screen):
         for i in self.listofweasels:
@@ -102,6 +131,7 @@ def main():
     weaselbots.add(robot3)
     #create game clock
     clock = pygame.time.Clock()
+    #Game loop
     while 1:
         #increment clock
         clock.tick(60)
