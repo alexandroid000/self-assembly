@@ -51,8 +51,12 @@ def collision_merge(collisions):
     #delete the previous two objects
     bot1 = collisions[0]
     bot2 = collisions[1]
-    width = bot1._width + bot2._width
-    height = bot1._height + bot2._height
+    if(bot1.x0pos + bot1._width == bot2.x0pos or bot2.x0pos + bot2._width == bot1.x0pos):
+        width = bot1._width + bot2._width
+        height = bot1._height
+    else:
+        height = bot1._height + bot2._height
+        width = bot1._width
     #this is temporary before algorithm gets developed
     xspeed = bot1.movex
     yspeed = bot2.movey
