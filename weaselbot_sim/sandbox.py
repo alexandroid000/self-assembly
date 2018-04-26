@@ -29,6 +29,7 @@ class WeaselBot():
         self._width = width #do not change
         self._height = height #do not change
         self._color = color
+        self.mergedwith = []
         self.collision = False
 
     def draw(self, screen):
@@ -45,6 +46,8 @@ class WeaselBot():
         if(self.y0pos < 0 or self.y0pos > (self.hscreen - self._height)):
             self.movey = -self.movey
 
+#Make a derived class for the merged case
+
 #merges two objects into one
 def collision_merge(collisions):
     #create a new, merged object
@@ -53,34 +56,20 @@ def collision_merge(collisions):
     bot2 = collisions[1]
     if(bot1.x0pos + bot1._width == bot2.x0pos):
         bot1.y0pos = bot2.y0pos
+        bot2.wscreen = bot2.wscreen - bot2._width
     elif(bot2.x0pos + bot2._width == bot1.x0pos):
         bot2.y0pos = bot1.y0pos
+        bot1.wscreen = bot1.wscreen - bot1._width
     elif(bot1.y0pos + bot1._height == bot2.y0pos):
         bot1.x0pos = bot2.x0pos
+        bot2.hscreen = bot2.hscreen - bot2._height
     else:
         bot2.x0pos = bot1.x0pos
+        bot1.hscreen = bot1.hscreen - bot1._height
     bot1.movex = bot2.movex
     bot2.movey = bot1.movey
     bot1.collision = False
     bot2.collision = False
-    # if(bot1.x0pos + bot1._width == bot2.x0pos or bot2.x0pos + bot2._width == bot1.x0pos):
-    #     width = bot1._width + bot2._width
-    #     height = bot1._height
-    # else:
-    #     height = bot1._height + bot2._height
-    #     width = bot1._width
-    # #this is temporary before algorithm gets developed
-    # xspeed = bot1.movex
-    # yspeed = bot2.movey
-    # mergedbot = WeaselBot(bot1.screen, width, height, xspeed, yspeed, BLUE)
-    #
-    # mergedbot.x0pos = bot1.x0pos
-    # mergedbot.y0pos = bot1.y0pos
-    # if(mergedbot.x0pos > bot2.x0pos):
-    #     mergedbot.x0pos = bot2.x0pos
-    # if(mergedbot.y0pos > bot2.y0pos):
-    #     mergedbot.y0pos = bot2.y0pos
-    # return mergedbot
 
 class WeaselBotsGroup():
     def __init__(self):
@@ -113,12 +102,7 @@ class WeaselBotsGroup():
         #if collisions occur, make a new weaselbot object and add it to the list
         if collisions:
             mergedbot = collision_merge(collisions)
-            # self.listofweasels.remove(collisions[0])
-            # self.listofweasels.remove(collisions[1])
             del collisions
-            #self.listofweasels.append(mergedbot)
-
-            #call collision merge on objects
 
     def draw(self, screen):
         for i in self.listofweasels:
@@ -139,7 +123,7 @@ def main():
     height = 20
     robot1 = WeaselBot(screen, width, height, 1, 1, GREEN)
     robot2 = WeaselBot(screen, width, height, 2, 2, BLACK)
-    #robot3 = WeaselBot(screen, width, height, 3, 3, RED)
+    robot3 = WeaselBot(screen, width, height, 3, 3, RED)
     weaselbots = WeaselBotsGroup();
     #I dislike how clunky this is but I can't get around it right now
     weaselbots.add(robot1)
