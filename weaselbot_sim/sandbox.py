@@ -48,10 +48,8 @@ class WeaselBot():
 
 #Make a derived class for the merged case
 
-#merges two objects into one
+#each object acts identically so they appear (on the screen) to be one object
 def collision_merge(collisions):
-    #create a new, merged object
-    #delete the previous two objects
     bot1 = collisions[0]
     bot2 = collisions[1]
     if(bot1.x0pos + bot1._width == bot2.x0pos):
@@ -63,7 +61,7 @@ def collision_merge(collisions):
     elif(bot1.y0pos + bot1._height == bot2.y0pos):
         bot1.x0pos = bot2.x0pos
         bot2.hscreen = bot2.hscreen - bot2._height
-    else:
+    elif(bot2.y0pos + bot2._height == bot1.y0pos):
         bot2.x0pos = bot1.x0pos
         bot1.hscreen = bot1.hscreen - bot1._height
     bot1.movex = bot2.movex
@@ -148,9 +146,3 @@ def main():
 
 if __name__ == '__main__':
         main()
-
-
-
-#Then get robot building
-#Get robot moving in a straight line
-#Handle wall collisions
