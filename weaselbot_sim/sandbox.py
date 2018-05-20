@@ -1,3 +1,11 @@
+#Current objectives
+# 1) Handle multiple objects forming one object
+#   Idea: Create a new merge class that treats any previous collision as a new WeaselBot object
+# 2) Handle non-square shapes
+
+
+
+
 #Calls the pygame library
 import pygame
 import random
@@ -11,12 +19,6 @@ BLUE = (0, 0, 255)
 #
 #
 # Functions
-#calculates the likelihood of a collision occuring
-#def collision():
-    #Case 1: Hitting another WeaselBot
-
-
-
 class WeaselBot():
     def __init__(self, screen, width, height, xspeed, yspeed, color):
         self.movex = xspeed #assume initial velocity
@@ -29,8 +31,8 @@ class WeaselBot():
         self._width = width #do not change
         self._height = height #do not change
         self._color = color
-        self.mergedwith = []
         self.collision = False
+        self.merged = False
 
     def draw(self, screen):
         BLACK = (  0,   0,   0) #temp, adjust so you can change color based instantation
@@ -46,28 +48,41 @@ class WeaselBot():
         if(self.y0pos < 0 or self.y0pos > (self.hscreen - self._height)):
             self.movey = -self.movey
 
-#Make a derived class for the merged case
+#Make a class for the merged case
+# class MergedBot():
+#     def __init__(self, bot1, bot2):
+#         self.listofweasels = []
+#         self.listofweasels.append(bot1)
+#         self.listofweasels.append(bot2)
 
 #each object acts identically so they appear (on the screen) to be one object
 def collision_merge(collisions):
-    bot1 = collisions[0]
-    bot2 = collisions[1]
-    if(bot1.x0pos + bot1._width == bot2.x0pos):
-        bot1.y0pos = bot2.y0pos
-        bot2.wscreen = bot2.wscreen - bot2._width
-    elif(bot2.x0pos + bot2._width == bot1.x0pos):
-        bot2.y0pos = bot1.y0pos
-        bot1.wscreen = bot1.wscreen - bot1._width
-    elif(bot1.y0pos + bot1._height == bot2.y0pos):
-        bot1.x0pos = bot2.x0pos
-        bot2.hscreen = bot2.hscreen - bot2._height
-    elif(bot2.y0pos + bot2._height == bot1.y0pos):
-        bot2.x0pos = bot1.x0pos
-        bot1.hscreen = bot1.hscreen - bot1._height
-    bot1.movex = bot2.movex
-    bot2.movey = bot1.movey
-    bot1.collision = False
-    bot2.collision = False
+    for i in collisions:
+        for j in collisions:
+            #makes sure they're not the same object and if collision has previously occured
+            if i == j or (i.merged == True and j.merged == True):
+                break;
+            bot1 = i
+            bot2 = j
+            if(bot1.x0pos + bot1._width == bot2.x0pos):
+                bot1.y0pos = bot2.y0pos
+                bot2.wscreen = bot2.wscreen - bot2._width
+            elif(bot2.x0pos + bot2._width == bot1.x0pos):
+                bot2.y0pos = bot1.y0pos
+                bot1.wscreen = bot1.wscreen - bot1._width
+            elif(bot1.y0pos + bot1._height == bot2.y0pos):
+                bot1.x0pos = bot2.x0pos
+                bot2.hscreen = bot2.hscreen - bot2._height
+            elif(bot2.y0pos + bot2._height == bot1.y0pos):
+                bot2.x0pos = bot1.x0pos
+                bot1.hscreen = bot1.hscreen - bot1._height
+            bot1.movex = bot2.movex
+            bot2.movey = bot1.movey
+            bot1.collision = False
+            bot2.collision = False
+            bot1.merged = True
+            bot2.merged = True
+            break;
 
 class WeaselBotsGroup():
     def __init__(self):
@@ -126,7 +141,7 @@ def main():
     #I dislike how clunky this is but I can't get around it right now
     weaselbots.add(robot1)
     weaselbots.add(robot2)
-    #weaselbots.add(robot3)
+    weaselbots.add(robot3)
     #create game clock
     clock = pygame.time.Clock()
     #Game loop
