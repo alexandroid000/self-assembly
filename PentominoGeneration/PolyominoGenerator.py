@@ -62,6 +62,8 @@ The daughter branches of the right matrix are:
 TODO:
 - Apply to 6- and 8-sided shapes as well.
 - Deal with different shapes with same perimeter path (ex. 9-unit 3x3 cube vs. 8-unit "hollow" 3x3)
+- Investigate using number of sides per unit used in order instead of direction along path (greatly 
+    reduces length of ID label for 6- and 8-sided shapes, at the cost of a higher base)
 
 '''
 
@@ -197,7 +199,7 @@ class Polyomino:
         print('')
 
     # lexLabelOrdering() takes the self.array and returns the proper trinary label
-    # for a given configuration with the lowest lexicographic ordering. Starting from
+    # for a given configuration with the highest lexicographic ordering. Starting from
     # the upperleft corner point of the "1" block, starting by facing the right direction, 
     # the label is as follows:
     # 0 - straight
