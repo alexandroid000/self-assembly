@@ -24,7 +24,6 @@ class WeaselBot():
         self.movex = xspeed #assume initial velocity
         self.movey = yspeed
         #get dimensions of screen
-        self.screen = screen
         self.wscreen, self.hscreen = pygame.display.get_surface().get_size()
         self.x0pos = random.randint(0, self.wscreen-width)
         self.y0pos = random.randint(0, self.hscreen-height)
@@ -55,12 +54,56 @@ class WeaselBot():
 #         self.listofweasels.append(bot1)
 #         self.listofweasels.append(bot2)
 
+
+
+class WeaselBotsGroup():
+    def __init__(self):
+        self.listofweasels = []
+    def add(self, bot):
+        self.listofweasels.append(bot)
+    #handle collision here
+    def update(self):
+        collisions = []
+        for i in self.listofweasels:
+            #makes a list of collisions
+            if i.collision:
+                collisions.append(i)
+            #otherwise, procede normally
+            else:
+                i.movement()
+        #checks for collisions, which will be adjusted in the next pass
+        for i in self.listofweasels:
+            for j in self.listofweasels:
+                #makes sure they're not the same object and if collision has previously occured
+                if i == j or (i.collision == True and j.collision == True):
+                    break;
+                #sees if x,y positions match
+                for jxpos in range(j.x0pos, j.x0pos+j._width):
+                    if i.x0pos <= jxpos <= i.x0pos+i._width:
+                        for jypos in range(j.y0pos, j.y0pos+j._height):
+                            if i.y0pos <= jypos <= i.y0pos+i._height:
+                                j.collision = True
+                                i.collision = True
+
+        #if collisions occur, make a new weaselbot object and add it to the list
+        if collisions:
+            mergedbot = collision_merge(collisions)
+            del collisions
+
+    def draw(self, screen):
+        for i in self.listofweasels:
+            i.draw(screen)
+
 #each object acts identically so they appear (on the screen) to be one object
 def collision_merge(collisions):
     for i in collisions:
         for j in collisions:
             #makes sure they're not the same object and if collision has previously occured
-            if i == j or (i.merged == True and j.merged == True):
+            if i == j:
+                break;
+            elif (i.merged == True and j.merged == True):
+                j.movement()
+                i.movement()
                 break;
             bot1 = i
             bot2 = j
@@ -82,44 +125,9 @@ def collision_merge(collisions):
             bot2.collision = False
             bot1.merged = True
             bot2.merged = True
-            break;
 
-class WeaselBotsGroup():
-    def __init__(self):
-        self.listofweasels = []
-    def add(self, bot):
-        self.listofweasels.append(bot)
-    #handle collision here
-    def update(self):
-        collisions = []
-        for i in self.listofweasels:
-            #makes a list of collisions
-            if i.collision:
-                collisions.append(i)
-            #otherwise, procede normally
-            else:
-                i.movement()
-        #checks for collisions
-        for i in self.listofweasels:
-            for j in self.listofweasels:
-                #makes sure they're not the same object and if collision has previously occured
-                if i == j or (i.collision == True and j.collision == True):
-                    break;
-                #sees if x,y positions match
-                for jxpos in range(j.x0pos, j.x0pos+j._width):
-                    if i.x0pos <= jxpos <= i.x0pos+i._width:
-                        for jypos in range(j.y0pos, j.y0pos+j._height):
-                            if i.y0pos <= jypos <= i.y0pos+i._height:
-                                j.collision = True
-                                i.collision = True
-        #if collisions occur, make a new weaselbot object and add it to the list
-        if collisions:
-            mergedbot = collision_merge(collisions)
-            del collisions
-
-    def draw(self, screen):
-        for i in self.listofweasels:
-            i.draw(screen)
+def merge_move(bot1, bot2):
+    pass
 
 def main():
     pygame.init()
@@ -145,7 +153,8 @@ def main():
     #create game clock
     clock = pygame.time.Clock()
     #Game loop
-    while 1:
+    done = False
+    while not done:
         #increment clock
         clock.tick(60)
         #update screen
@@ -155,7 +164,11 @@ def main():
         screen.blit(background, (0, 0))
         weaselbots.draw(screen)
         pygame.display.flip()
-
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                done = True
+                break;
 
     pygame.quit()
 
