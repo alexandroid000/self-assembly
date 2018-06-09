@@ -1,14 +1,11 @@
 #Current objectives
-# 1) Handle multiple objects forming one object
-#   Idea: Create a new merge class that treats any previous collision as a new WeaselBot object
-# 2) Handle non-square shapes
+# 1) Handle non-square shapes
 
 
 
 
 #Calls the pygame library
-import pygame
-import random
+import pygame, random, math
 #Optional: Sets up constants and functions in global namespace
 from pygame.locals import *
 #Declare global colors
@@ -31,7 +28,20 @@ class WeaselBot():
         self._height = height #do not change
         self._color = color
         self.collision = False
-        self.merged = False
+    # def __init__(self, screen, sides, length, xspeed, yspeed, color):
+    #     self.movex = xspeed #assume initial velocity
+    #     self.movey = yspeed
+    #     #get dimensions of screen
+    #     self.wscreen, self.hscreen = pygame.display.get_surface().get_size()
+    #     self.x0pos = random.randint(0, self.wscreen-width)
+    #     self.y0pos = random.randint(0, self.hscreen-height)
+    #     self.points = []
+    #     angle = 360 / sides
+    #     for i in sides:
+    #         #Look up some geometry and figure out how to do this
+    #     self._color = color
+    #     self.collision = False
+
 
     def draw(self, screen):
         BLACK = (  0,   0,   0) #temp, adjust so you can change color based instantation
@@ -46,15 +56,6 @@ class WeaselBot():
             self.movex = -self.movex
         if(self.y0pos < 0 or self.y0pos > (self.hscreen - self._height)):
             self.movey = -self.movey
-
-#Make a class for the merged case
-# class MergedBot():
-#     def __init__(self, bot1, bot2):
-#         self.listofweasels = []
-#         self.listofweasels.append(bot1)
-#         self.listofweasels.append(bot2)
-
-
 
 class WeaselBotsGroup():
     def __init__(self):
@@ -101,30 +102,32 @@ def collision_merge(collisions):
             #makes sure they're not the same object and if collision has previously occured
             if i == j:
                 break;
-            bot1 = i
-            bot2 = j
-            # All this is error checking to make sure it doesn't bounce outside screen
-            if(bot1.x0pos + bot1._width == bot2.x0pos):
-                bot1.y0pos = bot2.y0pos
-                bot2.wscreen = bot2.wscreen - bot2._width
-            elif(bot2.x0pos + bot2._width == bot1.x0pos):
-                bot2.y0pos = bot1.y0pos
-                bot1.wscreen = bot1.wscreen - bot1._width
-            elif(bot1.y0pos + bot1._height == bot2.y0pos):
-                bot1.x0pos = bot2.x0pos
-                bot2.hscreen = bot2.hscreen - bot2._height
-            elif(bot2.y0pos + bot2._height == bot1.y0pos):
-                bot2.x0pos = bot1.x0pos
-                bot1.hscreen = bot1.hscreen - bot1._height
-            bot2.movex = bot1.movex
-            bot2.movey = bot1.movey
-            bot1.collision = False
-            bot2.collision = False
-            bot1.merged = True
-            bot2.merged = True
+            redefine_bots_borders(i, j)
+            #This is going to be a source of problems once the movement algorithm gets implemented
+            j.movex = i.movex
+            j.movey = i.movey
+            i.collision = False
+            j.collision = False
+
+def redefine_bots_borders(bot1, bot2):
+    # All this is error checking to make sure it doesn't bounce outside screen
+    # BROKEN --- NEEDS TO BE FIXED
+    if(bot1.x0pos + bot1._width == bot2.x0pos):
+        bot1.y0pos = bot2.y0pos
+        bot2.wscreen = bot2.wscreen - bot2._width
+    elif(bot2.x0pos + bot2._width == bot1.x0pos):
+        bot2.y0pos = bot1.y0pos
+        bot1.wscreen = bot1.wscreen - bot1._width
+    elif(bot1.y0pos + bot1._height == bot2.y0pos):
+        bot1.x0pos = bot2.x0pos
+        bot2.hscreen = bot2.hscreen - bot2._height
+    elif(bot2.y0pos + bot2._height == bot1.y0pos):
+        bot2.x0pos = bot1.x0pos
+        bot1.hscreen = bot1.hscreen - bot1._height
+
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((400, 500))
+    screen = pygame.display.set_mode((700, 500))
     #fills in background
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -138,11 +141,15 @@ def main():
     robot1 = WeaselBot(screen, width, height, 1, 1, GREEN)
     robot2 = WeaselBot(screen, width, height, 2, 2, BLACK)
     robot3 = WeaselBot(screen, width, height, 3, 3, RED)
+    robot4 = WeaselBot(screen, width, height, 3, 3, RED)
+    robot5 = WeaselBot(screen, width, height, 3, 3, RED)
     weaselbots = WeaselBotsGroup();
     #I dislike how clunky this is but I can't get around it right now
     weaselbots.add(robot1)
     weaselbots.add(robot2)
     weaselbots.add(robot3)
+    weaselbots.add(robot4)
+    weaselbots.add(robot5)
     #create game clock
     clock = pygame.time.Clock()
     #Game loop
