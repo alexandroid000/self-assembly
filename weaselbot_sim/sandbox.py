@@ -101,12 +101,9 @@ def collision_merge(collisions):
             #makes sure they're not the same object and if collision has previously occured
             if i == j:
                 break;
-            elif (i.merged == True and j.merged == True):
-                j.movement()
-                i.movement()
-                break;
             bot1 = i
             bot2 = j
+            # All this is error checking to make sure it doesn't bounce outside screen
             if(bot1.x0pos + bot1._width == bot2.x0pos):
                 bot1.y0pos = bot2.y0pos
                 bot2.wscreen = bot2.wscreen - bot2._width
@@ -119,16 +116,12 @@ def collision_merge(collisions):
             elif(bot2.y0pos + bot2._height == bot1.y0pos):
                 bot2.x0pos = bot1.x0pos
                 bot1.hscreen = bot1.hscreen - bot1._height
-            bot1.movex = bot2.movex
+            bot2.movex = bot1.movex
             bot2.movey = bot1.movey
             bot1.collision = False
             bot2.collision = False
             bot1.merged = True
             bot2.merged = True
-
-def merge_move(bot1, bot2):
-    pass
-
 def main():
     pygame.init()
     screen = pygame.display.set_mode((400, 500))
