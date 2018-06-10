@@ -158,9 +158,9 @@ if __name__ == '__main__':
                 config.draw(screen)
         pygame.display.flip()
 
+        # For events, do nothing
         for event in pygame.event.get():
-            if event.type == MOUSEBUTTONUP:
-               None
+            None
 
         # If "q" pressed, exit game
         if keyboard.is_pressed('q'):
