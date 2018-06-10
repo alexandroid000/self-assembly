@@ -8,12 +8,15 @@ To run, type "python sandbox-ajborn2.py n" where n = number of units
 Press "q" to quit simulation
 
 TODO:
-- Specifics of collisions (overlap issues, adjusting to proper connect points => collision occurs at )
-- Deal with random motion 
+- Adjusting to proper connect points => collision occurs only at certain angles
+- Deal with random motion
+    - New constraints on walls
 - Deal with rotational motion(pygame.transform)
-    - Rotational center of mass
     - Collision detection with rotated shapes
 - Handle 6- and 8-sided shapes.
+- Other noted occurrences:
+    - For >200 units, configurations sometimes pass display boundaries
+    - Overlap issues
 '''
 
 # Import libraries
@@ -36,62 +39,75 @@ GRAY = (200, 200, 200)
 
 # Define Configuration class
 class Configuration():
-    def __init__(self, weaselbots, xmin, xmax, ymin, ymax, xspeed, yspeed):
+    # Instantiation function
+    def __init__(self, weaselbots, xcenter, ycenter, theta, xspeed, yspeed, thetaspeed):
         self.weaselbots = weaselbots
-        self.xmin = xmin
-        self.xmax = xmax
-        self.ymin = ymin
-        self.ymax = ymax
+        self.xcenter = xcenter
+        self.ycenter = ycenter
+        self.theta = theta
         self.xspeed = xspeed
         self.yspeed = yspeed
+        self.thetaspeed = thetaspeed
 
+    # Collision function to check against the nth configuration
     def collision(self, configlist, n):
         otherConfig = configlist[n]
-        cnt = 0
+        thisCnt = len(self.weaselbots)
+        otherCnt = 0
+
+        # Check every potential bot-to-bot collision
         for bot1 in self.weaselbots:
-            bot1Rect = pygame.Rect(bot1.xpos, bot1.ypos, bot1.width, bot1.height)
             for bot2 in otherConfig.weaselbots:
-                bot2Rect = pygame.Rect(bot2.xpos, bot2.ypos, bot2.width, bot2.height)
-                if bot1Rect.colliderect(bot2Rect):
+                # If collision, adjust position for each box relative to configuration
+                if math.sqrt((bot1.xpos - bot2.xpos)**2 + (bot1.ypos - bot2.ypos)**2) <= (bot1.r + bot2.r):
                     for bot in otherConfig.weaselbots:
                         self.weaselbots.append(bot)
-                        cnt += 1
-                        if bot.xpos < self.xmin:
-                            self.xmin = bot.xpos
-                        elif bot.xpos+bot.width > self.xmax:
-                            self.xmax = bot.xpos+bot.width
-                        if bot.ypos < self.ymin:
-                            self.ymin = bot.ypos
-                        elif bot.ypos+bot.height > self.ymax:
-                            self.ymax = bot.ypos+bot.height
-                    self.xspeed = (self.xspeed*len(self.weaselbots) + otherConfig.xspeed*cnt)/(len(self.weaselbots) + cnt)
-                    self.yspeed = (self.yspeed*len(self.weaselbots) + otherConfig.yspeed*cnt)/(len(self.weaselbots) + cnt)
+                        otherCnt += 1
+                    # Recalculate center of configuration
+                    self.xcenter = 0
+                    self.ycenter = 0
+                    for bot in self.weaselbots:
+                        self.xcenter += bot.xpos
+                        self.ycenter += bot.ypos
+                    self.xcenter = int(self.xcenter/(thisCnt + otherCnt))
+                    self.ycenter = int(self.ycenter/(thisCnt + otherCnt))
+                    # Recalculate configuration speed
+                    # TODO Adjust for rotational motion
+                    self.xspeed = (self.xspeed*thisCnt + otherConfig.xspeed*otherCnt)/(thisCnt + otherCnt)
+                    self.yspeed = (self.yspeed*thisCnt + otherConfig.yspeed*otherCnt)/(thisCnt + otherCnt)
                     return True
         return False
 
-
+    # Drawing function
     def draw(self, screen):
-        for weaselball in self.weaselbots:
-            pygame.draw.rect(screen, weaselball.color, [weaselball.xpos, weaselball.ypos, weaselball.width, weaselball.height], 0)
-
-    def move(self, screenWidth, screenHeight):
-        self.xmin += self.xspeed
-        self.xmax += self.xspeed
-        self.ymin += self.yspeed
-        self.ymax += self.yspeed
         for bot in self.weaselbots:
+            pygame.draw.rect(screen, bot.color, [bot.xpos - bot.r, bot.ypos - bot.r, 2*bot.r, 2*bot.r], 0)
+
+    # Movement function to calculate new location
+    def move(self, screenWidth, screenHeight):
+        self.xcenter += self.xspeed
+        self.ycenter += self.yspeed
+        self.theta += self.thetaspeed
+        for bot in self.weaselbots:
+            # TODO Adjust for rotational motion
             bot.xpos += self.xspeed
             bot.ypos += self.yspeed
-        if (self.xmin < 0) or (self.xmax > screenWidth):
-            self.xspeed *= -1
-        if (self.ymin < 0) or (self.ymax > screenHeight):
-            self.yspeed *= -1
+        # Handle edge bounces
+        for bot in self.weaselbots:
+            breakflag = False
+            if (bot.xpos - bot.r <= 0) or (bot.xpos + bot.r >= screenWidth):
+                self.xspeed *= -1
+                breakflag = True
+            if (bot.ypos - bot.r <= 0) or (bot.ypos + bot.r >= screenHeight):
+                self.yspeed *= -1
+                breakflag = True
+            if breakflag:
+                break
 
 # Define WeaselBot class
 class WeaselBot():
-    def __init__(self, width, height, color, xpos, ypos):
-        self.width = width
-        self.height = height
+    def __init__(self, r, color, xpos, ypos):
+        self.r = r
         self.color = color
         self.xpos = xpos
         self.ypos = ypos   
@@ -115,7 +131,7 @@ if __name__ == '__main__':
     pygame.display.flip()
 
     # Initialize configurations
-    w, h = 20, 20
+    r = 10
     weaselballNum = int(sys.argv[1])
     splitNum = math.ceil(math.sqrt(weaselballNum))
     splitLenw = int(screenw/splitNum)
@@ -123,10 +139,10 @@ if __name__ == '__main__':
     configlist = []
     for i in range(weaselballNum):
         color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
-        randx = random.randint(int(i%splitNum)*splitLenw, (int(i%splitNum)+1)*splitLenw-w)
-        randy = random.randint(math.floor(i/splitNum)*splitLenh, (math.floor(i/splitNum)+1)*splitLenh-h)
-        weasel = WeaselBot(w, h, color, randx, randy)
-        globals()['config%s' % i] = Configuration([weasel], weasel.xpos, weasel.xpos+weasel.width, weasel.ypos, weasel.ypos+weasel.height, random.randint(-3, 3), random.randint(-3, 3))
+        randx = random.randint(int(i%splitNum)*splitLenw+r, (int(i%splitNum)+1)*splitLenw-r)
+        randy = random.randint(math.floor(i/splitNum)*splitLenh+r, (math.floor(i/splitNum)+1)*splitLenh-r)
+        weasel = WeaselBot(r, color, randx, randy)
+        globals()['config%s' % i] = Configuration([weasel], weasel.xpos, weasel.ypos, 0, random.randint(-3, 3), random.randint(-3, 3), 0)
         configlist.append(globals()['config%s' % i])
 
 
