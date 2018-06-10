@@ -4,13 +4,15 @@ of the sandbox pygame simulation file. Adjustments made here
 are not necessarily reflective of the current state of the 
 simulation, but different changes are tested here.
 
+To run, type "python sandbox-ajborn2.py n" where n = number of units
 Press "q" to quit simulation
 
 TODO:
-- Specifics of collisions (overlap issues, adjusting to proper connect points)
-- Deal with random motion
-- Deal with spawning on top of other blocks
+- Specifics of collisions (overlap issues, adjusting to proper connect points => collision occurs at )
+- Deal with random motion 
 - Deal with rotational motion(pygame.transform)
+    - Rotational center of mass
+    - Collision detection with rotated shapes
 - Handle 6- and 8-sided shapes.
 '''
 
@@ -18,6 +20,8 @@ TODO:
 import pygame
 import random
 import keyboard
+import sys
+import math
 
 # Optional: Sets up constants and functions in global namespace
 # TODO: necessary?
@@ -93,6 +97,7 @@ class WeaselBot():
         self.ypos = ypos   
 
 
+# Main function body (sys.argv[1] is an integer n in the executable "py PolyominoGenerator.py n")
 if __name__ == '__main__':
     # Initialize game
     pygame.init()
@@ -111,11 +116,18 @@ if __name__ == '__main__':
 
     # Initialize configurations
     w, h = 20, 20
-    weaselballNum = 16
-    #color = [GREEN, RED, BLUE]
+    weaselballNum = int(sys.argv[1])
+    splitNum = math.ceil(math.sqrt(weaselballNum))
+    splitLenw = int(screenw/splitNum)
+    splitLenh = int(screenh/splitNum)
+    print("splitLenw="+str(splitLenw)+", splitLenh="+str(splitLenh))
     configlist = []
     for i in range(weaselballNum):
-        weasel = WeaselBot(w, h, (random.randint(0,255), random.randint(0,255), random.randint(0,255)), random.randint(0, screenw-w), random.randint(0, screenh-h))
+        color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+        randx = random.randint(int(i%splitNum)*splitLenw, (int(i%splitNum)+1)*splitLenw-w)
+        randy = random.randint(math.floor(i/splitNum)*splitLenh, (math.floor(i/splitNum)+1)*splitLenh-h)
+        print("randx="+str(randx)+", randy="+str(randy))
+        weasel = WeaselBot(w, h, color, randx, randy)
         globals()['config%s' % i] = Configuration([weasel], weasel.xpos, weasel.xpos+weasel.width, weasel.ypos, weasel.ypos+weasel.height, random.randint(-3, 3), random.randint(-3, 3))
         configlist.append(globals()['config%s' % i])
 
