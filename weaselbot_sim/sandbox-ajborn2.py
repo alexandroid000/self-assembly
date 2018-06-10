@@ -120,13 +120,11 @@ if __name__ == '__main__':
     splitNum = math.ceil(math.sqrt(weaselballNum))
     splitLenw = int(screenw/splitNum)
     splitLenh = int(screenh/splitNum)
-    print("splitLenw="+str(splitLenw)+", splitLenh="+str(splitLenh))
     configlist = []
     for i in range(weaselballNum):
         color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
         randx = random.randint(int(i%splitNum)*splitLenw, (int(i%splitNum)+1)*splitLenw-w)
         randy = random.randint(math.floor(i/splitNum)*splitLenh, (math.floor(i/splitNum)+1)*splitLenh-h)
-        print("randx="+str(randx)+", randy="+str(randy))
         weasel = WeaselBot(w, h, color, randx, randy)
         globals()['config%s' % i] = Configuration([weasel], weasel.xpos, weasel.xpos+weasel.width, weasel.ypos, weasel.ypos+weasel.height, random.randint(-3, 3), random.randint(-3, 3))
         configlist.append(globals()['config%s' % i])
@@ -159,6 +157,10 @@ if __name__ == '__main__':
             if config is not None:
                 config.draw(screen)
         pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == MOUSEBUTTONUP:
+               None
 
         # If "q" pressed, exit game
         if keyboard.is_pressed('q'):
