@@ -34,6 +34,7 @@ from pygame.color import *
 import pymunk
 import pymunk.pygame_util
 from pymunk import Vec2d
+import os
 
 # Declare global colors
 # COLOR = (R, G, B) => 0-255 for each
@@ -159,8 +160,11 @@ if __name__ == '__main__':
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 running = False
             elif event.type == KEYDOWN and event.key == K_p:
+                mypath = str(os.getcwd())+"\simulation_images"
+                if not os.path.exists(mypath):
+                    os.mkdir(mypath)
                 localtime = str(time.strftime("%Y-%m-%d-%H-%M-%S."+str(pygame.time.get_ticks()%1000), time.localtime()))
-                pygame.image.save(screen, "weaselball_sim_"+localtime+".png")
+                pygame.image.save(screen, mypath+"\weaselball_sim_"+localtime+".png")
             elif event.type == KEYDOWN and event.key == K_SPACE:
                 dt = 0
             elif event.type == KEYDOWN and event.key == K_1:
