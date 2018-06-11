@@ -1,8 +1,6 @@
 '''
-This file is Austin Born's (ajborn2@illinois.edu) recreation
-of the sandbox pygame simulation file. Adjustments made here
-are not necessarily reflective of the current state of the 
-simulation, but different changes are tested here.
+This file is essentially outdated as sandbox2-ajborn2.py
+shows much more promise.
 
 To run, type "python sandbox-ajborn2.py n" where n = number of units
 Press "q" to quit simulation
