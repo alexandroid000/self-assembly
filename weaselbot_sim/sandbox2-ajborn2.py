@@ -196,6 +196,9 @@ if __name__ == '__main__':
                     bot.body.apply_force_at_local_point((random.uniform(-forceMagnitude, forceMagnitude), random.uniform(-forceMagnitude, forceMagnitude)), (0,0))
                     # Print statement for debugging
                     print("angvel of bot "+str(bot)+" is "+str(bot.body.angular_velocity))
+                # maxAngVel = 0.0001
+                # if bot.body.angular_velocity > maxAngVel:
+                    bot.body.apply_force_
             counter = 0
         else:
             counter += 1
