@@ -15,7 +15,6 @@ TODO:
 - Deal with physics, erm, difficulties
     - Currently using PivotJoint for connections, but with the randomly-added forces, 
         this can lead to extreme angular velocities
-    - Maybe find a way to apply torque to counteract angular velocity
 - Play with type of joint
 - Play with elasticity settings
 '''
@@ -71,12 +70,6 @@ def addJoints(arbiter, space, data):
                 if len(arbiter.contact_point_set.points) == 2:
                     for c in arbiter.contact_point_set.points:
                         space.add(pymunk.PivotJoint(bot1.body, bot2.body, c.point_a))
-                        # rest_length = proximityMargin
-                        # stiffness = 20000000
-                        # damping = 900000
-                        # space.add(pymunk.DampedSpring(bot1.body, bot2.body, c.point_a+(1,1), c.point_b, rest_length, stiffness, damping))
-                        # Print statement for debugging
-                        print("joint added at:"+str(c.point_a)+"for "+str(bot1)+"and "+str(bot2))
                     joints[(bot1, bot2)] = True
                     joints[(bot2, bot1)] = True
 
@@ -194,11 +187,6 @@ if __name__ == '__main__':
             for bot in space.shapes:
                 if isinstance(bot, pymunk.Poly) and bot.body != None:
                     bot.body.apply_force_at_local_point((random.uniform(-forceMagnitude, forceMagnitude), random.uniform(-forceMagnitude, forceMagnitude)), (0,0))
-                    # Print statement for debugging
-                    print("angvel of bot "+str(bot)+" is "+str(bot.body.angular_velocity))
-                # maxAngVel = 0.0001
-                # if bot.body.angular_velocity > maxAngVel:
-                    bot.body.apply_force_
             counter = 0
         else:
             counter += 1
@@ -214,15 +202,13 @@ if __name__ == '__main__':
         screen.blit(pygame.font.SysFont('arial', 10).render('Press \'p\' to print to .png', False, BLACK), (0,10))
         screen.blit(pygame.font.SysFont('arial', 10).render('Press \'1-9\' to change fps (default=5)', False, BLACK), (0,20))
         screen.blit(pygame.font.SysFont('arial', 10).render('Press \'Space\' to pause', False, BLACK), (0,30))
+        screen.blit(pygame.font.SysFont('arial', 10).render("time: "+str(pygame.time.get_ticks()), False, BLACK), (0,screenh-10))
         
         # Update screen image
         pygame.display.flip()
 
         # Increment clock
         clock.tick(dt)
-
-        # Print statement for debugging
-        print("time: "+str(pygame.time.get_ticks()))
 
         # Display frames/second as the display caption
         pygame.display.set_caption(str(sides)+"-Sided Weaselball Simulation")
