@@ -1,0 +1,130 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <model name="weazelball">
+    <link name="shell">
+      <self_collide>false</self_collide>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <inertia>
+          <ixx>0.0000497901</ixx>
+          <ixy>-0.0000000437</ixy>
+          <ixz>0.0000000021</ixz>
+          <iyy>0.0000531742</iyy>
+          <iyz>0.0000000036</iyz>
+          <izz>0.0000498265</izz>
+        </inertia>
+        <mass>0.0489</mass>
+      </inertial>
+      <visual name="shell_geom_visual1">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://weazelball/meshes/visual/wb-shell-fixedhemi.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name="shell_geom_visual2">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://weazelball/meshes/visual/wb-shell-freehemi.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name="shell_geom_visual3">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://weazelball/meshes/visual/wb-shell-oring.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="base_geom_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.041</radius>
+          </sphere>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.5</mu>          
+              <mu2>0.5</mu2>       
+              <fdir1>0 0 0</fdir1>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+            <bullet>
+              <friction>1</friction>
+              <friction2>1</friction2> 
+              <fdir1>0 0 0</fdir1>
+              <rolling_friction>1</rolling_friction>
+            </bullet>
+          </friction>
+        </surface>
+      </collision>
+    </link>
+    <link name="motor">
+      <self_collide>false</self_collide>
+      <inertial>
+        <pose>-0.01656 0.00141 -0.00170 0 0 0</pose>
+<!-- Taken at center of mass and aligned with origin -->
+        <inertia>
+          <ixx>0.00002191279</ixx>
+          <ixy>0.00000232259</ixy>
+          <ixz>-0.00000120945</ixz>
+          <iyy>0.00002143758</iyy>
+          <iyz>0.00000043107</iyz>
+          <izz>0.00002578811</izz>
+        </inertia>
+        <mass>0.0864</mass>
+      </inertial>
+      <visual name="motor_geom_visual1">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <!--<uri>model://weazelball/meshes/visual/motor.dae</uri>-->
+            <uri>model://weazelball/meshes/visual/wb-bob-housing.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name="motor_geom_visual2">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://weazelball/meshes/visual/wb-bob-cw.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="motor_actuator" type="revolute"> 
+      <parent>shell</parent>
+      <child>motor</child>
+      <axis>
+        <dynamics>
+          <damping>0.0</damping>
+          <friction>0.0</friction>
+        </dynamics>
+        <xyz>0 1 0</xyz>
+      </axis>
+    </joint>
+
+    <!-- Fixed base -->
+<!--
+    <joint name="fixed_joint" type="revolute"> 
+      <parent>world</parent>
+      <child>shell</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>0</lower>
+          <upper>0</upper>
+        </limit>
+      </axis>
+    </joint>
+-->
+
+  </model>
+</sdf>
