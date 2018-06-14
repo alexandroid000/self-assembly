@@ -1,11 +1,10 @@
 '''
-This file is Austin Born's (ajborn2@illinois.edu) second
-attempt at a pygame simulation (this time with pymunk for the
-physics). Adjustments made here are not necessarily reflective 
-of the current state of the simulation, but different changes are tested here.
+This pygame simulation incorporates the pymunk library, which uses the Chipmunk
+physics engine. However, the joint connections and extreme angular velocities 
+have been difficult to deal with so far.
 
-To run, type: "python sandbox2-ajborn2.py n m" where n = number of units, m = sides per unit
-    Note: I recommend "python sandbox2-ajborn2.py 64 6"
+To run, type: "python pymunk-simulation.py m n" where m = number of units, n = sides per unit
+    Note: I recommend "python pymunk-simulation.py 64 6"
 To quit, press "Esc"
 To print to .png, press "p"
 To change speed, press "1-9" (default=5)
@@ -16,7 +15,7 @@ TODO:
     - Currently using PivotJoint for connections, but with the randomly-added forces, 
         this can lead to extreme angular velocities
 - Play with type of joint
-- Play with elasticity settings
+- Fix the way random forces are applied
 '''
 
 __version__ = "$Id:$"
@@ -29,10 +28,9 @@ import math
 import sys
 import time
 from pygame.locals import *
-from pygame.color import *
+#from pygame.color import *
 import pymunk
 import pymunk.pygame_util
-from pymunk import Vec2d
 import os
 
 # Declare global colors
@@ -143,6 +141,9 @@ if __name__ == '__main__':
     # Counter for random motion
     counter = 0
 
+    # Total time
+    time = 0
+
     # Game loop
     while running:
 
@@ -197,18 +198,21 @@ if __name__ == '__main__':
         # Necessary for drawing shapes
         space.debug_draw(draw_options)
 
+        # Update total time
+        time += dt
+
         # Instructions text
         screen.blit(pygame.font.SysFont('arial', 10).render('Press \'Esc\' to quit', False, BLACK), (0,0))
         screen.blit(pygame.font.SysFont('arial', 10).render('Press \'p\' to print to .png', False, BLACK), (0,10))
         screen.blit(pygame.font.SysFont('arial', 10).render('Press \'1-9\' to change fps (default=5)', False, BLACK), (0,20))
         screen.blit(pygame.font.SysFont('arial', 10).render('Press \'Space\' to pause', False, BLACK), (0,30))
-        screen.blit(pygame.font.SysFont('arial', 10).render("time: "+str(pygame.time.get_ticks()), False, BLACK), (0,screenh-10))
+        screen.blit(pygame.font.SysFont('arial', 10).render("Total time: "+str(time), False, BLACK), (0,screenh-10))
         
         # Update screen image
         pygame.display.flip()
 
         # Increment clock
-        clock.tick(dt)
+        clock.tick()
 
         # Display frames/second as the display caption
         pygame.display.set_caption(str(sides)+"-Sided Weaselball Simulation")
