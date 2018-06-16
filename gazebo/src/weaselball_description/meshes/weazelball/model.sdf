@@ -97,8 +97,6 @@
           </mesh>
         </geometry>
       </visual>
-    </link>
-
     <joint name="motor_actuator" type="revolute"> 
       <parent>shell</parent>
       <child>motor</child>
