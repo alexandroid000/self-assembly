@@ -2,7 +2,14 @@
 <sdf version="1.6">
   <model name="mount">
     <link name="mountlink">
-      <self_collide>false</self_collide>
+      <collision name="coll">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+	  <mesh>
+	    <uri>model://mount/meshes/mount.dae</uri>
+	  </mesh>
+        </geometry>
+      </collision>
       <inertial>
         <pose>0 0 0 0 0 0</pose>
         <inertia>
@@ -13,7 +20,7 @@
           <iyz>0.00000041827</iyz>
           <izz>0.00002531389</izz>
         </inertia>
-        <mass>0.0005</mass>
+        <mass>0.0000005</mass>
       </inertial>
       <visual name="mountvisual">
         <pose>0 0 0 0 0 0</pose>
@@ -24,20 +31,5 @@
         </geometry>
       </visual>
     </link>
-
-    <!-- Fixed base -->
-<!--
-    <joint name="fixed_joint" type="revolute"> 
-      <parent>world</parent>
-      <child>motor</child>
-      <axis>
-        <xyz>0 0 1</xyz>
-        <limit>
-          <lower>0</lower>
-          <upper>0</upper>
-        </limit>
-      </axis>
-    </joint>
--->
   </model>
 </sdf>

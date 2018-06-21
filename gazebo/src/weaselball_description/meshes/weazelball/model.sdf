@@ -84,7 +84,6 @@
         <pose>0 0 0 0 0 0</pose>
         <geometry>
           <mesh>
-            <!--<uri>model://weazelball/meshes/visual/motor.dae</uri>-->
             <uri>model://weazelball/meshes/visual/wb-bob-housing.dae</uri>
           </mesh>
         </geometry>
@@ -97,6 +96,7 @@
           </mesh>
         </geometry>
       </visual>
+    </link>
     <joint name="motor_actuator" type="revolute"> 
       <parent>shell</parent>
       <child>motor</child>
@@ -108,21 +108,5 @@
         <xyz>0 1 0</xyz>
       </axis>
     </joint>
-
-    <!-- Fixed base -->
-<!--
-    <joint name="fixed_joint" type="revolute"> 
-      <parent>world</parent>
-      <child>shell</child>
-      <axis>
-        <xyz>0 0 1</xyz>
-        <limit>
-          <lower>0</lower>
-          <upper>0</upper>
-        </limit>
-      </axis>
-    </joint>
--->
-
   </model>
 </sdf>
