@@ -5,51 +5,67 @@
 #include "gazebo/common/common.hh"
 #include "gazebo/gazebo.hh"
 
-//http://gazebosim.org/tutorials?tut=plugins_world&cat=write_plugin
 namespace gazebo
 {
-class Configure : public WorldPlugin
+class Factory : public WorldPlugin
 {
-private:
-  bool flag;
-  event::ConnectionPtr _updateConnection;  //< Gazebo update callback
+  private:
+      bool flag = 0;
+      event::ConnectionPtr _updateConnection;  //< Gazebo update callback
 
-public:
-  Configure() : WorldPlugin()
+  public: void Load(physics::WorldPtr _parent, sdf::ElementPtr /*_sdf*/)
+  {
+    _updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind( &Factory::Update, this ) );
+
+
+    // Option 3: Insert model from file via message passing.
+
+      // Create a new transport node
+      transport::NodePtr node(new transport::Node());
+
+      // Initialize the node with the world name
+      node->Init(_parent->GetName());
+
+      // Create a publisher on the ~/factory topic
+      transport::PublisherPtr factoryPub =
+      node->Advertise<msgs::Factory>("~/factory");
+
+      // Create the message
+      msgs::Factory msg;
+
+      // Model file to load
+      msg.set_sdf_filename("model://mount");
+
+      // Pose to initialize the model to
+      msgs::Set(msg.mutable_pose(),
+          ignition::math::Pose3d(
+            ignition::math::Vector3d(1, -2, 0),
+            ignition::math::Quaterniond(0, 0, 0)));
+
+      // Send the message
+      factoryPub->Publish(msg);
+
+  }
+  Factory() : WorldPlugin()
   {
   }
-
-  virtual void Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
-  {
-    // Make sure the ROS node for Gazebo has already been initialized                                                                                    
-    if (!ros::isInitialized())
+    virtual void Update()
     {
-      ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load configure plugin.");
-      return;
+        if(flag == 0)
+        {
+            createModel();
+            flag = 1;
+        }
     }
-    //register update callback
-    _updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind( &Configure::Update, this ) );
-    flag = 0;
-    ROS_INFO("Configure Loaded!");
-  }
-  
-	virtual void Update()
-	{
-		if(flag == 0)
-		{
-	   		createModel();
-			flag = 1;
-		}
-	}
 
-	int createModel()
-	{
-		ROS_INFO("CREATING MODEL");
-	}
-  
-
-  
+    int createModel()
+    {
+      // Create the message
+        ROS_INFO("CREATING MODEL");
+    }
 
 };
-GZ_REGISTER_WORLD_PLUGIN(Configure)
+
+// Register this plugin with the simulator
+GZ_REGISTER_WORLD_PLUGIN(Factory)
 }
