@@ -20,7 +20,7 @@
           <iyz>0.00000041827</iyz>
           <izz>0.00002531389</izz>
         </inertia>
-        <mass>0.0000005</mass>
+        <mass>0.05</mass>
       </inertial>
       <visual name="mountvisual">
         <pose>0 0 0 0 0 0</pose>

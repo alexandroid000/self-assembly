@@ -59,8 +59,8 @@
     <include>
       <uri>model://weazelball</uri>
       <pose>0 0 0.041 0 -1.5708 -1.5708</pose>
-      <plugin name='simulation-controller' filename='libsimulation-controller.so'>
-      </plugin>
+      <plugin name='simulation-controller' filename='libsimulation-controller.so'> 
+      </plugin> 
     </include>
     <include>
       <uri>model://mount</uri>
