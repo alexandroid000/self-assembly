@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <model name="weazeltable">
+    <static>true</static>
+    <link name="top">
+      <self_collide>false</self_collide>
+      <visual name="top_geom_visual">
+        <geometry>
+          <box>
+            <size>1.12713 1.12713 0.01905</size>
+          </box>
+        </geometry>
+        <material>
+          <lighting>true</lighting>
+          <ambient>0.8 0.8 0.8 1</ambient>
+          <diffuse>0.8 0.8 0.8 1</diffuse>
+          <specular>0 0 0 1</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
