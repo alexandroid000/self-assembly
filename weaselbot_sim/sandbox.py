@@ -1,11 +1,22 @@
-#Current objectives
-# 1) Handle non-square shapes
+#How it works:
+# - Each weaselbot is randomly generated on the screen
+# - When they collide, they don't actually form one entity; the collided objects speed parameters are made identical
+# - Handling of all the collided objects is taken care of in the WeaselBotsGroup class
+
+
+# Current Errors:
+#  - On collision, the robots do not stick together like they should
+#  - Fails at handling collisions between already collided objects and single objects
+# - Do not know how it would handle simultaneous collision between 3+ objects
+# - Gets stuck at the borders (this is probably due to a misplaced == sign when there should be a >= sign)
+# - Can't handle non-square shapes at present (that was the change I tried to implement and then everything stopped working)
 
 
 
 
 #Calls the pygame library
 import pygame, random, math
+from collections import defaultdict
 #Optional: Sets up constants and functions in global namespace
 from pygame.locals import *
 #Declare global colors
@@ -28,24 +39,12 @@ class WeaselBot():
         self._height = height #do not change
         self._color = color
         self.collision = False
-    # def __init__(self, screen, sides, length, xspeed, yspeed, color):
-    #     self.movex = xspeed #assume initial velocity
-    #     self.movey = yspeed
-    #     #get dimensions of screen
-    #     self.wscreen, self.hscreen = pygame.display.get_surface().get_size()
-    #     self.x0pos = random.randint(0, self.wscreen-width)
-    #     self.y0pos = random.randint(0, self.hscreen-height)
-    #     self.points = []
-    #     angle = 360 / sides
-    #     for i in sides:
-    #         #Look up some geometry and figure out how to do this
-    #     self._color = color
-    #     self.collision = False
-
 
     def draw(self, screen):
         BLACK = (  0,   0,   0) #temp, adjust so you can change color based instantation
+        #pygame.draw.polygon(screen, self._color, self.points, 0)
         pygame.draw.rect(screen, self._color, [self.x0pos, self.y0pos, self._width, self._height], 0)
+
     #define movement based on WeaselBot algorithm
     def movement(self):
         #insert WeaselBot algorithm here
@@ -64,16 +63,10 @@ class WeaselBotsGroup():
         self.listofweasels.append(bot)
     #handle collision here
     def update(self):
-        collisions = []
+        #Make a dictionary of lists
+        collisions = {}
         for i in self.listofweasels:
-            #makes a list of collisions
-            if i.collision:
-                collisions.append(i)
-            #otherwise, procede normally
-            else:
-                i.movement()
-        #checks for collisions, which will be adjusted in the next pass
-        for i in self.listofweasels:
+            collisions[i] = []
             for j in self.listofweasels:
                 #makes sure they're not the same object and if collision has previously occured
                 if i == j or (i.collision == True and j.collision == True):
@@ -83,31 +76,28 @@ class WeaselBotsGroup():
                     if i.x0pos <= jxpos <= i.x0pos+i._width:
                         for jypos in range(j.y0pos, j.y0pos+j._height):
                             if i.y0pos <= jypos <= i.y0pos+i._height:
-                                j.collision = True
-                                i.collision = True
+                                collisions[i].append(j)
+
 
         #if collisions occur, make a new weaselbot object and add it to the list
-        if collisions:
-            mergedbot = collision_merge(collisions)
-            del collisions
+        self.collision_merge(collisions)
+        del collisions
 
     def draw(self, screen):
         for i in self.listofweasels:
             i.draw(screen)
 
 #each object acts identically so they appear (on the screen) to be one object
-def collision_merge(collisions):
-    for i in collisions:
-        for j in collisions:
-            #makes sure they're not the same object and if collision has previously occured
-            if i == j:
-                break;
-            redefine_bots_borders(i, j)
-            #This is going to be a source of problems once the movement algorithm gets implemented
-            j.movex = i.movex
-            j.movey = i.movey
-            i.collision = False
-            j.collision = False
+    def collision_merge(self, collisions):
+        for i in collisions:
+            if collisions[i] == []:
+                i.movement()
+            for j in collisions[i]:
+                j.movex = i.movex
+                j.movey = i.movey
+                for k in collisions[j]:
+                    if k == i:
+                        collisions[j].remove(k)
 
 def redefine_bots_borders(bot1, bot2):
     # All this is error checking to make sure it doesn't bounce outside screen
@@ -141,8 +131,8 @@ def main():
     robot1 = WeaselBot(screen, width, height, 1, 1, GREEN)
     robot2 = WeaselBot(screen, width, height, 2, 2, BLACK)
     robot3 = WeaselBot(screen, width, height, 3, 3, RED)
-    robot4 = WeaselBot(screen, width, height, 3, 3, RED)
-    robot5 = WeaselBot(screen, width, height, 3, 3, RED)
+    robot4 = WeaselBot(screen, width, height, 4, 4, BLUE)
+    robot5 = WeaselBot(screen, width, height, 5, 5, RED)
     weaselbots = WeaselBotsGroup();
     #I dislike how clunky this is but I can't get around it right now
     weaselbots.add(robot1)
