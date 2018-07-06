@@ -1,8 +1,7 @@
 <?xml version='1.0'?>
 <sdf version='1.6'>
   <model name='4square'>
-    <model name='mount_1'>
-      <link name='mountlink'>
+      <link name='mountlink_1'>
         <collision name='coll'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
@@ -14,14 +13,14 @@
         <inertial>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <inertia>
-            <ixx>2.14968e-05</ixx>
-            <ixy>2.24448e-06</ixy>
-            <ixz>-1.27349e-06</ixz>
-            <iyy>2.11217e-05</iyy>
-            <iyz>4.1827e-07</iyz>
-            <izz>2.53139e-05</izz>
+            <ixx>0.00002149676</ixx>
+            <ixy>0.00000224448</ixy>
+            <ixz>-0.00000127349</ixz>
+            <iyy>0.00002112172</iyy>
+            <iyz>0.00000041827</iyz>
+            <izz>0.00002531389</izz>
           </inertia>
-          <mass>0.05</mass>
+          <mass>0.01</mass>
         </inertial>
         <visual name='mountvisual'>
           <pose frame=''>0 0 0 0 -0 0</pose>
@@ -31,11 +30,9 @@
             </mesh>
           </geometry>
         </visual>
+        <pose frame=''>-0.03385 -0.073611 0 0 -0 0</pose>
       </link>
-      <pose frame=''>-0.03385 -0.073611 0 0 -0 0</pose>
-    </model>
-    <model name='mount_1_clone'>
-      <link name='mountlink'>
+      <link name='mountlink_2'>
         <collision name='coll'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
@@ -47,14 +44,14 @@
         <inertial>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <inertia>
-            <ixx>2.14968e-05</ixx>
-            <ixy>2.24448e-06</ixy>
-            <ixz>-1.27349e-06</ixz>
-            <iyy>2.11217e-05</iyy>
-            <iyz>4.1827e-07</iyz>
-            <izz>2.53139e-05</izz>
+            <ixx>0.00002149676</ixx>
+            <ixy>0.00000224448</ixy>
+            <ixz>-0.00000127349</ixz>
+            <iyy>0.00002112172</iyy>
+            <iyz>0.00000041827</iyz>
+            <izz>0.00002531389</izz>
           </inertia>
-          <mass>0.05</mass>
+          <mass>0.01</mass>
         </inertial>
         <visual name='mountvisual'>
           <pose frame=''>0 0 0 0 -0 0</pose>
@@ -64,11 +61,9 @@
             </mesh>
           </geometry>
         </visual>
+        <pose frame=''>-0.073511 0.034357 -0 0 -0 0</pose>
       </link>
-      <pose frame=''>-0.073511 0.034357 -0 0 -0 0</pose>
-    </model>
-    <model name='mount_1_clone_0'>
-      <link name='mountlink'>
+      <link name='mountlink_3'>
         <collision name='coll'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
@@ -80,14 +75,14 @@
         <inertial>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <inertia>
-            <ixx>2.14968e-05</ixx>
-            <ixy>2.24448e-06</ixy>
-            <ixz>-1.27349e-06</ixz>
-            <iyy>2.11217e-05</iyy>
-            <iyz>4.1827e-07</iyz>
-            <izz>2.53139e-05</izz>
+            <ixx>0.00002149676</ixx>
+            <ixy>0.00000224448</ixy>
+            <ixz>-0.00000127349</ixz>
+            <iyy>0.00002112172</iyy>
+            <iyz>0.00000041827</iyz>
+            <izz>0.00002531389</izz>
           </inertia>
-          <mass>0.05</mass>
+          <mass>0.01</mass>
         </inertial>
         <visual name='mountvisual'>
           <pose frame=''>0 0 0 0 -0 0</pose>
@@ -97,11 +92,9 @@
             </mesh>
           </geometry>
         </visual>
+        <pose frame=''>0.073537 -0.034584 -0 0 -0 0</pose>
       </link>
-      <pose frame=''>0.073537 -0.034584 -0 0 -0 0</pose>
-    </model>
-    <model name='mount_1_clone_1'>
-      <link name='mountlink'>
+      <link name='mountlink_4'>
         <collision name='coll'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
@@ -113,14 +106,14 @@
         <inertial>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <inertia>
-            <ixx>2.14968e-05</ixx>
-            <ixy>2.24448e-06</ixy>
-            <ixz>-1.27349e-06</ixz>
-            <iyy>2.11217e-05</iyy>
-            <iyz>4.1827e-07</iyz>
-            <izz>2.53139e-05</izz>
+            <ixx>0.00002149676</ixx>
+            <ixy>0.00000224448</ixy>
+            <ixz>-0.00000127349</ixz>
+            <iyy>0.00002112172</iyy>
+            <iyz>0.00000041827</iyz>
+            <izz>0.00002531389</izz>
           </inertia>
-          <mass>0.05</mass>
+          <mass>0.01</mass>
         </inertial>
         <visual name='mountvisual'>
           <pose frame=''>0 0 0 0 -0 0</pose>
@@ -130,12 +123,11 @@
             </mesh>
           </geometry>
         </visual>
+        <pose frame=''>0.033824 0.07384 -0 0 -0 0</pose>
       </link>
-      <pose frame=''>0.033824 0.07384 -0 0 -0 0</pose>
-    </model>
     <joint name='mountlink_JOINT_3' type='fixed'>
-      <parent>mount_1::mountlink</parent>
-      <child>mount_1_clone_0::mountlink</child>
+      <parent>mountlink_1</parent>
+      <child>mountlink_2</child>
       <pose frame=''>0 0 0 0 -0 0</pose>
       <physics>
         <ode>
@@ -151,8 +143,8 @@
       </physics>
     </joint>
     <joint name='mountlink_JOINT_2' type='fixed'>
-      <parent>mount_1_clone::mountlink</parent>
-      <child>mount_1::mountlink</child>
+      <parent>mountlink_2</parent>
+      <child>mountlink_3</child>
       <pose frame=''>0 0 0 0 -0 0</pose>
       <physics>
         <ode>
@@ -168,8 +160,8 @@
       </physics>
     </joint>
     <joint name='mountlink_JOINT_0' type='fixed'>
-      <parent>mount_1_clone_1::mountlink</parent>
-      <child>mount_1_clone_0::mountlink</child>
+      <parent>mountlink_3</parent>
+      <child>mountlink_4</child>
       <pose frame=''>0 0 0 0 -0 0</pose>
       <physics>
         <ode>
@@ -185,8 +177,42 @@
       </physics>
     </joint>
     <joint name='mountlink_JOINT_1' type='fixed'>
-      <parent>mount_1_clone_1::mountlink</parent>
-      <child>mount_1_clone::mountlink</child>
+      <parent>mountlink_4</parent>
+      <child>mountlink_1</child>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='mountlink_JOINT_1_2' type='fixed'>
+      <parent>mountlink_4</parent>
+      <child>mountlink_2</child>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='mountlink_JOINT_1_3' type='fixed'>
+      <parent>mountlink_3</parent>
+      <child>mountlink_1</child>
       <pose frame=''>0 0 0 0 -0 0</pose>
       <physics>
         <ode>

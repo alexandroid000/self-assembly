@@ -5,7 +5,7 @@
 
 // Note: assumes build path is a subdirectory of the source directory and the
 // data directory is in the same parent directory as the source directory
-#define DATA_ROOT_PATH "../../data/"
+#define DATA_ROOT_PATH "/home/justin/Documents/bouncy/self-assembly/gazebo/src/data"
 
 // path to the motion capture data files on this system
 #define MOCAP_DATA_PATH DATA_ROOT_PATH "raw_experiment/vicon/"

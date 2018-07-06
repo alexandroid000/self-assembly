@@ -352,9 +352,11 @@ private:
   unsigned trial_index;
 
   bool _has_led;
+  physics::ModelPtr _weaselModelPtr;
 
 public:
-  world_c( physics::WorldPtr world ) : _world( world ) { _has_led = false; }
+  world_c( physics::WorldPtr world, physics::ModelPtr model ) : _world( world ) { _has_led = false; 
+  _weaselModelPtr = model;}
   virtual ~world_c( void ) { }
 
   physics::WorldPtr gzworld( void ) { return _world; }
@@ -367,7 +369,7 @@ public:
     errors = "";
 
     // create the weazelball model encapsulation structure and validate it 
-    _weazelball = weazelball_ptr( new weazelball_c( _world ) );
+    _weazelball = weazelball_ptr( new weazelball_c( _weaselModelPtr ) );
     weazelball_validated = _weazelball->validate( validation_errors );
     if( !( weazelball_validated ) ) return false;
 
