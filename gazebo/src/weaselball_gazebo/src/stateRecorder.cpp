@@ -36,7 +36,7 @@ namespace gazebo
   private:
     event::ConnectionPtr _updateConnection;  //< Gazebo update callback
 
-    world_ptr _world;                        //< Gazebo world pointer
+    physics::WorldPtr _world;                        //< Gazebo world pointer
 	std::vector<std::vector<weaselballData>> collections; //A collection is a vector of a vector that has n elements of weaselballData where n is the number of weaselballs
 	std::vector<physics::ModelPtr> weaselballs;
 	
@@ -48,9 +48,10 @@ namespace gazebo
       event::Events::DisconnectWorldUpdateBegin( _updateConnection );
     }
 
-	std::vector<physics:ModelPtr> getWeaselballs()
+	std::vector<physics::ModelPtr> getWeaselballs()
 	{
-
+		std::vector<physics::ModelPtr> ret;
+		return ret;
 
 	}
 

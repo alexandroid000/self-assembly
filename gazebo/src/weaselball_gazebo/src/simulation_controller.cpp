@@ -122,7 +122,7 @@ namespace gazebo
 
       double dt = 0.001;
 
-      double motor_freq = 1.333;
+      double motor_freq = 5.333;
       double theta_0 = 0;
       double theta_t = actuator->GetAngle( 0 ).Radian();
       double omega = actuator->GetVelocity( 0 );
