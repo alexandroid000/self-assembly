@@ -69,5 +69,7 @@
     </gui>
     <plugin name='configure' filename='libconfigure.so'> 
     </plugin> 
+    <plugin name='StateRecorder' filename='libStateRecorder.so'> 
+    </plugin> 
   </world>
 </sdf>
