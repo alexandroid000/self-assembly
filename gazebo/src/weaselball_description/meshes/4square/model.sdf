@@ -20,7 +20,7 @@
             <iyz>0.00000041827</iyz>
             <izz>0.00002531389</izz>
           </inertia>
-          <mass>0.01</mass>
+          <mass>0.028</mass>
         </inertial>
         <visual name='mountvisual'>
           <pose frame=''>0 0 0 0 -0 0</pose>
@@ -51,7 +51,7 @@
             <iyz>0.00000041827</iyz>
             <izz>0.00002531389</izz>
           </inertia>
-          <mass>0.01</mass>
+          <mass>0.028</mass>
         </inertial>
         <visual name='mountvisual'>
           <pose frame=''>0 0 0 0 -0 0</pose>
@@ -82,7 +82,7 @@
             <iyz>0.00000041827</iyz>
             <izz>0.00002531389</izz>
           </inertia>
-          <mass>0.01</mass>
+          <mass>0.028</mass>
         </inertial>
         <visual name='mountvisual'>
           <pose frame=''>0 0 0 0 -0 0</pose>
@@ -113,7 +113,7 @@
             <iyz>0.00000041827</iyz>
             <izz>0.00002531389</izz>
           </inertia>
-          <mass>0.01</mass>
+          <mass>0.028</mass>
         </inertial>
         <visual name='mountvisual'>
           <pose frame=''>0 0 0 0 -0 0</pose>
