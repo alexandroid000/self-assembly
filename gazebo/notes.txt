@@ -1,14 +1,14 @@
 Personal Notes:
 TODO) There seems to be a bug in the weaselball code where a mutex causes a crash.
 TODO) Create the state analysis
-TODO) Get measurements of the robot (Grab a scale!) for gazebo.
-TODO) Contact professor Bobadilla regarding what needs to be done for him to analyze the markov chain
 TODO) Open up video editing software to see how often the weaselballs are doing a new movement
 TODO) Update size of models
 
 Q) When should I do stuff in a plug in and when should I make a ros node?
 A) ?
 
+Q) Given how I normally set up my plugins, does update run before init is done?
+A) ?
 
 
 Starting Position of Balls:
@@ -21,6 +21,8 @@ Individual "Mount":
 28 grams
 2 inches per "face"
 4.25 inches across
+108mm to be exact
+111mm in gazebo for side to side
 
 Individual weaselball:
 138 grams
