@@ -92,7 +92,7 @@
             </mesh>
           </geometry>
         </visual>
-        <pose frame=''>0.073537 -0.034584 -0 0 -0 0</pose>
+        <pose frame=''>0.073537 -0.034584 0.003 0 -0 0</pose>
       </link>
       <link name='mountlink_4'>
         <collision name='coll'>
@@ -123,7 +123,7 @@
             </mesh>
           </geometry>
         </visual>
-        <pose frame=''>0.033824 0.07384 -0 0 -0 0</pose>
+        <pose frame=''>0.033824 0.07384 0.003 0 -0 0</pose>
       </link>
     <joint name='mountlink_JOINT_3' type='fixed'>
       <parent>mountlink_1</parent>
