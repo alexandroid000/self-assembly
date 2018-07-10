@@ -63,7 +63,7 @@
     <gui>
       <camera name='user_camera'>
 <!--        <pose>1.63355 0.021633 0.513402 -3.18134e-20 0.319643 -3.13899</pose> -->
-        <pose>1.63355 0 0.513402 0 0.319643 -3.13899</pose>
+        <pose>0 0 2.0 0 1.57079632 0</pose>
         <view_controller>orbit</view_controller>
       </camera>
     </gui>
