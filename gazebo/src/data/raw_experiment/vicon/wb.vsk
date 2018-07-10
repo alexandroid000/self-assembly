@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<KinematicModel VERSION="2.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.vicon.com/Schemas/ViconVST.xsd">
+
+  <Parameters>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19586_x" PRIOR="-38.5595397949219" SD="1.00000002004088e+020" VALUE="-38.5595397949219"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19586_y" PRIOR="17.0527439117432" SD="1.00000002004088e+020" VALUE="17.0527439117432"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19586_z" PRIOR="-4.08868408203125" SD="1.00000002004088e+020" VALUE="-4.08868408203125"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19588_x" PRIOR="-21.6157417297363" SD="1.00000002004088e+020" VALUE="-21.6157417297363"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19588_y" PRIOR="23.7062530517578" SD="1.00000002004088e+020" VALUE="23.7062530517578"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19588_z" PRIOR="29.9089965820313" SD="1.00000002004088e+020" VALUE="29.9089965820313"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19512_x" PRIOR="15.3001670837402" SD="1.00000002004088e+020" VALUE="15.3001670837402"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19512_y" PRIOR="38.8559799194336" SD="1.00000002004088e+020" VALUE="38.8559799194336"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19512_z" PRIOR="11.5132446289063" SD="1.00000002004088e+020" VALUE="11.5132446289063"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19537_x" PRIOR="13.46018409729" SD="1.00000002004088e+020" VALUE="13.46018409729"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19537_y" PRIOR="16.7821426391602" SD="1.00000002004088e+020" VALUE="16.7821426391602"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19537_z" PRIOR="-32.5468139648438" SD="1.00000002004088e+020" VALUE="-32.5468139648438"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19547_x" PRIOR="-13.0079488754272" SD="1.00000002004088e+020" VALUE="-13.0079488754272"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19547_y" PRIOR="-20.8673534393311" SD="1.00000002004088e+020" VALUE="-20.8673534393311"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19547_z" PRIOR="-27.1215209960938" SD="1.00000002004088e+020" VALUE="-27.1215209960938"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19546_x" PRIOR="-6.69712162017822" SD="1.00000002004088e+020" VALUE="-6.69712162017822"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19546_y" PRIOR="-35.203182220459" SD="1.00000002004088e+020" VALUE="-35.203182220459"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19546_z" PRIOR="13.0753784179688" SD="1.00000002004088e+020" VALUE="13.0753784179688"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19540_x" PRIOR="15.2748985290527" SD="1.00000002004088e+020" VALUE="15.2748985290527"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19540_y" PRIOR="-30.5433025360107" SD="1.00000002004088e+020" VALUE="-30.5433025360107"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19540_z" PRIOR="14.9324340820313" SD="1.00000002004088e+020" VALUE="14.9324340820313"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19534_x" PRIOR="35.845100402832" SD="1.00000002004088e+020" VALUE="35.845100402832"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19534_y" PRIOR="-9.78328227996826" SD="1.00000002004088e+020" VALUE="-9.78328227996826"/>
+    <Parameter HIDDEN="1" NAME="weazel_Unlabeled19534_z" PRIOR="-5.67303466796875" SD="1.00000002004088e+020" VALUE="-5.67303466796875"/>
+  </Parameters>
+
+  <Skeleton>
+    <Segment BOUNDS="-50 -50 -50 50 50 50 " CONTEXT="General" INERTIA="0 0 0 " MASS="0 " MASS-CENTRE="0 0 0 " NAME="weazel" RGB="255 164 0">
+      <JointFree BOUNDS="0 0 0 0 0 0 0 0 0 0 0 0" COVARIANCE="2.46490001678467 0 0 0 0 0  0 2.46490001678467 0 0 0 0  0 0 246.490005493164 0 0 0  0 0 0 1000000 0 0  0 0 0 0 1000000 0  0 0 0 0 0 1000000  " MEAN="0 0 0 0 0 0" NAME="World_weazel" POST-ORIENTATION="0 0 0" POST-POSITION="0 0 0" PRE-ORIENTATION="0 0 0" PRE-POSITION="0 0 0" SIGNS="+ + + + + + " T="* * * * * * ">
+        <JointTemplate COVARIANCE="2.46490001678467 0 0 0 0 0  0 2.46490001678467 0 0 0 0  0 0 246.490005493164 0 0 0  0 0 0 1000000 0 0  0 0 0 0 1000000 0  0 0 0 0 0 1000000  " MEAN="0 0 0 0 0 0" POST-ORIENTATION="0 0 0 " POST-POSITION="0 0 0 " PRE-ORIENTATION="0 0 0 " PRE-POSITION="0 0 0 " TPOSE-COVARIANCE="0 0 0 0 0 0  0 0 0 0 0 0  0 0 0 0 0 0  0 0 0 0 0 0  0 0 0 0 0 0  0 0 0 0 0 0  " TPOSE-MEAN="0 0 0 0 0 0"/>
+      </JointFree>
+    </Segment>
+  </Skeleton>
+
+  <MarkerSet>
+    <Markers>
+      <Marker COVARIANCE="1 0 0 0 1 0 0 0 1 " NAME="Unlabeled19586" POSITION="-38.5595 17.0527 -4.08868" RADIUS="12.5" RGB="255 164 0" SEGMENT="weazel" STATUS="required">
+        <MarkerTemplate COVARIANCE="1 0 0 0 1 0 0 0 1 " PLACEMENT-COVARIANCE="1 0 0 0 1 0 0 0 1 " POSITION="'weazel_Unlabeled19586_x' 'weazel_Unlabeled19586_y' 'weazel_Unlabeled19586_z'"/>
+      </Marker>
+      <Marker COVARIANCE="1 0 0 0 1 0 0 0 1 " NAME="Unlabeled19588" POSITION="-21.6157 23.7063 29.909" RADIUS="12.5" RGB="255 164 0" SEGMENT="weazel" STATUS="optional">
+        <MarkerTemplate COVARIANCE="1 0 0 0 1 0 0 0 1 " PLACEMENT-COVARIANCE="1 0 0 0 1 0 0 0 1 " POSITION="'weazel_Unlabeled19588_x' 'weazel_Unlabeled19588_y' 'weazel_Unlabeled19588_z'"/>
+      </Marker>
+      <Marker COVARIANCE="1 0 0 0 1 0 0 0 1 " NAME="Unlabeled19512" POSITION="15.3002 38.856 11.5132" RADIUS="12.5" RGB="255 164 0" SEGMENT="weazel" STATUS="optional">
+        <MarkerTemplate COVARIANCE="1 0 0 0 1 0 0 0 1 " PLACEMENT-COVARIANCE="1 0 0 0 1 0 0 0 1 " POSITION="'weazel_Unlabeled19512_x' 'weazel_Unlabeled19512_y' 'weazel_Unlabeled19512_z'"/>
+      </Marker>
+      <Marker COVARIANCE="1 0 0 0 1 0 0 0 1 " NAME="Unlabeled19537" POSITION="13.4602 16.7821 -32.5468" RADIUS="12.5" RGB="255 164 0" SEGMENT="weazel" STATUS="optional">
+        <MarkerTemplate COVARIANCE="1 0 0 0 1 0 0 0 1 " PLACEMENT-COVARIANCE="1 0 0 0 1 0 0 0 1 " POSITION="'weazel_Unlabeled19537_x' 'weazel_Unlabeled19537_y' 'weazel_Unlabeled19537_z'"/>
+      </Marker>
+      <Marker COVARIANCE="1 0 0 0 1 0 0 0 1 " NAME="Unlabeled19547" POSITION="-13.0079 -20.8674 -27.1215" RADIUS="12.5" RGB="255 164 0" SEGMENT="weazel" STATUS="optional">
+        <MarkerTemplate COVARIANCE="1 0 0 0 1 0 0 0 1 " PLACEMENT-COVARIANCE="1 0 0 0 1 0 0 0 1 " POSITION="'weazel_Unlabeled19547_x' 'weazel_Unlabeled19547_y' 'weazel_Unlabeled19547_z'"/>
+      </Marker>
+      <Marker COVARIANCE="1 0 0 0 1 0 0 0 1 " NAME="Unlabeled19546" POSITION="-6.69712 -35.2032 13.0754" RADIUS="12.5" RGB="255 164 0" SEGMENT="weazel" STATUS="optional">
+        <MarkerTemplate COVARIANCE="1 0 0 0 1 0 0 0 1 " PLACEMENT-COVARIANCE="1 0 0 0 1 0 0 0 1 " POSITION="'weazel_Unlabeled19546_x' 'weazel_Unlabeled19546_y' 'weazel_Unlabeled19546_z'"/>
+      </Marker>
+      <Marker COVARIANCE="1 0 0 0 1 0 0 0 1 " NAME="Unlabeled19540" POSITION="15.2749 -30.5433 14.9324" RADIUS="12.5" RGB="255 164 0" SEGMENT="weazel" STATUS="optional">
+        <MarkerTemplate COVARIANCE="1 0 0 0 1 0 0 0 1 " PLACEMENT-COVARIANCE="1 0 0 0 1 0 0 0 1 " POSITION="'weazel_Unlabeled19540_x' 'weazel_Unlabeled19540_y' 'weazel_Unlabeled19540_z'"/>
+      </Marker>
+      <Marker COVARIANCE="1 0 0 0 1 0 0 0 1 " NAME="Unlabeled19534" POSITION="35.8451 -9.78328 -5.67303" RADIUS="12.5" RGB="255 164 0" SEGMENT="weazel" STATUS="optional">
+        <MarkerTemplate COVARIANCE="1 0 0 0 1 0 0 0 1 " PLACEMENT-COVARIANCE="1 0 0 0 1 0 0 0 1 " POSITION="'weazel_Unlabeled19534_x' 'weazel_Unlabeled19534_y' 'weazel_Unlabeled19534_z'"/>
+      </Marker>
+    </Markers>
+    <Sticks>
+      <Stick MARKER1="Unlabeled19586" MARKER2="Unlabeled19588" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19586" MARKER2="Unlabeled19512" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19586" MARKER2="Unlabeled19537" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19586" MARKER2="Unlabeled19547" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19586" MARKER2="Unlabeled19546" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19586" MARKER2="Unlabeled19540" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19586" MARKER2="Unlabeled19534" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19588" MARKER2="Unlabeled19512" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19588" MARKER2="Unlabeled19537" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19588" MARKER2="Unlabeled19547" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19588" MARKER2="Unlabeled19546" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19588" MARKER2="Unlabeled19540" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19588" MARKER2="Unlabeled19534" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19512" MARKER2="Unlabeled19537" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19512" MARKER2="Unlabeled19547" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19512" MARKER2="Unlabeled19546" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19512" MARKER2="Unlabeled19540" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19512" MARKER2="Unlabeled19534" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19537" MARKER2="Unlabeled19547" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19537" MARKER2="Unlabeled19546" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19537" MARKER2="Unlabeled19540" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19537" MARKER2="Unlabeled19534" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19547" MARKER2="Unlabeled19546" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19547" MARKER2="Unlabeled19540" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19547" MARKER2="Unlabeled19534" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19546" MARKER2="Unlabeled19540" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19546" MARKER2="Unlabeled19534" RGB="255 164 0"/>
+      <Stick MARKER1="Unlabeled19540" MARKER2="Unlabeled19534" RGB="255 164 0"/>
+    </Sticks>
+  </MarkerSet>
+
+  <Alignment/>
+
+</KinematicModel>

@@ -13,14 +13,14 @@
       <inertial>
         <pose>0 0 0 0 0 0</pose>
         <inertia>
-          <ixx>0.00002149676</ixx>
-          <ixy>0.00000224448</ixy>
-          <ixz>-0.00000127349</ixz>
-          <iyy>0.00002112172</iyy>
-          <iyz>0.00000041827</iyz>
-          <izz>0.00002531389</izz>
+          <ixx>0.00055873</ixx>
+          <ixy>0.0000</ixy>
+          <ixz>-0.00000</ixz>
+          <iyy>0.00055873</iyy>
+          <iyz>0.00000/iyz>
+          <izz>0.0010789</izz>
         </inertia>
-        <mass>0.05</mass>
+        <mass>0.028</mass>
       </inertial>
       <visual name="mountvisual">
         <pose>0 0 0 0 0 0</pose>

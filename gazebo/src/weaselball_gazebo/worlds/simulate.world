@@ -57,25 +57,19 @@
       <uri>model://weazelsun</uri>
     </include>
     <include>
-      <uri>model://weazelball</uri>
-      <pose>0 0 0.041 0 -1.5708 -1.5708</pose>
-      <plugin name='simulation-controller' filename='libsimulation-controller.so'> 
-      </plugin> 
-    </include>
-    <include>
-      <uri>model://mount</uri>
-      <pose>0 0 0 0 0 0</pose>
-    </include>
-    <include>
       <uri>model://weazelenclosure</uri>
       <pose>0 0 -0.009525 0 0 0</pose>
-    </include>
+    </include> 
     <gui>
       <camera name='user_camera'>
 <!--        <pose>1.63355 0.021633 0.513402 -3.18134e-20 0.319643 -3.13899</pose> -->
-        <pose>1.63355 0 0.513402 0 0.319643 -3.13899</pose>
+        <pose>0 0 2.0 0 1.57079632 0</pose>
         <view_controller>orbit</view_controller>
       </camera>
     </gui>
+<!--    <plugin name='configure' filename='libconfigure.so'> 
+    </plugin> -->
+    <plugin name='StateRecorder' filename='libStateRecorder.so'> 
+    </plugin> 
   </world>
 </sdf>

@@ -108,5 +108,7 @@
         <xyz>0 1 0</xyz>
       </axis>
     </joint>
+    <plugin name='simulation-controller' filename='libsimulation-controller.so'>
+    </plugin>
   </model>
 </sdf>
