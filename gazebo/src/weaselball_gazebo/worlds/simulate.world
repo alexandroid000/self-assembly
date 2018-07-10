@@ -67,8 +67,8 @@
         <view_controller>orbit</view_controller>
       </camera>
     </gui>
-    <plugin name='configure' filename='libconfigure.so'> 
-    </plugin> 
+<!--    <plugin name='configure' filename='libconfigure.so'> 
+    </plugin> -->
     <plugin name='StateRecorder' filename='libStateRecorder.so'> 
     </plugin> 
   </world>
