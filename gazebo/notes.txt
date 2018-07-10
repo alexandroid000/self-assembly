@@ -1,8 +1,6 @@
 Personal Notes:
 TODO) There seems to be a bug in the weaselball code where a mutex causes a crash.
 TODO) Create the state analysis
-TODO) Open up video editing software to see how often the weaselballs are doing a new movement
-TODO) Update size of models
 
 Q) When should I do stuff in a plug in and when should I make a ros node?
 A) ?
