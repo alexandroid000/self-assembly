@@ -61,6 +61,11 @@ set( SRCS
 add_library(hello_world SHARED src/simple_world_plugin.cpp)
 target_link_libraries(hello_world ${GAZEBO_LIBRARIES})
 
+#add_library(configure SHARED src/configure.cpp)
+#target_link_libraries(configure ${GAZEBO_LIBRARIES})
+
+add_library(StateRecorder SHARED src/stateRecorder.cpp)
+target_link_libraries(StateRecorder ${GAZEBO_LIBRARIES})
 #target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 catkin_package(
   DEPENDS 
