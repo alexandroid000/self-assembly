@@ -49,9 +49,9 @@ set( HDRS
   include/virtual_time.h
   include/vicon.h
   include/video.h
+  include/movie.h
   include/models.h
   include/weazelball.h
-  include/movie.h
   include/gazebo_log.h
 )
 
