@@ -118,7 +118,6 @@ namespace gazebo
 */
       //rsync.synchronize( );
       double t = _world->sim_time();
-      if( t > 120.0f ) exit(0);
 
       double dt = 0.001;
 
