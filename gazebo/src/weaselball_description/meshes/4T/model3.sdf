@@ -1,0 +1,215 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='4T'>
+        <link name='mountlink1'>
+          <collision name='coll'>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <uri>model://mount/meshes/mount.dae</uri>
+              </mesh>
+            </geometry>
+          </collision>
+          <inertial>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <inertia>
+				  <ixx>0.00055873</ixx>
+				  <ixy>0.0000</ixy>
+				  <ixz>0.00000</ixz>
+				  <iyy>0.00055873</iyy>
+				  <iyz>0.00000/iyz></iyz>
+				  <izz>0.0010789</izz>
+            </inertia>
+            <mass>0.028</mass>
+          </inertial>
+          <visual name='mountvisual'>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <uri>model://mount/meshes/mount.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+        </link>
+        <pose frame=''>-0.012243 -0.025526 0 0 -0 0</pose>
+        <link name='mountlink2'>
+          <collision name='coll'>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <uri>model://mount/meshes/mount.dae</uri>
+              </mesh>
+            </geometry>
+          </collision>
+          <inertial>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <inertia>
+				  <ixx>0.00055873</ixx>
+				  <ixy>0.0000</ixy>
+				  <ixz>0.00000</ixz>
+				  <iyy>0.00055873</iyy>
+				  <iyz>0.00000/iyz></iyz>
+				  <izz>0.0010789</izz>
+            </inertia>
+            <mass>0.028</mass>
+          </inertial>
+          <visual name='mountvisual'>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <uri>model://mount/meshes/mount.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+        </link>
+        <pose frame=''>0.03438 0.076098 0 0 -0 0</pose>
+        <link name='mountlink3'>
+          <collision name='coll'>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <uri>model://mount/meshes/mount.dae</uri>
+              </mesh>
+            </geometry>
+          </collision>
+          <inertial>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <inertia>
+				  <ixx>0.00055873</ixx>
+				  <ixy>0.0000</ixy>
+				  <ixz>0.00000</ixz>
+				  <iyy>0.00055873</iyy>
+				  <iyz>0.00000/iyz></iyz>
+				  <izz>0.0010789</izz>
+            </inertia>
+            <mass>0.028</mass>
+          </inertial>
+          <visual name='mountvisual'>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <uri>model://mount/meshes/mount.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+        </link>
+        <pose frame=''>-0.110867 0.022535 0 0 -0 0</pose>
+        <link name='mountlink4'>
+          <collision name='coll'>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <uri>model://mount/meshes/mount.dae</uri>
+              </mesh>
+            </geometry>
+          </collision>
+          <inertial>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <inertia>
+				  <ixx>0.00055873</ixx>
+				  <ixy>0.0000</ixy>
+				  <ixz>0.00000</ixz>
+				  <iyy>0.00055873</iyy>
+				  <iyz>0.00000/iyz></iyz>
+				  <izz>0.0010789</izz>
+            </inertia>
+            <mass>0.028</mass>
+          </inertial>
+          <visual name='mountvisual'>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <uri>model://mount/meshes/mount.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+        </link>
+        <pose frame=''>0.08873 -0.073107 0 0 -0 0</pose>
+      <static>0</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+    <joint name='mountlink_JOINT_1' type='revolute'>
+      <parent>mountlink1</parent>
+      <child>mountlink2</child>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <use_parent_model_frame>0</use_parent_model_frame>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+          <effort>-1</effort>
+          <velocity>-1</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+          <damping>0</damping>
+        </dynamics>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='mountlink_JOINT_2' type='revolute'>
+      <parent>mountlink1</parent>
+      <child>mountlink3</child>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <use_parent_model_frame>0</use_parent_model_frame>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+          <effort>-1</effort>
+          <velocity>-1</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+          <damping>0</damping>
+        </dynamics>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='mountlink_JOINT_0' type='fixed'>
+      <parent>mountlink4</parent>
+      <child>mountlink1</child>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <static>0</static>
+    <allow_auto_disable>1</allow_auto_disable>
+  </model>
+</sdf>
