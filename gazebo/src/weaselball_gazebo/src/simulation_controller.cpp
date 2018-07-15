@@ -47,6 +47,7 @@ namespace gazebo
 
     physics::JointPtr actuator;
     double virtual_time;
+
 	physics::ModelPtr mod;
 
     //render_synchronization_buffer_c  rsync;
@@ -84,7 +85,7 @@ namespace gazebo
         boost::bind( &controller_c::Update, this ) );
 
       actuator = _weazelball->actuator();
-      virtual_time = 0.0;   
+     virtual_time = 0.0;   
 
 /*
       int r = rsync.open();
@@ -119,7 +120,7 @@ namespace gazebo
       //rsync.synchronize( );
       double t = _world->sim_time();
 
-      double dt = 0.001; //This relates to how the world file is set up look for the variable with "1000"
+      double dt = 0.00001; //This relates to how the world file is set up look for the variable with "1000"
 
       double motor_freq = 7.5;
       double theta_0 = 0;
