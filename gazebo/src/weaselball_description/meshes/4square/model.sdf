@@ -6,7 +6,7 @@
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://mount/meshes/mount.dae</uri>
+              <uri>model://mount/meshes/mount_collision.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -37,7 +37,7 @@
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://mount/meshes/mount.dae</uri>
+              <uri>model://mount/meshes/mount_collision.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -68,7 +68,7 @@
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://mount/meshes/mount.dae</uri>
+              <uri>model://mount/meshes/mount_collision.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -99,7 +99,7 @@
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://mount/meshes/mount.dae</uri>
+              <uri>model://mount/meshes/mount_collision.dae</uri>
             </mesh>
           </geometry>
         </collision>

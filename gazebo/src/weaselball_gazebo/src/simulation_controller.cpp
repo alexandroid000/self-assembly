@@ -120,9 +120,9 @@ namespace gazebo
       //rsync.synchronize( );
       double t = _world->sim_time();
 
-      double dt = 0.00001; //This relates to how the world file is set up look for the variable with "1000"
+      double dt = 0.001; //This relates to how the world file is set up look for the variable with "1000"
 
-      double motor_freq = 7.5;
+      double motor_freq = 1.5;
       double theta_0 = 0;
       double theta_t = actuator->GetAngle( 0 ).Radian();
       double omega = actuator->GetVelocity( 0 );
