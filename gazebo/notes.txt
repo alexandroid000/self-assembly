@@ -8,6 +8,8 @@ A) ?
 Q) Given how I normally set up my plugins, does update run before init is done?
 A) ?
 
+observation) For 4sq when a force is applied the balls become erratic but eventually come down to a steady state
+observation) For 4T when a force is applied there is a moment where the balls work together
 
 Starting Position of Balls:
 (-0.073094, 030629)

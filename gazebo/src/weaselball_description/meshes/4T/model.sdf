@@ -30,7 +30,7 @@
             </mesh>
           </geometry>
         </visual>
-        <pose frame=''>-0.03385 -0.073611 0 0 -0 0</pose>
+		<pose frame=''>-0.012243 -0.025526 0 0 -0 0</pose>
       </link>
       <link name='mountlink_2'>
         <collision name='coll'>
@@ -61,7 +61,7 @@
             </mesh>
           </geometry>
         </visual>
-        <pose frame=''>-0.073511 0.034357 -0 0 -0 0</pose>
+		 <pose frame=''>0.03438 0.076098 0.0025 0 -0 0</pose>
       </link>
       <link name='mountlink_3'>
         <collision name='coll'>
@@ -92,7 +92,7 @@
             </mesh>
           </geometry>
         </visual>
-        <pose frame=''>0.073537 -0.034584 0.003 0 -0 0</pose>
+		   <pose frame=''>-0.110867 0.022535 -0.002 0 -0 0</pose>
       </link>
       <link name='mountlink_4'>
         <collision name='coll'>
@@ -123,7 +123,7 @@
             </mesh>
           </geometry>
         </visual>
-        <pose frame=''>0.033824 0.07384 0.003 0 -0 0</pose>
+			<pose frame=''>0.08873 -0.073107 0.002 0 -0 0</pose>
       </link>
     <joint name='mountlink_JOINT_3' type='fixed'>
       <parent>mountlink_1</parent>
@@ -143,7 +143,7 @@
       </physics>
     </joint>
     <joint name='mountlink_JOINT_2' type='fixed'>
-      <parent>mountlink_2</parent>
+      <parent>mountlink_1</parent>
       <child>mountlink_3</child>
       <pose frame=''>0 0 0 0 -0 0</pose>
       <physics>
@@ -160,7 +160,7 @@
       </physics>
     </joint>
     <joint name='mountlink_JOINT_0' type='fixed'>
-      <parent>mountlink_3</parent>
+      <parent>mountlink_1</parent>
       <child>mountlink_4</child>
       <pose frame=''>0 0 0 0 -0 0</pose>
       <physics>
