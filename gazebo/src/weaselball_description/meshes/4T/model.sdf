@@ -31,6 +31,11 @@
           </geometry>
         </visual>
 		<pose frame=''>-0.012243 -0.025526 0 0 -0 0</pose>
+	    <sensor name='contactSensor' type='contact'>
+	      <contact>
+		    <collision>coll</collision>
+	      </contact>
+	    </sensor>
       </link>
       <link name='mountlink_2'>
         <collision name='coll'>
@@ -62,6 +67,11 @@
           </geometry>
         </visual>
 		 <pose frame=''>0.03438 0.076098 0.0025 0 -0 0</pose>
+	    <sensor name='contactSensor' type='contact'>
+	      <contact>
+		    <collision>coll</collision>
+	      </contact>
+	    </sensor>
       </link>
       <link name='mountlink_3'>
         <collision name='coll'>
@@ -94,6 +104,11 @@
         </visual>
 		   <pose frame=''>-0.110867 0.022535 -0.002 0 -0 0</pose>
       </link>
+	    <sensor name='contactSensor' type='contact'>
+	      <contact>
+		    <collision>coll</collision>
+	      </contact>
+	    </sensor>
       <link name='mountlink_4'>
         <collision name='coll'>
           <pose frame=''>0 0 0 0 -0 0</pose>
@@ -124,6 +139,11 @@
           </geometry>
         </visual>
 			<pose frame=''>0.08873 -0.073107 0.002 0 -0 0</pose>
+	    <sensor name='contactSensor' type='contact'>
+	      <contact>
+		    <collision>coll</collision>
+	      </contact>
+	    </sensor>
       </link>
     <joint name='mountlink_JOINT_3' type='fixed'>
       <parent>mountlink_1</parent>

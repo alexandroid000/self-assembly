@@ -30,6 +30,12 @@
           </mesh>
         </geometry>
       </visual>
+	  <sensor name='contactSensor' type='contact'>
+	  <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
+	    <contact>
+		  <collision>coll</collision>
+		</contact>
+	  </sensor>
     </link>
   </model>
 </sdf>
