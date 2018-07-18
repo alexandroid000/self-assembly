@@ -2,12 +2,18 @@ Personal Notes:
 TODO) Create and Populate the Markov Chain Model
 TODO) Come up with ideas for useful information that can be gathered (data science)
 TODO) Create launch files to randomize robots
+TODO) Update parameters about world
+TODO) Put generated datalog files somewhere NOT IN REPO for storage/analysis
+TODO) Look harder at sensor plugin and what it is doing with dynamic pointer
+
+Note For Slack: Collisions seem to be our bottleneck, getting rid of the group of mounts (ie not allowing collisions increased the real time factor by 3 times from 0.5 to 1.5
 
 Q) When should I do stuff in a plug in and when should I make a ros node?
 A) Whatevers more convenient, for this project it will likely just be a gazebo plugin to interface with gazebo more easily.
 
 Q) Given how I normally set up my plugins, does update run before init is done?
 A) ?
+
 
 observation) For 4sq when a force is applied the balls become erratic but eventually come down to a steady state
 observation) For 4T when a force is applied there is a moment where the balls work together

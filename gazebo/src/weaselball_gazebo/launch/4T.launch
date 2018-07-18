@@ -1,7 +1,7 @@
 <launch>
  <include file="$(find gazebo_ros)/launch/empty_world.launch">     
     <arg name="world_name" value="$(find weaselball_gazebo)/worlds/simulate.world"/>
-	<arg name="gui" value="false"/>
+	<arg name="gui" value="true"/>
   </include>  
 
 
