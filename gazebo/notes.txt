@@ -1,0 +1,37 @@
+Personal Notes:
+TODO) There seems to be a bug in the weaselball code where a mutex causes a crash.
+TODO) Create the state analysis
+
+Q) When should I do stuff in a plug in and when should I make a ros node?
+A) ?
+
+Q) Given how I normally set up my plugins, does update run before init is done?
+A) ?
+
+
+Starting Position of Balls:
+(-0.073094, 030629)
+(-0.035330, -0.078100)
+(-0.078100, -0.037626)
+(0.036148, 0.067242)
+
+Individual "Mount":
+28 grams
+2 inches per "face"
+4.25 inches across
+108mm to be exact
+111mm in gazebo for side to side
+
+Individual weaselball:
+138 grams
+3 and 3.5/16th in radius
+
+Helpful Links
+
+
+______________________-
+Setting up multi bots
+______________________-
+https://answers.ros.org/question/41433/multiple-robots-simulation-and-navigation/ - Good for overview of how to set up multibot
+https://github.com/nevinvalsaraj/swarm-gazebo-simulator/ - Example of multibot project
+https://github.com/Swarm-IITKgp/swarm_simulator/blob/master/launch/swarm.launch - Another example of multibot project, but I like how they import there robots.
