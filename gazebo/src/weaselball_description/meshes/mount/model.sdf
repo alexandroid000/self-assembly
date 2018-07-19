@@ -30,8 +30,8 @@
           </mesh>
         </geometry>
       </visual>
-	  <sensor name='contactSensor' type='contact'>
 	  <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
+	  <sensor name='contactSensor' type='contact'>
 	    <contact>
 		  <collision>coll</collision>
 		</contact>
