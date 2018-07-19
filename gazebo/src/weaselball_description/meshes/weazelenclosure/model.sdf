@@ -2,41 +2,6 @@
 <sdf version="1.4">
   <model name="weazelenclosure">
     <static>true</static>
-    <link name="top">
-      <self_collide>false</self_collide>
-      <collision name="top_geom_collision">
-        <geometry>
-          <box>
-            <size>1.12713 1.12713 0.01905</size>
-          </box>
-        </geometry>
-        <surface>
-          <friction>
-            <ode>
-              <mu>0.5</mu>          
-              <mu2>0.5</mu2>       
-              <fdir1>0 0 0</fdir1>
-              <slip1>0.0</slip1>
-              <slip2>0.0</slip2>
-            </ode>
-          </friction>
-        </surface>
-      </collision>
-      <visual name="top_geom_visual">
-        <geometry>
-          <box>
-            <size>1.12713 1.12713 0.01905</size>
-          </box>
-        </geometry>
-        <material>
-          <lighting>true</lighting>
-          <ambient>0.8 0.8 0.8 1</ambient>
-          <diffuse>0.8 0.8 0.8 1</diffuse>
-          <specular>0 0 0 1</specular>
-          <emissive>0 0 0 1</emissive>
-        </material>
-      </visual>
-    </link>
     <link name="rail01">
       <pose>0.56355 0 0.03175 0 0 0</pose>
       <self_collide>false</self_collide>
