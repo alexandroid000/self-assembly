@@ -1,6 +1,9 @@
 #include "../include/bumpSensor.h"
+#include <regex>
+#include <unistd.h>
 
 using namespace gazebo;
+using namespace std;
 GZ_REGISTER_SENSOR_PLUGIN(BumpSensor)
 
 /////////////////////////////////////////////////
@@ -48,21 +51,110 @@ void BumpSensor::OnUpdate()
 	//If it is a swarmbot or the ground ignore it
 	std::string model1Name = contacts.contact(i).collision1();
 	std::string model2Name = contacts.contact(i).collision2();
-	if(model1Name.find("swarmbot") != std::string::npos or model1Name.find("myGroundPlane") != std::string::npos)
-	{
-		return;
-	}
-	if(model2Name.find("swarmbot") != std::string::npos or model2Name.find("myGroundPlane") != std::string::npos)
-	{
-		return;
-	}
-	//[MyGroundPlane::link::collision]
-	//[swarmbot0::shell::base_geom_collision]
-    	
-    std::cout << "Collision between[" << model1Name
-              << "] and [" << model2Name << "]\n";
 
-	
+	std::map<std::string, physics::Contact> mapping = this->parentSensor->Contacts(model1Name);
+	physics::ModelPtr mount;
+	std::string linkNumber;
+	//Ignore collisions unless it is "coll" and "rail"
+	if(model1Name.find("mount") != std::string::npos and model2Name.find("rail") != std::string::npos)
+	{
+		for (const auto &p : mapping) {
+			if(model1Name.find("mount") != std::string::npos)
+			{
+				std::cout << "M = " << p.second.collision1->GetName();
+				mount = p.second.collision1->GetModel();
+				std::string coll = p.second.collision1->GetName();
+				linkNumber = coll.substr(4, coll.length());
+			}
+			else
+			{
+				std::cout << "M = " << p.second.collision2->GetName();
+				mount = p.second.collision2->GetModel();
+				std::string coll = p.second.collision2->GetName();
+				linkNumber = coll.substr(4, coll.length());
+			}
 
+		}
+
+	}
+	else if(model1Name.find("rail") != std::string::npos and model2Name.find("mount") != std::string::npos)
+	{
+		for (const auto &p : mapping) {
+			if(model1Name.find("coll") != std::string::npos)
+			{
+				std::cout << "M = " << p.second.collision1->GetName();
+				mount = p.second.collision1->GetModel();
+				std::string coll = p.second.collision1->GetName();
+				linkNumber = coll.substr(4, coll.length());
+			}
+			else
+			{
+				std::cout << "M = " << p.second.collision2->GetName();
+				mount = p.second.collision2->GetModel();
+				std::string coll = p.second.collision2->GetName();
+				linkNumber = coll.substr(4, coll.length());
+			}
+		}
+
+	}
+	else
+	{
+		continue;
+	}
+
+
+	std::vector<physics::LinkPtr> links = mount->GetLinks();
+	std::vector<physics::JointPtr> joints = mount->GetJoints();
+
+	for (auto it : links)
+	{
+		std::cout << "Link = " << it->GetName() << std::endl;
+	}	
+	for (auto it : joints)
+	{
+		std::cout << "Joint = " << it->GetName() << std::endl;
+//		it->Detach();
+	}	
+
+
+	for (auto it : links)
+	{
+		std::cout << "ID is = " << linkNumber << "Link is = " << it->GetName() << std::endl;
+		if(it->GetName().find(linkNumber) != std::string::npos)
+		{
+			std::cout << "MATCH FOUND" << std::endl;
+			for (auto j : joints)
+			{
+				try
+				{
+						if(j->GetParent()->GetName() == it->GetName())
+						{
+							std::cout << "PARENT = " << j->GetParent()->GetName() << " LINK = " << it->GetName() << std::endl;
+							std::cout << "DETACHING " << j->GetName() << std::endl;
+							j->Detach();
+							j->Fini();
+						}
+						if(j->GetChild()->GetName() == it->GetName())
+						{
+							std::cout << "CHILD = " << j->GetChild()->GetName() << " LINK = " << it->GetName() << std::endl;
+							std::cout << "DETACHING " << j->GetName() << std::endl;
+							j->Detach();
+							j->Fini();
+						}
+				}
+				catch (const std::exception& e)
+				{
+					std::cout << "CAUGHT" << std::endl;
+				}
+				catch (...)
+				{
+					std::cout << "Caught it" << std::endl;
+				}
+			}
+			break;
+		}
+	}
+			std::cout << "GOT TO END FLAG " << std::endl; 
+	return;
   }
 }

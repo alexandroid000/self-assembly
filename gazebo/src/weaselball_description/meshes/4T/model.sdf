@@ -13,7 +13,7 @@
 	   <sensor name='contactSensor' type='contact'>
 	   <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
 	      <contact>
-		    <collision>coll</collision>
+		    <collision>coll1</collision>
 	      </contact>
 	   </sensor>
         <inertial>
@@ -28,7 +28,7 @@
           </inertia>
           <mass>0.028</mass>
         </inertial>
-        <visual name='mountvisual'>
+        <visual name='mountvisual1'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
@@ -39,7 +39,7 @@
 		<pose frame=''>-0.012243 -0.025526 0 0 -0 0</pose>
       </link>
       <link name='mountlink_2'>
-        <collision name='coll'>
+        <collision name='coll2'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
@@ -65,7 +65,7 @@
           </inertia>
           <mass>0.028</mass>
         </inertial>
-        <visual name='mountvisual'>
+        <visual name='mountvisual2'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
@@ -76,7 +76,7 @@
 		 <pose frame=''>0.03438 0.076098 0.0025 0 -0 0</pose>
       </link>
       <link name='mountlink_3'>
-        <collision name='coll'>
+        <collision name='coll3'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
@@ -87,7 +87,7 @@
 	   <sensor name='contactSensor' type='contact'>
 	   <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
 	      <contact>
-		    <collision>coll</collision>
+		    <collision>coll3</collision>
 	      </contact>
 	   </sensor>
         <inertial>
@@ -102,7 +102,7 @@
           </inertia>
           <mass>0.028</mass>
         </inertial>
-        <visual name='mountvisual'>
+        <visual name='mountvisual3'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
@@ -113,7 +113,7 @@
 		   <pose frame=''>-0.110867 0.022535 -0.002 0 -0 0</pose>
       </link>
       <link name='mountlink_4'>
-        <collision name='coll'>
+        <collision name='coll4'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
@@ -124,7 +124,7 @@
 	   <sensor name='contactSensor' type='contact'>
 	   <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
 	      <contact>
-		    <collision>coll</collision>
+		    <collision>coll4</collision>
 	      </contact>
 	   </sensor>
         <inertial>
@@ -139,7 +139,7 @@
           </inertia>
           <mass>0.028</mass>
         </inertial>
-        <visual name='mountvisual'>
+        <visual name='mountvisual4'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
@@ -186,57 +186,6 @@
     <joint name='mountlink_JOINT_0' type='fixed'>
       <parent>mountlink_1</parent>
       <child>mountlink_4</child>
-      <pose frame=''>0 0 0 0 -0 0</pose>
-      <physics>
-        <ode>
-          <limit>
-            <cfm>0</cfm>
-            <erp>0.2</erp>
-          </limit>
-          <suspension>
-            <cfm>0</cfm>
-            <erp>0.2</erp>
-          </suspension>
-        </ode>
-      </physics>
-    </joint>
-    <joint name='mountlink_JOINT_1' type='fixed'>
-      <parent>mountlink_4</parent>
-      <child>mountlink_1</child>
-      <pose frame=''>0 0 0 0 -0 0</pose>
-      <physics>
-        <ode>
-          <limit>
-            <cfm>0</cfm>
-            <erp>0.2</erp>
-          </limit>
-          <suspension>
-            <cfm>0</cfm>
-            <erp>0.2</erp>
-          </suspension>
-        </ode>
-      </physics>
-    </joint>
-    <joint name='mountlink_JOINT_1_2' type='fixed'>
-      <parent>mountlink_4</parent>
-      <child>mountlink_2</child>
-      <pose frame=''>0 0 0 0 -0 0</pose>
-      <physics>
-        <ode>
-          <limit>
-            <cfm>0</cfm>
-            <erp>0.2</erp>
-          </limit>
-          <suspension>
-            <cfm>0</cfm>
-            <erp>0.2</erp>
-          </suspension>
-        </ode>
-      </physics>
-    </joint>
-    <joint name='mountlink_JOINT_1_3' type='fixed'>
-      <parent>mountlink_3</parent>
-      <child>mountlink_1</child>
       <pose frame=''>0 0 0 0 -0 0</pose>
       <physics>
         <ode>
