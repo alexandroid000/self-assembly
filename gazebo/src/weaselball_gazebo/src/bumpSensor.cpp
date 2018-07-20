@@ -105,6 +105,11 @@ void BumpSensor::OnUpdate()
 
 	std::vector<physics::LinkPtr> links = mount->GetLinks();
 	std::vector<physics::JointPtr> joints = mount->GetJoints();
+	if(this->jointsFlag == 0)
+	{
+		this->joints_ = joints;
+		this->jointsFlag = 1;
+	}
 
 	for (auto it : links)
 	{
@@ -123,21 +128,25 @@ void BumpSensor::OnUpdate()
 		if(it->GetName().find(linkNumber) != std::string::npos)
 		{
 			std::cout << "MATCH FOUND" << std::endl;
-			for (auto j : joints)
+			for (int i = 0; i < this->joints_.size() ; i++)
 			{
+				auto j = this->joints_[i]; 
 				try
 				{
 						if(j->GetParent()->GetName() == it->GetName())
 						{
 							std::cout << "PARENT = " << j->GetParent()->GetName() << " LINK = " << it->GetName() << std::endl;
 							std::cout << "DETACHING " << j->GetName() << std::endl;
+							this->joints_.erase(this->joints_.begin() + i);
 							j->Detach();
 							j->Fini();
+							
 						}
 						if(j->GetChild()->GetName() == it->GetName())
 						{
 							std::cout << "CHILD = " << j->GetChild()->GetName() << " LINK = " << it->GetName() << std::endl;
 							std::cout << "DETACHING " << j->GetName() << std::endl;
+							this->joints_.erase(this->joints_.begin() + i);
 							j->Detach();
 							j->Fini();
 						}

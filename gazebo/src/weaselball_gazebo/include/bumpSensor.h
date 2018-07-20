@@ -17,6 +17,8 @@ namespace gazebo
 	public: std::string parseForModelName();
     /// \brief Destructor.
     public: virtual ~BumpSensor();
+	public: std::vector<physics::JointPtr> joints_;
+	bool jointsFlag = 0;
 
     /// \brief Load the sensor plugin.
     /// \param[in] _sensor Pointer to the sensor that loaded this plugin.
