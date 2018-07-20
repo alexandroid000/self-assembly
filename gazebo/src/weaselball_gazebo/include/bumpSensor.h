@@ -14,6 +14,7 @@ namespace gazebo
     /// \brief Constructor.
     public: BumpSensor();
 
+	public: std::string parseForModelName();
     /// \brief Destructor.
     public: virtual ~BumpSensor();
 
@@ -31,6 +32,7 @@ namespace gazebo
     /// \brief Connection that maintains a link between the contact sensor's
     /// updated signal and the OnUpdate callback.
     private: event::ConnectionPtr updateConnection;
+
   };
 }
 #endif
