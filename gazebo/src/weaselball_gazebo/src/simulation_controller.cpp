@@ -109,14 +109,6 @@ namespace gazebo
     //-------------------------------------------------------------------------
     // Gazebo callback.  Called whenever the simulation advances a timestep
     virtual void Update( ) {
-/*
-      srand((unsigned)time(NULL));
-	  math::Pose initPose =  this->mod->GetRelativePose();
-	  math::Quaternion randomRotation = math::Quaternion( ((double)rand()/(double)3.14159), ((double)rand()/(double)3.14159),((double)rand()/(double)3.14159));
-	  math::Pose newPose = math::Pose(initPose.pos, randomRotation);
-	  std::cout << "New Pose = " << newPose << std::endl;
-	  this->mod->SetRelativePose(newPose);
-*/
       //rsync.synchronize( );
       double t = _world->sim_time();
 
