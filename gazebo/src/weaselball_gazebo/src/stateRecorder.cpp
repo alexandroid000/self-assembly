@@ -87,31 +87,31 @@ namespace gazebo
 
 
 
-	void writeDataToCSV(weaselballData data, int id)
+	void writeDataToCSV(weaselballData data,int id)
 	{
 		if(this->recordingType_ == 0)
 		{
-			this->collectionFile << data.timeStamp << ", ";
-			this->collectionFile << id << ", ";
+			this->collectionFile << data.timeStamp << ",";
+			this->collectionFile << id << ",";
 		//Create the header of the csv and init
-			this->collectionFile << data.position[0] << ", " << data.position[1] << ", " << data.position[2] << ", ";	
-			this->collectionFile << data.rotationalDisplacement[1] << ", " << data.rotationalDisplacement[1] << ", " << data.rotationalDisplacement[2] << ", ";	
+			this->collectionFile << data.position[0] << "," << data.position[1] << "," << data.position[2] << ",";	
+			this->collectionFile << data.rotationalDisplacement[1] << "," << data.rotationalDisplacement[1] << "," << data.rotationalDisplacement[2] << ",";	
 
-			this->collectionFile << data.linearVelocityWorld[0] << ", " << data.linearVelocityWorld[1] << ", " << data.linearVelocityWorld[2] << ", ";	
-			this->collectionFile << data.linearAccelerationWorld[0] << ", " << data.linearAccelerationWorld[1] << ", " << data.linearAccelerationWorld[2] << ", ";	
-			this->collectionFile << data.rotationalVelocityWorld[0] << ", " << data.rotationalVelocityWorld[1] << ", " << data.rotationalVelocityWorld[2] << ", ";	
-			this->collectionFile << data.rotationalAccelerationWorld[0] << ", " << data.rotationalAccelerationWorld[1] << ", " << data.rotationalAccelerationWorld[2] << ", ";	
+			this->collectionFile << data.linearVelocityWorld[0] << "," << data.linearVelocityWorld[1] << "," << data.linearVelocityWorld[2] << ",";	
+			this->collectionFile << data.linearAccelerationWorld[0] << "," << data.linearAccelerationWorld[1] << "," << data.linearAccelerationWorld[2] << ",";	
+			this->collectionFile << data.rotationalVelocityWorld[0] << "," << data.rotationalVelocityWorld[1] << "," << data.rotationalVelocityWorld[2] << ",";	
+			this->collectionFile << data.rotationalAccelerationWorld[0] << "," << data.rotationalAccelerationWorld[1] << "," << data.rotationalAccelerationWorld[2] << ",";	
 
-			this->collectionFile << data.linearVelocityRelative[0] << ", " << data.linearVelocityRelative[1] << ", " << data.linearVelocityRelative[2] << ", ";	
-			this->collectionFile << data.linearAccelerationRelative[0] << ", " << data.linearAccelerationRelative[1] << ", " << data.linearAccelerationRelative[2] << ", ";	
-			this->collectionFile << data.rotationalVelocityRelative[0] << ", " << data.rotationalVelocityRelative[1] << ", " << data.rotationalVelocityRelative[2] << ", ";	
-			this->collectionFile << data.rotationalAccelerationRelative[0] << ", " << data.rotationalAccelerationRelative[1] << ", " << data.rotationalAccelerationRelative[2] << ", \n";	
+			this->collectionFile << data.linearVelocityRelative[0] << "," << data.linearVelocityRelative[1] << "," << data.linearVelocityRelative[2] << ",";	
+			this->collectionFile << data.linearAccelerationRelative[0] << "," << data.linearAccelerationRelative[1] << "," << data.linearAccelerationRelative[2] << ",";	
+			this->collectionFile << data.rotationalVelocityRelative[0] << "," << data.rotationalVelocityRelative[1] << "," << data.rotationalVelocityRelative[2] << ",";	
+			this->collectionFile << data.rotationalAccelerationRelative[0] << "," << data.rotationalAccelerationRelative[1] << "," << data.rotationalAccelerationRelative[2] << ",\n";	
 		}
 		else if(this->recordingType_ == 1)
 		{
-			this->collectionFile << data.timeStamp << ", ";
+			this->collectionFile << data.timeStamp << ",";
 			this->collectionFile << id << ",";
-			this->collectionFile << data.mountPosition[0] << ", " << data.mountPosition[1] << ", ";
+			this->collectionFile << data.mountPosition[0] << "," << data.mountPosition[1] << ",";
 			//Gazebo does rotation as rpy
 			this->collectionFile << data.mountRotation[2] << "\n";
 		}
@@ -134,11 +134,11 @@ namespace gazebo
 	  this->collectionFile.open (COLLECTION_PATH,std::ofstream::out);
 	  if(this->recordingType_ == 0)
 	  {
-	  this->collectionFile << "Time, ID, Pos_x, Pos_y, Pos_z, Yaw, Pitch, Roll, Linear_Velocity_X_World, Linear_Velocity_Y_World, Linear_Velocity_Z_World, Linear_Acceleration_X_World, Linear_Acceleration_Y_World, Linear_Acceleration_Z_World, Rotational_Velocity_X_World, Rotational_Velocity_Y_World, Rotational_Velocity_Z_World, Rotational_Acceleration_X_World, Rotational_Acceleration_Y_World, Rotational_Acceleration_Z_World,Linear_Velocity_X_Relative, Linear_Velocity_Y_Relative, Linear_Velocity_Z_Relative, Linear_Acceleration_X_Relative, Linear_Acceleration_Y_Relative, Linear_Acceleration_Z_Relative_Relative, Rotational_Velocity_X_Relative, Rotational_Velocity_Y_Relative, Rotational_Velocity_Z_Relative, Rotational_Acceleration_X_Relative, Rotational_Acceleration_Y_Relative, Rotational_Acceleration_Z_Relative \n"; 
+	  this->collectionFile << "Time,ID,Pos_x,Pos_y,Pos_z,Yaw,Pitch,Roll,Linear_Velocity_X_World,Linear_Velocity_Y_World,Linear_Velocity_Z_World,Linear_Acceleration_X_World,Linear_Acceleration_Y_World,Linear_Acceleration_Z_World,Rotational_Velocity_X_World,Rotational_Velocity_Y_World,Rotational_Velocity_Z_World,Rotational_Acceleration_X_World,Rotational_Acceleration_Y_World,Rotational_Acceleration_Z_World,Linear_Velocity_X_Relative,Linear_Velocity_Y_Relative,Linear_Velocity_Z_Relative,Linear_Acceleration_X_Relative,Linear_Acceleration_Y_Relative,Linear_Acceleration_Z_Relative_Relative,Rotational_Velocity_X_Relative,Rotational_Velocity_Y_Relative,Rotational_Velocity_Z_Relative,Rotational_Acceleration_X_Relative,Rotational_Acceleration_Y_Relative,Rotational_Acceleration_Z_Relative \n"; 
 	  }
 		else if(recordingType_ == 1)
 		{
-			this->collectionFile << "Time, ID, X, Y, Yaw \n";
+			this->collectionFile << "Time,ID, X, Y, Yaw \n";
 
 		}
 	  std::cout << "State Collector has loaded!" << std::endl;
@@ -212,7 +212,7 @@ namespace gazebo
 	
 	void getSimTime(weaselballData* data)
 	{
-		data->timeStamp = this->_world->GetSimTime();
+		data->timeStamp = this->_world->GetRealTime();
 	}
 
 	void getMountXYZ(physics::ModelPtr mount, weaselballData* data)

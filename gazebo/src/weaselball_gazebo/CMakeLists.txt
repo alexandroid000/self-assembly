@@ -68,6 +68,7 @@ set( SRCS
 add_library(StateRecorder SHARED src/stateRecorder.cpp)
 target_link_libraries(StateRecorder ${GAZEBO_LIBRARIES})
 
+#This plugin is still being developed...
 #add_library(bumpSensor SHARED src/bumpSensor.cpp)
 #target_link_libraries(bumpSensor ${GAZEBO_LIBRARIES})
 
