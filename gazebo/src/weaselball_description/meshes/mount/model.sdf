@@ -5,9 +5,9 @@
       <collision name="coll">
         <pose>0 0 0 0 0 0</pose>
         <geometry>
-	  <mesh>
-	    <uri>model://mount/meshes/mount.dae</uri>
-	  </mesh>
+	      <mesh>
+              <uri>model://mount/meshes/mount_collision.dae</uri>
+	      </mesh>
         </geometry>
       </collision>
       <inertial>
@@ -15,9 +15,9 @@
         <inertia>
           <ixx>0.00055873</ixx>
           <ixy>0.0000</ixy>
-          <ixz>-0.00000</ixz>
+          <ixz>0.00000</ixz>
           <iyy>0.00055873</iyy>
-          <iyz>0.00000/iyz>
+          <iyz>0.00000/iyz></iyz>
           <izz>0.0010789</izz>
         </inertia>
         <mass>0.028</mass>
@@ -30,6 +30,12 @@
           </mesh>
         </geometry>
       </visual>
+	  <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
+	  <sensor name='contactSensor' type='contact'>
+	    <contact>
+		  <collision>coll</collision>
+		</contact>
+	  </sensor>
     </link>
   </model>
 </sdf>
