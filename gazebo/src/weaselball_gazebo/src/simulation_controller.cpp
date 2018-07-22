@@ -47,6 +47,7 @@ namespace gazebo
 
     physics::JointPtr actuator;
     double virtual_time;
+
 	physics::ModelPtr mod;
 
     //render_synchronization_buffer_c  rsync;
@@ -84,7 +85,7 @@ namespace gazebo
         boost::bind( &controller_c::Update, this ) );
 
       actuator = _weazelball->actuator();
-      virtual_time = 0.0;   
+     virtual_time = 0.0;   
 
 /*
       int r = rsync.open();
@@ -108,21 +109,12 @@ namespace gazebo
     //-------------------------------------------------------------------------
     // Gazebo callback.  Called whenever the simulation advances a timestep
     virtual void Update( ) {
-/*
-      srand((unsigned)time(NULL));
-	  math::Pose initPose =  this->mod->GetRelativePose();
-	  math::Quaternion randomRotation = math::Quaternion( ((double)rand()/(double)3.14159), ((double)rand()/(double)3.14159),((double)rand()/(double)3.14159));
-	  math::Pose newPose = math::Pose(initPose.pos, randomRotation);
-	  std::cout << "New Pose = " << newPose << std::endl;
-	  this->mod->SetRelativePose(newPose);
-*/
       //rsync.synchronize( );
       double t = _world->sim_time();
-      if( t > 120.0f ) exit(0);
 
-      double dt = 0.001;
+      double dt = 0.001; //This relates to how the world file is set up look for the variable with "1000"
 
-      double motor_freq = 4.0;
+      double motor_freq = 1.5;
       double theta_0 = 0;
       double theta_t = actuator->GetAngle( 0 ).Radian();
       double omega = actuator->GetVelocity( 0 );

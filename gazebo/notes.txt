@@ -1,13 +1,31 @@
 Personal Notes:
-TODO) There seems to be a bug in the weaselball code where a mutex causes a crash.
-TODO) Create the state analysis
+TODO) Create and Populate the Markov Chain Model
+TODO) Come up with ideas for useful information that can be gathered (data science)
+TODO) Create launch files to randomize robots
+TODO) Update parameters about world
+TODO) Put generated datalog files somewhere NOT IN REPO for storage/analysis
+TODO) Look harder at sensor plugin and what it is doing with dynamic pointer
+
+Note For Slack: Collisions seem to be our bottleneck, getting rid of the group of mounts (ie not allowing collisions increased the real time factor by 3 times from 0.5 to 1.5
 
 Q) When should I do stuff in a plug in and when should I make a ros node?
-A) ?
+A) Whatevers more convenient, for this project it will likely just be a gazebo plugin to interface with gazebo more easily.
 
 Q) Given how I normally set up my plugins, does update run before init is done?
 A) ?
 
+
+observation) For 4sq when a force is applied the balls become erratic but eventually come down to a steady state
+observation) For 4T when a force is applied there is a moment where the balls work together
+
+data science) Check if balls are still in mount by end of data collection. If it isnt use O(log n) divide and conquer algorithm to find where it breaks off
+response) I will need to keep track of the mount's data as well, but I beleive this wont be needed
+
+data science) Check if there is a cycle in the data. This can be found by sorting the list in O(nlog n) and then searching some near the data point. This part we assume that the there are time steps (t_s) and in order for something to be considered a cycle it has to be k time steps away from the time t being analyzed (otherwise noise may be counted as a cycle). This last part of the algorithm is O(k) since if none of the data points near it are within a threshold it automatically returns a 0 for cycle. If all of the data points near it are withing the threshold it will search 2K points until it finds a point outside its range. Thus this algorithm runs in O(nlogn). 
+response) ?
+
+data science) Use Principle Component Analysis to reduce the dimensionality of our data set. This would make work faster computation when we use markov chains to predict the movement of the robot ie (X,Y) based off of lots of variables. 
+response) Using PCA isn't that helpful since the features depend on eachother. It would be smarter to figure out whether we should use relative or world for data collection to remove an equal amount of features which can have redundency.
 
 Starting Position of Balls:
 (-0.073094, 030629)

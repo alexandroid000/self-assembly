@@ -49,23 +49,29 @@ set( HDRS
   include/virtual_time.h
   include/vicon.h
   include/video.h
+  include/movie.h
   include/models.h
   include/weazelball.h
-  include/movie.h
   include/gazebo_log.h
+  include/bumpSensor.h
 )
 
 set( SRCS
 )
 
-add_library(hello_world SHARED src/simple_world_plugin.cpp)
-target_link_libraries(hello_world ${GAZEBO_LIBRARIES})
+#add_library(hello_world SHARED src/simple_world_plugin.cpp)
+#target_link_libraries(hello_world ${GAZEBO_LIBRARIES})
 
 #add_library(configure SHARED src/configure.cpp)
 #target_link_libraries(configure ${GAZEBO_LIBRARIES})
 
 add_library(StateRecorder SHARED src/stateRecorder.cpp)
 target_link_libraries(StateRecorder ${GAZEBO_LIBRARIES})
+
+#This plugin is still being developed...
+#add_library(bumpSensor SHARED src/bumpSensor.cpp)
+#target_link_libraries(bumpSensor ${GAZEBO_LIBRARIES})
+
 #target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 catkin_package(
   DEPENDS 
