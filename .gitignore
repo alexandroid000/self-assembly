@@ -18,3 +18,5 @@ basic-haskell/.stack-work/dist/x86_64-osx/Cabal-1.24.2.0/build/autogen/cabal_mac
 *vscode
 
 dataAnalysis/data
+dataAnalysis/develop/.ipynb_checkpoints/*
+dataAnalysis/deliver/.ipynb_checkpoints/*
