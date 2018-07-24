@@ -21,7 +21,8 @@ const int NUMBER_OF_STRUCTURES = 1;
 const std::string NAME_OF_WEASELBALLS = "swarmbot";
 const std::string NAME_OF_MOUNTS = "mount";
 const std::string SHELL_STRING = "shell";
-const std::string COLLECTION_PATH = "/home/justin/Documents/bouncy/self-assembly/gazebo/src/data/collections/collection.csv";
+//const std::string COLLECTION_PATH = "/home/justin/Documents/bouncy/self-assembly/gazebo/src/data/collections/collection.csv";
+const std::string COLLECTION_PATH = "/home/justin/Documents/bouncy/self-assembly2/self-assembly/gazebo/src/data/collections/collection.csv";
 namespace gazebo
 {
     struct weaselballData
@@ -56,7 +57,7 @@ namespace gazebo
 	std::vector<physics::ModelPtr> structures;
 	bool getModelsFlag = 1;
 	//recordingType is set to 0 to collect a lot of data about the weaselballs and is set to 1 to collect R2 x S1 of the mount configuration.
-	int recordingType_ = 1;
+	int recordingType_ = 0;
 	std::ofstream collectionFile;
 	
 	
@@ -93,6 +94,9 @@ namespace gazebo
 		{
 			this->collectionFile << data.timeStamp << ",";
 			this->collectionFile << id << ",";
+			this->collectionFile << data.mountPosition[0] << "," << data.mountPosition[1] << ",";
+			//Gazebo does rotation as rpy
+			this->collectionFile << data.mountRotation[2] << ",";
 		//Create the header of the csv and init
 			this->collectionFile << data.position[0] << "," << data.position[1] << "," << data.position[2] << ",";	
 			this->collectionFile << data.rotationalDisplacement[1] << "," << data.rotationalDisplacement[1] << "," << data.rotationalDisplacement[2] << ",";	
@@ -134,7 +138,7 @@ namespace gazebo
 	  this->collectionFile.open (COLLECTION_PATH,std::ofstream::out);
 	  if(this->recordingType_ == 0)
 	  {
-	  this->collectionFile << "Time,ID,Pos_x,Pos_y,Pos_z,Yaw,Pitch,Roll,Linear_Velocity_X_World,Linear_Velocity_Y_World,Linear_Velocity_Z_World,Linear_Acceleration_X_World,Linear_Acceleration_Y_World,Linear_Acceleration_Z_World,Rotational_Velocity_X_World,Rotational_Velocity_Y_World,Rotational_Velocity_Z_World,Rotational_Acceleration_X_World,Rotational_Acceleration_Y_World,Rotational_Acceleration_Z_World,Linear_Velocity_X_Relative,Linear_Velocity_Y_Relative,Linear_Velocity_Z_Relative,Linear_Acceleration_X_Relative,Linear_Acceleration_Y_Relative,Linear_Acceleration_Z_Relative_Relative,Rotational_Velocity_X_Relative,Rotational_Velocity_Y_Relative,Rotational_Velocity_Z_Relative,Rotational_Acceleration_X_Relative,Rotational_Acceleration_Y_Relative,Rotational_Acceleration_Z_Relative \n"; 
+	  this->collectionFile << "Time,ID,Mount_X,Mount_Y,Mount_Yaw,Pos_x,Pos_y,Pos_z,Yaw,Pitch,Roll,Linear_Velocity_X_World,Linear_Velocity_Y_World,Linear_Velocity_Z_World,Linear_Acceleration_X_World,Linear_Acceleration_Y_World,Linear_Acceleration_Z_World,Rotational_Velocity_X_World,Rotational_Velocity_Y_World,Rotational_Velocity_Z_World,Rotational_Acceleration_X_World,Rotational_Acceleration_Y_World,Rotational_Acceleration_Z_World,Linear_Velocity_X_Relative,Linear_Velocity_Y_Relative,Linear_Velocity_Z_Relative,Linear_Acceleration_X_Relative,Linear_Acceleration_Y_Relative,Linear_Acceleration_Z_Relative_Relative,Rotational_Velocity_X_Relative,Rotational_Velocity_Y_Relative,Rotational_Velocity_Z_Relative,Rotational_Acceleration_X_Relative,Rotational_Acceleration_Y_Relative,Rotational_Acceleration_Z_Relative \n"; 
 	  }
 		else if(recordingType_ == 1)
 		{
@@ -169,9 +173,18 @@ namespace gazebo
 		std::vector<weaselballData> collection;
 	    if(recordingType_ == 0)
 		{
-			for (auto weaselball : this->weaselballs)
+			weaselballData data;
+			for (auto mount : this->structures)
 			{
 				weaselballData data;
+
+				getMountXYZ(mount, &data);
+				getMountRotation(mount, &data);
+			    getSimTime(&data);
+
+			}
+			for (auto weaselball : this->weaselballs)
+			{
 				std::string name = weaselball->GetName();
 
 				getXYZCoordinatesWorld(weaselball, &data);
@@ -212,7 +225,7 @@ namespace gazebo
 	
 	void getSimTime(weaselballData* data)
 	{
-		data->timeStamp = this->_world->GetRealTime();
+		data->timeStamp = this->_world->GetSimTime();
 	}
 
 	void getMountXYZ(physics::ModelPtr mount, weaselballData* data)
