@@ -57,7 +57,7 @@ namespace gazebo
 	std::vector<physics::ModelPtr> structures;
 	bool getModelsFlag = 1;
 	//recordingType is set to 0 to collect a lot of data about the weaselballs and is set to 1 to collect R2 x S1 of the mount configuration.
-	int recordingType_ = 0;
+	int recordingType_ = 1;
 	std::ofstream collectionFile;
 	
 	
@@ -176,7 +176,6 @@ namespace gazebo
 			weaselballData data;
 			for (auto mount : this->structures)
 			{
-				weaselballData data;
 
 				getMountXYZ(mount, &data);
 				getMountRotation(mount, &data);
