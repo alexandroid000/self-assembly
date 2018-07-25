@@ -47,7 +47,8 @@ echo
 read -n1 -p "Do you need to install the additional dependencies for this repo (Ravelin)? Enter (y) or (n)" doit
 echo
 if [[ $doit == "Y" || $doit == "y" ]]; then
-	yes | sudo add-apt-repository ppa:gwu-positronics/ravelin
+	sudo echo "deb http://ppa.launchpad.net/gwu-positronics/ravelin/ubuntu trusty main"  >> /etc/apt/sources.list
+        sudo echo "deb-src http://ppa.launchpad.net/gwu-positronics/ravelin/ubuntu trusty main" >> /etc/apt/sources.list
 	sudo apt-get install ravelin
 fi
 
