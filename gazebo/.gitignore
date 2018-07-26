@@ -2,4 +2,4 @@
 build/
 devel/
 *.swp
-src/data/collections/*
+data/collections/*

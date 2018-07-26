@@ -3,6 +3,7 @@ TODO) Create launch files to randomize robots (Needed for next update to master)
 TODO) Update parameters about world (such as friction)
 TODO) Test scripts in scripts directory on fresh Ubuntu (Needed for next update to master)
 TODO) Clean up other parts of self assembly repo
+TODO) Make data collection directory local/make a user defined file
 
 
 Q) When should I do stuff in a plug in and when should I make a ros node?

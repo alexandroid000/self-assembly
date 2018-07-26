@@ -1,3 +1,4 @@
+
 #include <gazebo/gazebo.hh>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/common/common.hh>
@@ -6,6 +7,7 @@
 
 #include "../include/gazebo_log.h"
 
+#include <ctime>
 #include <stdlib.h>
 #include <vector>
 #include <string>
@@ -21,8 +23,9 @@ const int NUMBER_OF_STRUCTURES = 1;
 const std::string NAME_OF_WEASELBALLS = "swarmbot";
 const std::string NAME_OF_MOUNTS = "mount";
 const std::string SHELL_STRING = "shell";
-//const std::string COLLECTION_PATH = "/home/justin/Documents/bouncy/self-assembly/gazebo/src/data/collections/collection.csv";
-const std::string COLLECTION_PATH = "/home/justin/Documents/bouncy/self-assembly2/self-assembly/gazebo/src/data/collections/collection.csv";
+const std::string COLLECTION_PATH = "/home/justin/Documents/bouncy/self-assembly/gazebo/data/collections/";
+
+//This data structures is used to store information about the weaselballs/mount. 
 namespace gazebo
 {
     struct weaselballData
@@ -45,6 +48,7 @@ namespace gazebo
 
 	};
 }
+
 namespace gazebo 
 {
   class StateCollector : public WorldPlugin
@@ -54,6 +58,7 @@ namespace gazebo
 
     physics::WorldPtr _world;                        //< Gazebo world pointer
 	std::vector<physics::ModelPtr> weaselballs;
+
 	std::vector<physics::ModelPtr> structures;
 	bool getModelsFlag = 1;
 	//recordingType is set to 0 to collect a lot of data about the weaselballs and is set to 1 to collect R2 x S1 of the mount configuration.
@@ -134,8 +139,29 @@ namespace gazebo
 	  this->_world = world;
       this->_updateConnection = event::Events::ConnectWorldUpdateBegin(
         boost::bind( &StateCollector::Update, this ) );
+	  //Get time and append to string name
+	  time_t rawtime;
+	  struct tm * timeinfo;
+	  char buffer[80];
 
-	  this->collectionFile.open (COLLECTION_PATH,std::ofstream::out);
+	  time (&rawtime);
+	  timeinfo = localtime(&rawtime);
+
+	  strftime(buffer,sizeof(buffer),"%m-%d-%Y_%H-%M-%S",timeinfo);
+	  std::string str(buffer);
+
+	  std::stringstream ss;
+	  if(recordingType_ == 0)
+	  {
+          ss << COLLECTION_PATH << str << "_long.csv";
+
+      }
+	  else if(recordingType_ == 1)
+      {
+          ss << COLLECTION_PATH << str << ".csv";
+      }
+
+	  this->collectionFile.open (ss.str(),std::ofstream::out);
 	  if(this->recordingType_ == 0)
 	  {
 	  this->collectionFile << "Time,ID,Mount_X,Mount_Y,Mount_Yaw,Pos_x,Pos_y,Pos_z,Yaw,Pitch,Roll,Linear_Velocity_X_World,Linear_Velocity_Y_World,Linear_Velocity_Z_World,Linear_Acceleration_X_World,Linear_Acceleration_Y_World,Linear_Acceleration_Z_World,Rotational_Velocity_X_World,Rotational_Velocity_Y_World,Rotational_Velocity_Z_World,Rotational_Acceleration_X_World,Rotational_Acceleration_Y_World,Rotational_Acceleration_Z_World,Linear_Velocity_X_Relative,Linear_Velocity_Y_Relative,Linear_Velocity_Z_Relative,Linear_Acceleration_X_Relative,Linear_Acceleration_Y_Relative,Linear_Acceleration_Z_Relative_Relative,Rotational_Velocity_X_Relative,Rotational_Velocity_Y_Relative,Rotational_Velocity_Z_Relative,Rotational_Acceleration_X_Relative,Rotational_Acceleration_Y_Relative,Rotational_Acceleration_Z_Relative \n"; 

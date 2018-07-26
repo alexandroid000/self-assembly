@@ -65,7 +65,7 @@ set( SRCS
 #add_library(configure SHARED src/configure.cpp)
 #target_link_libraries(configure ${GAZEBO_LIBRARIES})
 
-add_library(StateRecorder SHARED src/stateRecorder.cpp)
+add_library(StateRecorder SHARED plugins/stateRecorder.cpp)
 target_link_libraries(StateRecorder ${GAZEBO_LIBRARIES})
 
 #This plugin is still being developed...
@@ -79,6 +79,6 @@ catkin_package(
     gazebo_ros 
 )
 
-add_library( simulation-controller SHARED src/simulation_controller.cpp ${HDRS} ${SRCS} )
+add_library( simulation-controller SHARED plugins/simulation_controller.cpp ${HDRS} ${SRCS} )
 target_link_libraries( simulation-controller ${LIBS} )
 
