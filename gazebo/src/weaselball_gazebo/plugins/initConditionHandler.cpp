@@ -77,7 +77,7 @@ namespace gazebo
 				//Reset the world
 				this->world_->Reset();
 				//Pause the world
-				this->world_->SetPaused(1);
+	     		this->world_->SetPaused(1);
 				//Randomize the balls
 				for(auto it : weaselballs)
 				{

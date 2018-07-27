@@ -9,7 +9,7 @@ VICON_SAMPLE_RATE=100.0
 BASE_VIDEO_LED_DURATION=1.0/30.0
 VIDEO_LED_TIME_FACTOR=20.0
 
-RANDOMIZE_BALLS=0
+RANDOMIZE_BALLS=1
 #The following dont do anything besides screw up the math, so dont touch it. I am putting it in here for completion
 NUMBER_OF_STRUCTURES=1
 NUMBER_OF_WEASELBALLS=4
