@@ -17,13 +17,7 @@
 #include <string>
 
 #include <tuple>
-#define PI 3.14159265359
-const int NUMBER_OF_WEASELBALLS = 4;
-const int NUMBER_OF_STRUCTURES = 1;
-const std::string NAME_OF_WEASELBALLS = "swarmbot";
-const std::string NAME_OF_MOUNTS = "mount";
-const std::string SHELL_STRING = "shell";
-const std::string COLLECTION_PATH = "/home/justin/Documents/bouncy/self-assembly/gazebo/data/collections/";
+#include "../include/common.h"
 
 //This data structures is used to store information about the weaselballs/mount. 
 namespace gazebo
