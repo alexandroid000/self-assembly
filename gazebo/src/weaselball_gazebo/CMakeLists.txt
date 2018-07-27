@@ -59,11 +59,9 @@ set( HDRS
 set( SRCS
 )
 
-#add_library(hello_world SHARED src/simple_world_plugin.cpp)
-#target_link_libraries(hello_world ${GAZEBO_LIBRARIES})
 
-#add_library(configure SHARED src/configure.cpp)
-#target_link_libraries(configure ${GAZEBO_LIBRARIES})
+add_library(configure SHARED plugins/initConditionHandler.cpp)
+target_link_libraries(configure ${GAZEBO_LIBRARIES})
 
 add_library(StateRecorder SHARED plugins/stateRecorder.cpp)
 target_link_libraries(StateRecorder ${GAZEBO_LIBRARIES})

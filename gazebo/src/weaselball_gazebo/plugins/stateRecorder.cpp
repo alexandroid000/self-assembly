@@ -182,7 +182,7 @@ namespace gazebo
 				this->weaselballs = weaselballs;
 				this->structures = structures;
 				//Reset world, sometimes the balls/mounts glitch out. This will likely be moved to the "setup/configure" plugin when it is done being developed.
-				this->_world->Reset();
+	//			this->_world->Reset();
 			}
 			else
 			{

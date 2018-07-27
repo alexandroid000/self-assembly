@@ -55,6 +55,7 @@ echo "
 " >> $FILE
 
 echo "//Definitions used in state recorder
+#define RANDOMIZE_BALLS $RANDOMIZE_BALLS
 #define NUMBER_OF_WEASELBALLS $NUMBER_OF_WEASELBALLS
 #define NUMBER_OF_STRUCTURES $NUMBER_OF_STRUCTURES
 #define NAME_OF_WEASELBALLS \"swarmbot\"
@@ -64,3 +65,5 @@ echo "//Definitions used in state recorder
                       
 
 echo "#endif // _COMMON_H_" >> $FILE
+
+./install_new_updates.sh
