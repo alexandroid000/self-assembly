@@ -34,6 +34,7 @@
 #define VIDEO_LED_TIME_FACTOR 20.0
 
 //Definitions used in state recorder
+#define RANDOMIZE_BALLS 0
 #define NUMBER_OF_WEASELBALLS 4
 #define NUMBER_OF_STRUCTURES 1
 #define NAME_OF_WEASELBALLS "swarmbot"
