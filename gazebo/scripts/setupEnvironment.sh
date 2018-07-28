@@ -3,10 +3,11 @@
 
 #This file will also automatically generate directories for each system.
 #__________Variables____________
-source Robot_Config.txt
-
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 WORKSPACE_PATH="$(dirname "$SCRIPT_PATH")"
+cd $SCRIPT_PATH
+source Robot_Config.txt
+
 
 FILE=$WORKSPACE_PATH/src/weaselball_gazebo/include/common.h
 
