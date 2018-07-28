@@ -74,7 +74,7 @@
     <plugin name='configure' filename='libconfigure.so'> 
     </plugin> 
     <plugin name='StateRecorder' filename='libStateRecorder.so'> 
-       <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
     </plugin> 
+       <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
   </world>
 </sdf>
