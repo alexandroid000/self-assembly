@@ -36,7 +36,7 @@
 //Definitions used in state recorder
 #define RANDOMIZE_STRUCTURES 1
 #define RUN_TRIALS 1
-#define NUMBER_OF_TRIALS_CYCLES 2
+#define NUMBER_OF_TRIALS_CYCLES -1
 #define INDIVIDUAL_TRIAL_TIME 10
 #define RANDOMIZE_BALLS 1
 #define NUMBER_OF_WEASELBALLS 4

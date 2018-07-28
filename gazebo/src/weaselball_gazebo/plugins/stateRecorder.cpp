@@ -49,6 +49,7 @@ namespace gazebo
   {
   private:
     event::ConnectionPtr _updateConnection;  //< Gazebo update callback
+    event::ConnectionPtr _updateWorldReset;  //< Gazebo update callback
 
     physics::WorldPtr _world;                        //< Gazebo world pointer
 	std::vector<physics::ModelPtr> weaselballs;
@@ -58,6 +59,7 @@ namespace gazebo
 	//recordingType is set to 0 to collect a lot of data about the weaselballs and is set to 1 to collect R2 x S1 of the mount configuration.
 	int recordingType_ = 1;
 	std::ofstream collectionFile;
+	int resetCounter = 0;
 	
 	
   public:
@@ -108,7 +110,10 @@ namespace gazebo
 			this->collectionFile << data.linearVelocityRelative[0] << "," << data.linearVelocityRelative[1] << "," << data.linearVelocityRelative[2] << ",";	
 			this->collectionFile << data.linearAccelerationRelative[0] << "," << data.linearAccelerationRelative[1] << "," << data.linearAccelerationRelative[2] << ",";	
 			this->collectionFile << data.rotationalVelocityRelative[0] << "," << data.rotationalVelocityRelative[1] << "," << data.rotationalVelocityRelative[2] << ",";	
-			this->collectionFile << data.rotationalAccelerationRelative[0] << "," << data.rotationalAccelerationRelative[1] << "," << data.rotationalAccelerationRelative[2] << ",\n";	
+			this->collectionFile << data.rotationalAccelerationRelative[0] << "," << data.rotationalAccelerationRelative[1] << "," << data.rotationalAccelerationRelative[2] << ",";	
+			this->collectionFile << this->resetCounter << ",";
+			this->collectionFile << checkCorrectness() << ",";
+			this->collectionFile << "\n";
 		}
 		else if(this->recordingType_ == 1)
 		{
@@ -116,15 +121,30 @@ namespace gazebo
 			this->collectionFile << id << ",";
 			this->collectionFile << data.mountPosition[0] << "," << data.mountPosition[1] << ",";
 			//Gazebo does rotation as rpy
-			this->collectionFile << data.mountRotation[2] << "\n";
+			this->collectionFile << data.mountRotation[2] << ",";
+			this->collectionFile << this->resetCounter << ",";
+			this->collectionFile << checkCorrectness() << ",";
+			this->collectionFile << "\n";
 		}
 	}
-	
 
+	//The purpose of the function is to check that everything at a high level looks like it is working well in the simulator	
+	bool checkCorrectness()
+	{
+	//Get Max distance between a structure
+	//Make sure none of the balls are over the Max distance away from eachother + lil extra (say 1.2 times)
+		return 1;
+
+	}
 	
 	bool checkAllModelsInit(std::vector<physics::ModelPtr> weaselballs, std::vector<physics::ModelPtr> structure)
 	{
 		return ((weaselballs.size() == NUMBER_OF_WEASELBALLS and structure.size() == NUMBER_OF_STRUCTURES) ? 1 : 0);
+	}
+
+	void worldReset()
+	{
+	    this->resetCounter++;
 	}
 
     //-------------------------------------------------------------------------
@@ -133,6 +153,8 @@ namespace gazebo
 	  this->_world = world;
       this->_updateConnection = event::Events::ConnectWorldUpdateBegin(
         boost::bind( &StateCollector::Update, this ) );
+      this->_updateWorldReset = event::Events::ConnectWorldReset(
+        boost::bind( &StateCollector::worldReset, this ) );
 	  //Get time and append to string name
 	  time_t rawtime;
 	  struct tm * timeinfo;
@@ -158,11 +180,11 @@ namespace gazebo
 	  this->collectionFile.open (ss.str(),std::ofstream::out);
 	  if(this->recordingType_ == 0)
 	  {
-	  this->collectionFile << "Time,ID,Mount_X,Mount_Y,Mount_Yaw,Pos_x,Pos_y,Pos_z,Yaw,Pitch,Roll,Linear_Velocity_X_World,Linear_Velocity_Y_World,Linear_Velocity_Z_World,Linear_Acceleration_X_World,Linear_Acceleration_Y_World,Linear_Acceleration_Z_World,Rotational_Velocity_X_World,Rotational_Velocity_Y_World,Rotational_Velocity_Z_World,Rotational_Acceleration_X_World,Rotational_Acceleration_Y_World,Rotational_Acceleration_Z_World,Linear_Velocity_X_Relative,Linear_Velocity_Y_Relative,Linear_Velocity_Z_Relative,Linear_Acceleration_X_Relative,Linear_Acceleration_Y_Relative,Linear_Acceleration_Z_Relative_Relative,Rotational_Velocity_X_Relative,Rotational_Velocity_Y_Relative,Rotational_Velocity_Z_Relative,Rotational_Acceleration_X_Relative,Rotational_Acceleration_Y_Relative,Rotational_Acceleration_Z_Relative \n"; 
+	  this->collectionFile << "Time,ID,Mount_X,Mount_Y,Mount_Yaw,Pos_x,Pos_y,Pos_z,Yaw,Pitch,Roll,Linear_Velocity_X_World,Linear_Velocity_Y_World,Linear_Velocity_Z_World,Linear_Acceleration_X_World,Linear_Acceleration_Y_World,Linear_Acceleration_Z_World,Rotational_Velocity_X_World,Rotational_Velocity_Y_World,Rotational_Velocity_Z_World,Rotational_Acceleration_X_World,Rotational_Acceleration_Y_World,Rotational_Acceleration_Z_World,Linear_Velocity_X_Relative,Linear_Velocity_Y_Relative,Linear_Velocity_Z_Relative,Linear_Acceleration_X_Relative,Linear_Acceleration_Y_Relative,Linear_Acceleration_Z_Relative_Relative,Rotational_Velocity_X_Relative,Rotational_Velocity_Y_Relative,Rotational_Velocity_Z_Relative,Rotational_Acceleration_X_Relative,Rotational_Acceleration_Y_Relative,Rotational_Acceleration_Z_Relative,ResetID,checkCorrectness\n"; 
 	  }
 		else if(recordingType_ == 1)
 		{
-			this->collectionFile << "Time,ID, X, Y, Yaw \n";
+			this->collectionFile << "Time,ID,X,Y,Yaw,ResetID,checkCorrectness\n";
 
 		}
 	  std::cout << "State Collector has loaded!" << std::endl;
@@ -181,8 +203,6 @@ namespace gazebo
 				this->getModelsFlag = 0;
 				this->weaselballs = weaselballs;
 				this->structures = structures;
-				//Reset world, sometimes the balls/mounts glitch out. This will likely be moved to the "setup/configure" plugin when it is done being developed.
-	//			this->_world->Reset();
 			}
 			else
 			{
