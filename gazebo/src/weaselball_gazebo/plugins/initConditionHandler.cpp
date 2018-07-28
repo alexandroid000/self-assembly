@@ -31,6 +31,7 @@ namespace gazebo
         bool resetBalls_ = 0;
 		physics::WorldPtr world_;
 		event::ConnectionPtr _updateConnection;
+		event::ConnectionPtr _updateWorldReset;
 
 		public:
 
@@ -43,10 +44,17 @@ namespace gazebo
         {
 			this->world_ = _world;
             this->_updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind( &InitCondition::Update, this ) );
+			this->_updateWorldReset = event::Events::ConnectWorldReset(boost::bind( &InitCondition::worldReset, this));
 			this->resetBalls_ = RANDOMIZE_BALLS;
 			srand (static_cast <unsigned> (time(0)));	
 			std::cout << "Finished loading in initial state of balls" << std::endl;
         }
+
+		void worldReset()
+		{
+			this->resetBalls_ = RANDOMIZE_BALLS;
+		}
+
 		std::vector<physics::ModelPtr> getModels(std::string modelName)
 		{
 			std::vector<physics::ModelPtr> ret;

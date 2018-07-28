@@ -1,9 +1,8 @@
 Personal Notes:
-TODO) Create launch files to randomize robots (Needed for next update to master)
 TODO) Update parameters about world (such as friction)
-TODO) Test scripts in scripts directory on fresh Ubuntu (Needed for next update to master)
-TODO) Clean up other parts of self assembly repo
-TODO) Make data collection directory local/make a user defined file
+TODO) Have robot start in different spots/rotations for better data analysis (need for next update)
+TODO) Create Heurisitc for sparser matrix (needed for update) (need for next update)
+TODO) Compare downsampling to current sampling rate of data (need for next update)
 
 
 Q) When should I do stuff in a plug in and when should I make a ros node?
