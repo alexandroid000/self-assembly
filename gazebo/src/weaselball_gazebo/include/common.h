@@ -34,7 +34,8 @@
 #define VIDEO_LED_TIME_FACTOR 20.0
 
 //Definitions used in state recorder
-#define RANDOMIZE_STRUCTURES 0
+#define STRUCTURE_TYPE 
+#define RANDOMIZE_STRUCTURES 1
 #define RUN_TRIALS 0
 #define NUMBER_OF_TRIALS_CYCLES 1
 #define INDIVIDUAL_TRIAL_TIME 120

@@ -36,6 +36,7 @@ Individual "Mount":
 4.25 inches across
 108mm to be exact
 111mm in gazebo for side to side
+0.45 yaw seems to straighten it out
 
 Individual weaselball:
 138 grams
