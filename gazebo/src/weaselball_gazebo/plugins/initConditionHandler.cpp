@@ -36,6 +36,7 @@ namespace gazebo
 		event::ConnectionPtr _updateWorldReset;
 		int cycleCounter_ = 0;
 		std::vector<math::Vector3> positions_{math::Vector3(0,0,0), math::Vector3(0,0.385,0), math::Vector3(0.385,0.385,0)};
+		
 
 		public:
 
@@ -63,6 +64,21 @@ namespace gazebo
 
 		void Update()
 		{
+			//Check that trials dont need a reset
+			if(RUN_TRIALS)
+			{
+				if( (int)(this->cycleCounter_ / 3 ) == NUMBER_OF_TRIALS_CYCLES)
+				{
+					std::cout << "[Debug] Ending Simulator" << std::endl;
+					std::cout << "[Debug] cycleCounter = "<< this->cycleCounter_ << " NUMBER_OF_TRIALS_CYCLES = " << NUMBER_OF_TRIALS_CYCLES << std::endl; 
+					this->world_->Fini();	
+				}
+				if(this->world_->GetSimTime().sec > INDIVIDUAL_TRIAL_TIME)
+				{
+					this->world_->Reset();
+
+				}
+			}
 			if(this->resetFlag_)
 			{
 				if(checkAllModelsInit())
