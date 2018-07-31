@@ -44,7 +44,7 @@ echo
 ##############################
 #   Get Other Dependencies
 ##############################
-read -n1 -p "Do you need to install the additional dependencies for this repo (Ravelin)? Enter (y) or (n)" doit
+read -n1 -p "Do you need to install the additional dependencies for this repo? Enter (y) or (n)" doit
 echo
 if [[ $doit == "Y" || $doit == "y" ]]; then
        
@@ -52,5 +52,7 @@ if [[ $doit == "Y" || $doit == "y" ]]; then
         echo "deb-src http://ppa.launchpad.net/gwu-positronics/ravelin/ubuntu trusty main" | sudo tee -a /etc/apt/sources.list
 	sudo apt-get update
 	sudo apt-get install ravelin
+echo "\nexport PYTHONPATH=$PYTHONPATH:/home/justin/Documents/bouncy/self-assembly/dataAnalysis/src\n" >> ~/.bashrc 
+source ~/.bashrc
 fi
 echo "Done!"

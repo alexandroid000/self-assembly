@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[27]:
+# In[1]:
 
 
 #The purpose of this test is to show that there are currently more samples for the diagnol than there are for the non diagnol parts of the matrix
@@ -9,7 +9,7 @@
 #I beleive this occurs because the simulator samples very quickly
 
 
-# In[28]:
+# In[2]:
 
 
 #!/usr/bin/env python
@@ -25,14 +25,14 @@ fig_prefix = "../figures/2018-07-22-jw-weaselball-diagnol_"
 data_prefix = "../data/2018-07-22-jw-weaselball-diagnol_"
 
 
-# In[29]:
+# In[3]:
 
 
 df = pd.read_csv('../data/2018-07-22-jw-weaselball_analysis_translation_matrix_out.csv')
 df.head()
 
 
-# In[30]:
+# In[4]:
 
 
 sumDiagnol = 0
@@ -46,14 +46,14 @@ for index, row in df.iterrows():
             sumNotDiagnol += df.iat[index,i]
 
 
-# In[31]:
+# In[5]:
 
 
 sumDiagnolAveraged = sumDiagnol/(df.shape[0])
 sumNotDiagnolAveraged = sumDiagnol/(df.shape[0]**2 - df.shape[0])
 
 
-# In[32]:
+# In[6]:
 
 
 #This graphically shows that my hypothesis is true
