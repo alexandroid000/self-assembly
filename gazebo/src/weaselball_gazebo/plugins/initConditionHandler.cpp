@@ -36,6 +36,7 @@ namespace gazebo
 		event::ConnectionPtr _updateWorldReset;
 		int cycleCounter_ = 0;
 		std::vector<math::Vector3> positions_{math::Vector3(0,0,0), math::Vector3(0,0.385,0), math::Vector3(0.385,0.385,0)};
+		bool doneInitFlag = 0;
 		
 
 		public:
@@ -49,11 +50,12 @@ namespace gazebo
         {
 			this->world_ = _world;
             this->_updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind( &InitCondition::Update, this ) );
-			this->_updateWorldReset = event::Events::ConnectWorldReset(boost::bind( &InitCondition::worldReset, this));
 			this->resetBalls_ = RANDOMIZE_BALLS;
 			this->resetStructure_ = RANDOMIZE_STRUCTURES;
 			this->resetFlag_ = 1;
 			srand (static_cast <unsigned> (time(0)));	
+			this->world_->SetPaused(0);	
+			
 			std::cout << "Finished loading in initial state of balls" << std::endl;
         }
 
@@ -64,6 +66,15 @@ namespace gazebo
 
 		void Update()
 		{
+			//Check that everything has initialized
+            if (!this->doneInitFlag)
+			{
+				if(checkAllModelsInit())
+				{
+					this->doneInitFlag = 1;
+					this->_updateWorldReset = event::Events::ConnectWorldReset(boost::bind( &InitCondition::worldReset, this));
+				}
+			}
 			//Check that trials dont need a reset
 			if(RUN_TRIALS)
 			{
@@ -81,7 +92,6 @@ namespace gazebo
 			}
 			if(this->resetFlag_)
 			{
-				if(checkAllModelsInit())
 					//Pause the world
 					this->world_->SetPaused(1);
 					//Randomize the models that need to be randomized

@@ -8,8 +8,8 @@ WORKSPACE_PATH="$(dirname "$SCRIPT_PATH")"
 cd $SCRIPT_PATH
 source Robot_Config.txt
 
-
 FILE=$WORKSPACE_PATH/src/weaselball_gazebo/include/common.h
+
 
 #____________ECHO_________________
 
