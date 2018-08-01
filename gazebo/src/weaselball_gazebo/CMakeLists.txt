@@ -59,23 +59,25 @@ set( HDRS
 set( SRCS
 )
 
+catkin_package(
+  DEPENDS 
+    roscpp 
+    gazebo_ros 
+	gazebo
+)
 
 add_library(configure SHARED plugins/initConditionHandler.cpp)
 target_link_libraries(configure ${GAZEBO_LIBRARIES})
 
 add_library(StateRecorder SHARED plugins/stateRecorder.cpp)
-target_link_libraries(StateRecorder ${GAZEBO_LIBRARIES})
+target_link_libraries(StateRecorder gazebo_sensors ${GAZEBO_LIBRARIES})
+
 
 #This plugin is still being developed...
 #add_library(bumpSensor SHARED src/bumpSensor.cpp)
 #target_link_libraries(bumpSensor ${GAZEBO_LIBRARIES})
 
 #target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
-catkin_package(
-  DEPENDS 
-    roscpp 
-    gazebo_ros 
-)
 
 add_library( simulation-controller SHARED plugins/simulation_controller.cpp ${HDRS} ${SRCS} )
 target_link_libraries( simulation-controller ${LIBS} )

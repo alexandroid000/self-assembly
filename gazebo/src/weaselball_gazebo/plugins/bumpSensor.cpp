@@ -43,6 +43,14 @@ void BumpSensor::Load(sensors::SensorPtr _sensor, sdf::ElementPtr /*_sdf*/)
 /////////////////////////////////////////////////
 void BumpSensor::OnUpdate()
 {
+
+}
+
+
+
+void BumpSensor::detatch()
+{
+
   // Get all the contacts.
   msgs::Contacts contacts;
   contacts = this->parentSensor->Contacts();

@@ -53,6 +53,8 @@
   <exec_depend>roscpp</exec_depend>
   <build_depend>gazebo_ros</build_depend>
   <exec_depend>gazebo_ros</exec_depend>
+  <build_export_depend>gazebo</build_export_depend>
+  <exec_depend>gazebo</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
