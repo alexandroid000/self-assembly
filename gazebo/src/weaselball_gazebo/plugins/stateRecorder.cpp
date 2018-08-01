@@ -61,7 +61,6 @@ namespace gazebo
 	std::ofstream collectionFile;
 	int resetCounter = 0;
 	
-	
   public:
     //-------------------------------------------------------------------------
     StateCollector( void ) { }
@@ -146,6 +145,17 @@ namespace gazebo
 	{
 	    this->resetCounter++;
 	}
+	
+	//This function checks if there are any collisions with the wall
+	int getNumberOfWalls()
+	{
+		//Get weaselballs bumpsensor
+	//	sensors::SensorManager *mgr = sensors::SensorManager::Instance();
+	//	sensorsList = sensorManager.GetSensors();
+		std::cout << "Sensor name is " << sensorList[0]->GetName() << std::endl;	
+		
+	
+	}
 
     //-------------------------------------------------------------------------
     // Gazebo callback.  Called when the simulation is starting up
@@ -187,6 +197,9 @@ namespace gazebo
 			this->collectionFile << "Time,ID,X,Y,Yaw,ResetID,checkCorrectness\n";
 
 		}
+
+	//Get structure object and store it
+	
 	  std::cout << "State Collector has loaded!" << std::endl;
     }
 
