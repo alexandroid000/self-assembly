@@ -14,8 +14,9 @@ include( FindPkgConfig )
 if( PKG_CONFIG_FOUND )
   pkg_check_modules( GAZEBO REQUIRED gazebo )
 endif()
-include_directories( ${GAZEBO_INCLUDE_DIRS} )
+message (${GAZEBO_LIBRARY_DIRS})
 link_directories( ${GAZEBO_LIBRARY_DIRS} )
+include_directories( ${GAZEBO_INCLUDE_DIRS} )
 
 #if( PKG_CONFIG_FOUND )
 #  pkg_check_modules( RAVELIN ravelin )
@@ -29,8 +30,8 @@ if (PKG_CONFIG_FOUND)
   pkg_check_modules(OGRE OGRE)
   pkg_check_modules(OGRE-Terrain OGRE-Terrain)
 endif()
-include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS} ${OGRE_INCLUDE_DIRS} ${OGRE-Terrain_INCLUDE_DIRS})
 link_directories(${GAZEBO_LIBRARY_DIRS} ${OGRE_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS} ${OGRE_INCLUDE_DIRS} ${OGRE-Terrain_INCLUDE_DIRS})
 
 
 #------------------------------------------------------------------------------
@@ -59,26 +60,24 @@ set( HDRS
 set( SRCS
 )
 
-catkin_package(
-  DEPENDS 
-    roscpp 
-    gazebo_ros 
-	gazebo
-)
 
 add_library(configure SHARED plugins/initConditionHandler.cpp)
 target_link_libraries(configure ${GAZEBO_LIBRARIES})
 
 add_library(StateRecorder SHARED plugins/stateRecorder.cpp)
-target_link_libraries(StateRecorder gazebo_sensors ${GAZEBO_LIBRARIES})
+target_link_libraries(StateRecorder ${GAZEBO_LIBRARIES} ${CATKIN_LIBRARIES})
 
 
-#This plugin is still being developed...
-#add_library(bumpSensor SHARED src/bumpSensor.cpp)
-#target_link_libraries(bumpSensor ${GAZEBO_LIBRARIES})
+add_library(bumpSensor SHARED plugins/bumpSensor.cpp)
+target_link_libraries(bumpSensor ${GAZEBO_LIBRARIES})
 
 #target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 add_library( simulation-controller SHARED plugins/simulation_controller.cpp ${HDRS} ${SRCS} )
 target_link_libraries( simulation-controller ${LIBS} )
 
+catkin_package(
+  DEPENDS 
+    roscpp 
+    gazebo_ros 
+)

@@ -1,5 +1,9 @@
 Personal Notes:
 TODO) Update parameters about world (such as friction)
+TODO) Get EC2 To automotically run tests 
+TODO) Get 2 wall | 1 wall | 0 wall data - USE SRV!!!
+TODO) Create graphics for tracking motion in dataAnalysis
+TODO) Fix verification
 
 
 Q) When should I do stuff in a plug in and when should I make a ros node?

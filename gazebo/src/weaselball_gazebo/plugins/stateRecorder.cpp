@@ -4,6 +4,7 @@
 #include <gazebo/common/common.hh>
 #include <gazebo/common/Events.hh>
 #include <gazebo/physics/physics.hh>
+#include <gazebo-7/gazebo/sensors/SensorManager.hh>
 
 #include "../include/gazebo_log.h"
 
@@ -150,9 +151,9 @@ namespace gazebo
 	int getNumberOfWalls()
 	{
 		//Get weaselballs bumpsensor
-	//	sensors::SensorManager *mgr = sensors::SensorManager::Instance();
-	//	sensorsList = sensorManager.GetSensors();
-		std::cout << "Sensor name is " << sensorList[0]->GetName() << std::endl;	
+		gazebo::sensors::SensorManager* mgr = sensors::SensorManager::Instance();
+//		sensorsList = sensorManager.GetSensors();
+//		std::cout << "Sensor name is " << sensorList[0]->GetName() << std::endl;	
 		
 	
 	}
