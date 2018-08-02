@@ -4,6 +4,8 @@
 #include <gazebo/common/common.hh>
 #include <gazebo/common/Events.hh>
 #include <gazebo/physics/physics.hh>
+#include <gazebo/sensors/SensorTypes.hh>
+#include <gazebo/sensors/sensors.hh>
 #include <gazebo-7/gazebo/sensors/SensorManager.hh>
 
 #include "../include/gazebo_log.h"
@@ -41,6 +43,9 @@ namespace gazebo
 		
 		common::Time timeStamp;
 
+		int numberOfWalls;
+
+
 	};
 }
 
@@ -51,10 +56,11 @@ namespace gazebo
   private:
     event::ConnectionPtr _updateConnection;  //< Gazebo update callback
     event::ConnectionPtr _updateWorldReset;  //< Gazebo update callback
+    event::ConnectionPtr _updateCollision;  //< Gazebo update callback
 
     physics::WorldPtr _world;                        //< Gazebo world pointer
 	std::vector<physics::ModelPtr> weaselballs;
-
+	sensors::SensorPtr bumpSensor;
 	std::vector<physics::ModelPtr> structures;
 	bool getModelsFlag = 1;
 	//recordingType is set to 0 to collect a lot of data about the weaselballs and is set to 1 to collect R2 x S1 of the mount configuration.
@@ -62,6 +68,8 @@ namespace gazebo
 	std::ofstream collectionFile;
 	int resetCounter = 0;
 	
+	int wallCounter = 0;
+	std::vector<std::string> railStrings;
   public:
     //-------------------------------------------------------------------------
     StateCollector( void ) { }
@@ -147,16 +155,17 @@ namespace gazebo
 	    this->resetCounter++;
 	}
 	
-	//This function checks if there are any collisions with the wall
-	int getNumberOfWalls()
+	sensors::SensorPtr getContactSensor()
 	{
-		//Get weaselballs bumpsensor
 		gazebo::sensors::SensorManager* mgr = sensors::SensorManager::Instance();
-//		sensorsList = sensorManager.GetSensors();
-//		std::cout << "Sensor name is " << sensorList[0]->GetName() << std::endl;	
-		
-	
+		std::vector<sensors::SensorPtr> sensorsList = mgr->GetSensors();
+		if(sensorsList.size() == 0)
+		{
+			return NULL;
+		}
+		return sensorsList[0];
 	}
+
 
     //-------------------------------------------------------------------------
     // Gazebo callback.  Called when the simulation is starting up
@@ -195,7 +204,7 @@ namespace gazebo
 	  }
 		else if(recordingType_ == 1)
 		{
-			this->collectionFile << "Time,ID,X,Y,Yaw,ResetID,checkCorrectness\n";
+			this->collectionFile << "Time,ID,X,Y,Yaw,ResetID,checkCorrectness,NumberOfWalls\n";
 
 		}
 
@@ -203,6 +212,11 @@ namespace gazebo
 	
 	  std::cout << "State Collector has loaded!" << std::endl;
     }
+	void onCollision()
+	{
+		std::cout << "COLLISION OCCURED!\n";
+
+	}
 
     //-------------------------------------------------------------------------
     // Gazebo callback.  Called whenever the simulation advances a timestep
@@ -212,11 +226,19 @@ namespace gazebo
 		{
 			std::vector<physics::ModelPtr> weaselballs = getModels(NAME_OF_WEASELBALLS);
 			std::vector<physics::ModelPtr> structures = getModels(NAME_OF_MOUNTS);
-			if( checkAllModelsInit(weaselballs, structures) )
+			sensors::SensorPtr bumpSensor = getContactSensor();
+			if( checkAllModelsInit(weaselballs, structures) and bumpSensor != NULL)
 			{
+				std::cout << "[DEBUG] Found all the models and Sensors!" << std::endl;
 				this->getModelsFlag = 0;
 				this->weaselballs = weaselballs;
 				this->structures = structures;
+				this->bumpSensor = bumpSensor;
+				this->bumpSensor->Init();
+				this->_updateCollision = this->bumpSensor->ConnectUpdated(
+					std::bind(&StateCollector::onCollision,  this));
+				std::cout << "Sensor type  = " << this->bumpSensor->Type() << std::endl;
+				std::cout << "Sensor status = " << this->bumpSensor->IsActive() << std::endl;
 			}
 			else
 			{
@@ -234,6 +256,7 @@ namespace gazebo
 				getMountXYZ(mount, &data);
 				getMountRotation(mount, &data);
 			    getSimTime(&data);
+				getNumberOfWalls(&data);
 
 			}
 			for (auto weaselball : this->weaselballs)
@@ -353,6 +376,18 @@ namespace gazebo
 	void getLinearAccelerationRelative(physics::ModelPtr weaselball, weaselballData* data)
 	{
 		data->linearAccelerationRelative = weaselball->GetRelativeLinearAccel();
+	}
+
+	//This function checks if there are any collisions with the wall
+	void getNumberOfWalls(weaselballData* data)
+	{
+		std::cout << "FLAG1\n";
+		data->numberOfWalls = this->wallCounter;
+		std::cout << "FLAG2\n";
+		this->wallCounter = 0;
+		std::cout << "FLAG3\n";
+		this->railStrings.clear();
+		std::cout << "FLAG4\n";
 	}
   };
 
