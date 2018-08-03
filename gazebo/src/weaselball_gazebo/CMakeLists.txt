@@ -65,11 +65,11 @@ add_library(configure SHARED plugins/initConditionHandler.cpp)
 target_link_libraries(configure ${GAZEBO_LIBRARIES})
 
 add_library(StateRecorder SHARED plugins/stateRecorder.cpp)
-target_link_libraries(StateRecorder ${GAZEBO_LIBRARIES} ${CATKIN_LIBRARIES})
+target_link_libraries(StateRecorder ${GAZEBO_LIBRARIES} ${CATKIN_LIBRARIES} ${BOOST_LIBRARIES})
 
 
-#add_library(bumpSensor SHARED plugins/bumpSensor.cpp)
-#target_link_libraries(bumpSensor ${GAZEBO_LIBRARIES})
+add_library(bumpSensor SHARED plugins/bumpSensor.cpp)
+target_link_libraries(bumpSensor ${GAZEBO_LIBRARIES})
 
 #target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 

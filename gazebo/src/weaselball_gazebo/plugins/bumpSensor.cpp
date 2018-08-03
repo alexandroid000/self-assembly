@@ -62,7 +62,7 @@ void BumpSensor::Load(sensors::SensorPtr _sensor, sdf::ElementPtr /*_sdf*/)
 /////////////////////////////////////////////////
 void BumpSensor::OnWorldUpdate()
 {
-	writeToCSV();
+//	writeToCSV();
 }
 
 //This function gets the Number of walls being touched for each update and writes it to a csv

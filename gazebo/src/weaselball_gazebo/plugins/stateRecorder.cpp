@@ -10,6 +10,7 @@
 
 #include "../include/gazebo_log.h"
 
+#include <ros/console.h>
 #include <ctime>
 #include <stdlib.h>
 #include <vector>
@@ -60,7 +61,7 @@ namespace gazebo
 
     physics::WorldPtr _world;                        //< Gazebo world pointer
 	std::vector<physics::ModelPtr> weaselballs;
-	sensors::SensorPtr bumpSensor;
+	std::vector<sensors::ContactSensorPtr> bumpSensor;
 	std::vector<physics::ModelPtr> structures;
 	bool getModelsFlag = 1;
 	//recordingType is set to 0 to collect a lot of data about the weaselballs and is set to 1 to collect R2 x S1 of the mount configuration.
@@ -103,6 +104,7 @@ namespace gazebo
 		{
 			this->collectionFile << data.timeStamp << ",";
 			this->collectionFile << id << ",";
+			this->collectionFile << data.numberOfWalls << ",";
 			this->collectionFile << data.mountPosition[0] << "," << data.mountPosition[1] << ",";
 			//Gazebo does rotation as rpy
 			this->collectionFile << data.mountRotation[2] << ",";
@@ -132,6 +134,7 @@ namespace gazebo
 			this->collectionFile << data.mountRotation[2] << ",";
 			this->collectionFile << this->resetCounter << ",";
 			this->collectionFile << checkCorrectness() << ",";
+			this->collectionFile << data.numberOfWalls << ",";
 			this->collectionFile << "\n";
 		}
 	}
@@ -141,6 +144,9 @@ namespace gazebo
 	{
 	//Get Max distance between a structure
 	//Make sure none of the balls are over the Max distance away from eachother + lil extra (say 1.2 times)
+		//I measured this distance by between the 2 farthest awayy balls
+		double MAX_DISTANCE = 0.20591;
+		
 		return 1;
 
 	}
@@ -155,15 +161,17 @@ namespace gazebo
 	    this->resetCounter++;
 	}
 	
-	sensors::SensorPtr getContactSensor()
+	std::vector<sensors::ContactSensorPtr> getContactSensor()
 	{
 		gazebo::sensors::SensorManager* mgr = sensors::SensorManager::Instance();
 		std::vector<sensors::SensorPtr> sensorsList = mgr->GetSensors();
-		if(sensorsList.size() == 0)
+		std::vector<sensors::ContactSensorPtr> ret;
+		std::cout << "Sensor size is " << sensorsList.size() << std::endl;
+		for(auto it : sensorsList)
 		{
-			return NULL;
+			ret.push_back(std::dynamic_pointer_cast<sensors::ContactSensor>(it));
 		}
-		return sensorsList[0];
+		return ret;
 	}
 
 
@@ -214,10 +222,59 @@ namespace gazebo
     }
 	void onCollision()
 	{
-		std::cout << "COLLISION OCCURED!\n";
+//	std::vector<std::string> railStrings;
+		msgs::Contacts contacts;
+		for(auto contactSensor : this->bumpSensor)
+		{
+			contacts = contactSensor->Contacts();
+			for (unsigned int i = 0; i < contacts.contact_size(); ++i)
+			{
+				//If it is a swarmbot or the ground ignore it
+				std::string model1Name = contacts.contact(i).collision1();
+				std::string model2Name = contacts.contact(i).collision2();
+				ROS_DEBUG("CONTACT");
+
+				std::map<std::string, physics::Contact> mapping = contactSensor->Contacts(model1Name);
+				physics::ModelPtr mount;
+				std::string linkNumber;
+				
+				if(model1Name.find("mount") != std::string::npos and model2Name.find("rail") != std::string::npos)
+				{
+					//Check that rail# isn't already counted
+					if (std::find(this->railStrings.begin(), this->railStrings.end(), model2Name) == this->railStrings.end())
+					{
+						ROS_DEBUG("FOO");
+						
+					  // Element not in vector.
+						this->wallCounter += 1;
+						this->railStrings.push_back(model2Name);
+					}
+					else
+					{
+//						std::cout << "Already counted " << model2Name << std::endl;
+					}
+				}
+				else if(model1Name.find("rail") != std::string::npos and model2Name.find("mount") != std::string::npos)
+				{
+					//Check that rail# isn't already counted
+					if (std::find(this->railStrings.begin(), this->railStrings.end(), model1Name) == this->railStrings.end())
+					{
+						ROS_DEBUG("BAR");
+					  // Element not in vector.
+						this->wallCounter += 1;
+						this->railStrings.push_back(model1Name);
+					}
+					else
+					{
+//						std::cout << "Already counted " << model1Name << std::endl;
+
+					}
+				}
+
+			}
+		}
 
 	}
-
     //-------------------------------------------------------------------------
     // Gazebo callback.  Called whenever the simulation advances a timestep
     virtual void Update( ) {
@@ -226,19 +283,22 @@ namespace gazebo
 		{
 			std::vector<physics::ModelPtr> weaselballs = getModels(NAME_OF_WEASELBALLS);
 			std::vector<physics::ModelPtr> structures = getModels(NAME_OF_MOUNTS);
-			sensors::SensorPtr bumpSensor = getContactSensor();
-			if( checkAllModelsInit(weaselballs, structures) and bumpSensor != NULL)
+			std::vector<sensors::ContactSensorPtr> bumpSensor = getContactSensor();
+			if( checkAllModelsInit(weaselballs, structures) and bumpSensor.size() != 0)
 			{
 				std::cout << "[DEBUG] Found all the models and Sensors!" << std::endl;
 				this->getModelsFlag = 0;
 				this->weaselballs = weaselballs;
 				this->structures = structures;
 				this->bumpSensor = bumpSensor;
-				this->bumpSensor->Init();
-				this->_updateCollision = this->bumpSensor->ConnectUpdated(
-					std::bind(&StateCollector::onCollision,  this));
-				std::cout << "Sensor type  = " << this->bumpSensor->Type() << std::endl;
-				std::cout << "Sensor status = " << this->bumpSensor->IsActive() << std::endl;
+				for (auto it : bumpSensor)
+				{
+					it->Init();
+					this->_updateCollision = it->ConnectUpdated(
+						std::bind(&StateCollector::onCollision,  this));
+					std::cout << "Sensor status = " << it->IsActive() << std::endl;
+
+				}
 			}
 			else
 			{
@@ -290,6 +350,7 @@ namespace gazebo
 				getMountXYZ(mount, &data);
 				getMountRotation(mount, &data);
 			    getSimTime(&data);
+				getNumberOfWalls(&data);
 
 				writeDataToCSV(data,0); //I will worry about creating IDs for substructures later...
 				collection.push_back(data);	 
@@ -381,13 +442,9 @@ namespace gazebo
 	//This function checks if there are any collisions with the wall
 	void getNumberOfWalls(weaselballData* data)
 	{
-		std::cout << "FLAG1\n";
 		data->numberOfWalls = this->wallCounter;
-		std::cout << "FLAG2\n";
 		this->wallCounter = 0;
-		std::cout << "FLAG3\n";
 		this->railStrings.clear();
-		std::cout << "FLAG4\n";
 	}
   };
 
