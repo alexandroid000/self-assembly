@@ -9,6 +9,8 @@
 
 namespace gazebo
 {
+ // typedef boost::shared_ptr<Sensor> SensorPtr;
+ // typedef boost::shared_ptr<ContactSensor> ContactSensorPtr;
   /// \brief An example plugin for a contact sensor.
   class BumpSensor : public SensorPlugin
   {
