@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+source Robot_Config.txt
 
 killall gzserver
 killall gzclient
@@ -12,11 +13,13 @@ source $WORKSPACE_PATH/devel/setup.sh
 export GAZEBO_MODEL_PATH=$WORKSPACE_PATH/src/weaselball_description/meshes:$GAZEBO_MODEL_PATH
 export GAZEBO_RESOURCE_PATH=$WORKSPACE_PATH/src/weaselball_gazebo/worlds:$GAZEBO_RESOURCE_PATH
 
-#Not implemented yet
-#read -n1 -p "Random initial condition (r) or Constant initial condition (c)?" doit
-
-
 roslaunch weaselball_gazebo 4T.launch init_cond:=$doit
+
+if [ "$UPLOAD_DATA" -eq "1" ]; then
+	cd $WORKSPACE_PATH/data/collections
+	chmod +x upload.sh
+	sh ./upload.sh s3://vrmsl/4T
+fi
 
 
 killall gzserver

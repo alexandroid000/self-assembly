@@ -9,6 +9,11 @@ VICON_SAMPLE_RATE=100.0
 BASE_VIDEO_LED_DURATION=1.0/30.0
 VIDEO_LED_TIME_FACTOR=20.0
 
+
+#In order to upload data to the AWS S3 you will need to setup AWS using "aws configure command"
+#Please contact the AWS admin to get your user account details. 
+UPLOAD_DATA=0
+
 RANDOMIZE_BALLS=1
 RANDOMIZE_STRUCTURES=1
 

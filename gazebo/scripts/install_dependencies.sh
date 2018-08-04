@@ -52,7 +52,8 @@ if [[ $doit == "Y" || $doit == "y" ]]; then
         echo "deb-src http://ppa.launchpad.net/gwu-positronics/ravelin/ubuntu trusty main" | sudo tee -a /etc/apt/sources.list
 	sudo apt-get update
 	sudo apt-get install ravelin
-echo "\nexport PYTHONPATH=$PYTHONPATH:/home/justin/Documents/bouncy/self-assembly/dataAnalysis/src\n" >> ~/.bashrc 
-source ~/.bashrc
+	pip install awscli
+	echo "\nexport PYTHONPATH=$PYTHONPATH:/home/justin/Documents/bouncy/self-assembly/dataAnalysis/src\n" >> ~/.bashrc 
 fi
+source ~/.bashrc
 echo "Done!"
