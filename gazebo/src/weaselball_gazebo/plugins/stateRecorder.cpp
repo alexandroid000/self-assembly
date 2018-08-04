@@ -4,9 +4,13 @@
 #include <gazebo/common/common.hh>
 #include <gazebo/common/Events.hh>
 #include <gazebo/physics/physics.hh>
+#include <gazebo/sensors/SensorTypes.hh>
+#include <gazebo/sensors/sensors.hh>
+#include <gazebo-7/gazebo/sensors/SensorManager.hh>
 
 #include "../include/gazebo_log.h"
 
+#include <ros/console.h>
 #include <ctime>
 #include <stdlib.h>
 #include <vector>
@@ -15,6 +19,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <math.h>
 
 #include <tuple>
 #include "../include/common.h"
@@ -40,6 +45,9 @@ namespace gazebo
 		
 		common::Time timeStamp;
 
+		int numberOfWalls;
+
+
 	};
 }
 
@@ -50,10 +58,11 @@ namespace gazebo
   private:
     event::ConnectionPtr _updateConnection;  //< Gazebo update callback
     event::ConnectionPtr _updateWorldReset;  //< Gazebo update callback
+    event::ConnectionPtr _updateCollision;  //< Gazebo update callback
 
-    physics::WorldPtr _world;                        //< Gazebo world pointer
+    physics::WorldPtr world_;                        //< Gazebo world pointer
 	std::vector<physics::ModelPtr> weaselballs;
-
+	std::vector<sensors::ContactSensorPtr> bumpSensor;
 	std::vector<physics::ModelPtr> structures;
 	bool getModelsFlag = 1;
 	//recordingType is set to 0 to collect a lot of data about the weaselballs and is set to 1 to collect R2 x S1 of the mount configuration.
@@ -61,7 +70,8 @@ namespace gazebo
 	std::ofstream collectionFile;
 	int resetCounter = 0;
 	
-	
+	int wallCounter = 0;
+	std::vector<std::string> railStrings;
   public:
     //-------------------------------------------------------------------------
     StateCollector( void ) { }
@@ -74,7 +84,7 @@ namespace gazebo
 	std::vector<physics::ModelPtr> getModels(std::string modelName)
 	{
 		std::vector<physics::ModelPtr> ret;
-		std::vector<physics::ModelPtr> allModels = this->_world->GetModels();
+		std::vector<physics::ModelPtr> allModels = this->world_->GetModels();
 		for(auto it : allModels)
 		{
 			std::string name = it->GetName();
@@ -95,6 +105,7 @@ namespace gazebo
 		{
 			this->collectionFile << data.timeStamp << ",";
 			this->collectionFile << id << ",";
+			this->collectionFile << data.numberOfWalls << ",";
 			this->collectionFile << data.mountPosition[0] << "," << data.mountPosition[1] << ",";
 			//Gazebo does rotation as rpy
 			this->collectionFile << data.mountRotation[2] << ",";
@@ -113,6 +124,7 @@ namespace gazebo
 			this->collectionFile << data.rotationalAccelerationRelative[0] << "," << data.rotationalAccelerationRelative[1] << "," << data.rotationalAccelerationRelative[2] << ",";	
 			this->collectionFile << this->resetCounter << ",";
 			this->collectionFile << checkCorrectness() << ",";
+			this->collectionFile << data.numberOfWalls << ",";
 			this->collectionFile << "\n";
 		}
 		else if(this->recordingType_ == 1)
@@ -124,6 +136,7 @@ namespace gazebo
 			this->collectionFile << data.mountRotation[2] << ",";
 			this->collectionFile << this->resetCounter << ",";
 			this->collectionFile << checkCorrectness() << ",";
+			this->collectionFile << data.numberOfWalls << ",";
 			this->collectionFile << "\n";
 		}
 	}
@@ -131,9 +144,51 @@ namespace gazebo
 	//The purpose of the function is to check that everything at a high level looks like it is working well in the simulator	
 	bool checkCorrectness()
 	{
-	//Get Max distance between a structure
-	//Make sure none of the balls are over the Max distance away from eachother + lil extra (say 1.2 times)
-		return 1;
+		//The system is correct if all of the balls are in a hub and are within the enclosure
+		std::vector<physics::ModelPtr> weaselballs = getModels(NAME_OF_WEASELBALLS);
+		std::vector<physics::ModelPtr> structures = getModels(NAME_OF_MOUNTS);
+		double MOUNT_RADIUS = 0.0504;
+		double ENCLOSURE_MAX_X = 0.52;
+		double ENCLOSURE_MAX_Y = 0.52;
+		double ENCLOSURE_MIN_X = -0.52;
+		double ENCLOSURE_MIN_Y = -0.52;
+		bool valid = 1;
+		for (auto it : weaselballs)
+		{
+			math::Vector3 ballPose = it->GetWorldPose().pos;
+			bool flag = 0;
+			//Make sure the balls are in a hub
+			for (auto structure : structures)
+			{
+				std::vector<physics::LinkPtr> links = structure->GetLinks();
+				for (auto link : links)
+				{
+					math::Vector3 linkPose = link->GetWorldPose().pos;
+					double foo = pow(linkPose[0]-ballPose[0],2) + pow(linkPose[1]-ballPose[1],2);
+					if (pow(foo,0.5) < MOUNT_RADIUS)
+					{
+						flag = 1;
+						break;
+					}
+				}	
+				if(flag)
+					break;
+			}
+			valid = flag;	
+			if(!valid)
+				break;
+
+			//Make sure ball is within the enclosure
+			if(ballPose[0] < ENCLOSURE_MIN_X || ballPose[0] > ENCLOSURE_MAX_X || ballPose[1] < ENCLOSURE_MIN_Y || ballPose[1] > ENCLOSURE_MAX_Y)	
+				valid = 0;
+				break;
+
+		}
+		if(!valid)
+		{
+			this->world_->Reset();
+		}
+		return valid;
 
 	}
 	
@@ -146,11 +201,25 @@ namespace gazebo
 	{
 	    this->resetCounter++;
 	}
+	
+	std::vector<sensors::ContactSensorPtr> getContactSensor()
+	{
+		gazebo::sensors::SensorManager* mgr = sensors::SensorManager::Instance();
+		std::vector<sensors::SensorPtr> sensorsList = mgr->GetSensors();
+		std::vector<sensors::ContactSensorPtr> ret;
+		std::cout << "Sensor size is " << sensorsList.size() << std::endl;
+		for(auto it : sensorsList)
+		{
+			ret.push_back(std::dynamic_pointer_cast<sensors::ContactSensor>(it));
+		}
+		return ret;
+	}
+
 
     //-------------------------------------------------------------------------
     // Gazebo callback.  Called when the simulation is starting up
     virtual void Load( physics::WorldPtr world, sdf::ElementPtr sdf ) {
-	  this->_world = world;
+	  this->world_ = world;
       this->_updateConnection = event::Events::ConnectWorldUpdateBegin(
         boost::bind( &StateCollector::Update, this ) );
       this->_updateWorldReset = event::Events::ConnectWorldReset(
@@ -184,12 +253,69 @@ namespace gazebo
 	  }
 		else if(recordingType_ == 1)
 		{
-			this->collectionFile << "Time,ID,X,Y,Yaw,ResetID,checkCorrectness\n";
+			this->collectionFile << "Time,ID,X,Y,Yaw,ResetID,checkCorrectness,NumberOfWalls\n";
 
 		}
+
+	//Get structure object and store it
+	
 	  std::cout << "State Collector has loaded!" << std::endl;
     }
+	void onCollision()
+	{
+//	std::vector<std::string> railStrings;
+		msgs::Contacts contacts;
+		for(auto contactSensor : this->bumpSensor)
+		{
+			contacts = contactSensor->Contacts();
+			for (unsigned int i = 0; i < contacts.contact_size(); ++i)
+			{
+				//If it is a swarmbot or the ground ignore it
+				std::string model1Name = contacts.contact(i).collision1();
+				std::string model2Name = contacts.contact(i).collision2();
+				ROS_DEBUG("CONTACT");
 
+				std::map<std::string, physics::Contact> mapping = contactSensor->Contacts(model1Name);
+				physics::ModelPtr mount;
+				std::string linkNumber;
+				
+				if(model1Name.find("mount") != std::string::npos and model2Name.find("rail") != std::string::npos)
+				{
+					//Check that rail# isn't already counted
+					if (std::find(this->railStrings.begin(), this->railStrings.end(), model2Name) == this->railStrings.end())
+					{
+						ROS_DEBUG("FOO");
+						
+					  // Element not in vector.
+						this->wallCounter += 1;
+						this->railStrings.push_back(model2Name);
+					}
+					else
+					{
+//						std::cout << "Already counted " << model2Name << std::endl;
+					}
+				}
+				else if(model1Name.find("rail") != std::string::npos and model2Name.find("mount") != std::string::npos)
+				{
+					//Check that rail# isn't already counted
+					if (std::find(this->railStrings.begin(), this->railStrings.end(), model1Name) == this->railStrings.end())
+					{
+						ROS_DEBUG("BAR");
+					  // Element not in vector.
+						this->wallCounter += 1;
+						this->railStrings.push_back(model1Name);
+					}
+					else
+					{
+//						std::cout << "Already counted " << model1Name << std::endl;
+
+					}
+				}
+
+			}
+		}
+
+	}
     //-------------------------------------------------------------------------
     // Gazebo callback.  Called whenever the simulation advances a timestep
     virtual void Update( ) {
@@ -198,11 +324,22 @@ namespace gazebo
 		{
 			std::vector<physics::ModelPtr> weaselballs = getModels(NAME_OF_WEASELBALLS);
 			std::vector<physics::ModelPtr> structures = getModels(NAME_OF_MOUNTS);
-			if( checkAllModelsInit(weaselballs, structures) )
+			std::vector<sensors::ContactSensorPtr> bumpSensor = getContactSensor();
+			if( checkAllModelsInit(weaselballs, structures) and bumpSensor.size() != 0)
 			{
+				std::cout << "[DEBUG] Found all the models and Sensors!" << std::endl;
 				this->getModelsFlag = 0;
 				this->weaselballs = weaselballs;
 				this->structures = structures;
+				this->bumpSensor = bumpSensor;
+				for (auto it : bumpSensor)
+				{
+					it->Init();
+					this->_updateCollision = it->ConnectUpdated(
+						std::bind(&StateCollector::onCollision,  this));
+					std::cout << "Sensor status = " << it->IsActive() << std::endl;
+
+				}
 			}
 			else
 			{
@@ -220,6 +357,7 @@ namespace gazebo
 				getMountXYZ(mount, &data);
 				getMountRotation(mount, &data);
 			    getSimTime(&data);
+				getNumberOfWalls(&data);
 
 			}
 			for (auto weaselball : this->weaselballs)
@@ -253,6 +391,7 @@ namespace gazebo
 				getMountXYZ(mount, &data);
 				getMountRotation(mount, &data);
 			    getSimTime(&data);
+				getNumberOfWalls(&data);
 
 				writeDataToCSV(data,0); //I will worry about creating IDs for substructures later...
 				collection.push_back(data);	 
@@ -264,7 +403,7 @@ namespace gazebo
 	
 	void getSimTime(weaselballData* data)
 	{
-		data->timeStamp = this->_world->GetSimTime();
+		data->timeStamp = this->world_->GetSimTime();
 	}
 
 	void getMountXYZ(physics::ModelPtr mount, weaselballData* data)
@@ -339,6 +478,14 @@ namespace gazebo
 	void getLinearAccelerationRelative(physics::ModelPtr weaselball, weaselballData* data)
 	{
 		data->linearAccelerationRelative = weaselball->GetRelativeLinearAccel();
+	}
+
+	//This function checks if there are any collisions with the wall
+	void getNumberOfWalls(weaselballData* data)
+	{
+		data->numberOfWalls = this->wallCounter;
+		this->wallCounter = 0;
+		this->railStrings.clear();
 	}
   };
 

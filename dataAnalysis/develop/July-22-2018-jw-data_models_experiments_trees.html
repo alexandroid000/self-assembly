@@ -11769,20 +11769,45 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="ch">#!/usr/bin/env python</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<div class=" highlight hl-ipython3"><pre><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
 <span class="o">%</span><span class="k">load_ext</span> version_information
 <span class="o">%</span><span class="k">version_information</span> numpy, pandas, matplotlib
 <span class="o">%</span><span class="k">version_information</span>
 <span class="n">fig_prefix</span> <span class="o">=</span> <span class="s2">&quot;../figures/2018-07-22-jw-weaselball-heatmap_&quot;</span>
 <span class="n">data_prefix</span> <span class="o">=</span> <span class="s2">&quot;../data/2018-07-22-jw-weaselball-heatmap_&quot;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/07-28-2018_22-55-56.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/07-29-2018_17-26-37.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/07-29-2018_13-13-11.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df3</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">df4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/07-29-2018_22-44-40.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df4</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">df5</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/07-30-2018_03-47-59.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df5</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">df1</span><span class="p">,</span><span class="n">df2</span><span class="p">,</span><span class="n">df3</span><span class="p">,</span><span class="n">df4</span><span class="p">,</span><span class="n">df5</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span><span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11799,36 +11824,18 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>The version_information extension is already loaded. To reload it, use:
-  %reload_ext version_information
+<pre>(19274541, 7)
+(6492777, 7)
+(6152540, 7)
+(17329453, 7)
+(12237448, 7)
 </pre>
 </div>
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/collection.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[26]:</div>
+<div class="prompt output_prompt">Out[3]:</div>
 
 
 
@@ -11853,151 +11860,66 @@ div#notebook {
       <th></th>
       <th>Time</th>
       <th>ID</th>
-      <th>Mount_X</th>
-      <th>Mount_Y</th>
-      <th>Mount_Yaw</th>
-      <th>Pos_x</th>
-      <th>Pos_y</th>
-      <th>Pos_z</th>
+      <th>X</th>
+      <th>Y</th>
       <th>Yaw</th>
-      <th>Pitch</th>
-      <th>...</th>
-      <th>Linear_Velocity_Z_Relative</th>
-      <th>Linear_Acceleration_X_Relative</th>
-      <th>Linear_Acceleration_Y_Relative</th>
-      <th>Linear_Acceleration_Z_Relative_Relative</th>
-      <th>Rotational_Velocity_X_Relative</th>
-      <th>Rotational_Velocity_Y_Relative</th>
-      <th>Rotational_Velocity_Z_Relative</th>
-      <th>Rotational_Acceleration_X_Relative</th>
-      <th>Rotational_Acceleration_Y_Relative</th>
-      <th>Rotational_Acceleration_Z_Relative</th>
+      <th>ResetID</th>
+      <th>checkCorrectness</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>0 0</td>
-      <td>48</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000e+00</td>
-      <td>-0.012243</td>
-      <td>-0.025526</td>
-      <td>0.010</td>
-      <td>1.20000</td>
-      <td>1.20000</td>
-      <td>...</td>
+      <td>0 202000000</td>
+      <td>0</td>
       <td>0.000000</td>
-      <td>0.023433</td>
-      <td>-0.578691</td>
-      <td>1.26987</td>
       <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>14.0356</td>
-      <td>28.9883</td>
-      <td>11.5330</td>
+      <td>0.000000</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0 0</td>
-      <td>49</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000e+00</td>
-      <td>0.036942</td>
-      <td>0.072364</td>
-      <td>0.010</td>
-      <td>0.50150</td>
-      <td>0.50150</td>
-      <td>...</td>
-      <td>0.000000</td>
-      <td>27.562800</td>
-      <td>-10.700600</td>
-      <td>-39.59940</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>-343.1260</td>
-      <td>-1903.2400</td>
-      <td>927.5120</td>
+      <td>0 203000000</td>
+      <td>0</td>
+      <td>-0.012095</td>
+      <td>0.012400</td>
+      <td>-0.098138</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0 0</td>
-      <td>50</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000e+00</td>
-      <td>-0.110867</td>
-      <td>0.022535</td>
-      <td>0.010</td>
-      <td>0.08680</td>
-      <td>0.08680</td>
-      <td>...</td>
-      <td>0.000000</td>
-      <td>-1.804070</td>
-      <td>-0.274777</td>
-      <td>1.31604</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>36.6215</td>
-      <td>-37.7046</td>
-      <td>41.7151</td>
+      <td>0 204000000</td>
+      <td>0</td>
+      <td>-0.003114</td>
+      <td>-0.052982</td>
+      <td>-0.181063</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0 0</td>
-      <td>51</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000e+00</td>
-      <td>0.088730</td>
-      <td>-0.073107</td>
-      <td>0.010</td>
-      <td>0.47689</td>
-      <td>0.47689</td>
-      <td>...</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>0.0000</td>
-      <td>0.0000</td>
-      <td>0.0000</td>
+      <td>0 205000000</td>
+      <td>0</td>
+      <td>-0.002668</td>
+      <td>-0.053384</td>
+      <td>-0.182874</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0 1000000</td>
-      <td>48</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>-4.047560e-21</td>
-      <td>-0.009433</td>
-      <td>-0.026050</td>
-      <td>0.041</td>
-      <td>1.19860</td>
-      <td>1.19860</td>
-      <td>...</td>
-      <td>-0.104303</td>
-      <td>-20.047100</td>
-      <td>5.029310</td>
-      <td>-104.30300</td>
-      <td>-0.331358</td>
-      <td>-4.25314</td>
-      <td>-0.37465</td>
-      <td>-320.4300</td>
-      <td>-4271.8800</td>
-      <td>-366.0040</td>
+      <td>0 206000000</td>
+      <td>0</td>
+      <td>-0.001664</td>
+      <td>-0.053407</td>
+      <td>-0.186672</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 35 columns</p>
 </div>
 </div>
 
@@ -12009,18 +11931,195 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Clean x,y data</span>
-<span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1">#Sample the data</span>
+<span class="n">SAMPLING_RATE</span> <span class="o">=</span> <span class="mi">200</span> <span class="c1">#Keep 1 row for every SAMPLING_RATE</span>
+<span class="n">df_sampled</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="n">SAMPLING_RATE</span><span class="p">,:]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Size of new DF is {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df_sampled</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span class="n">df_sampled</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Size of new DF is (307434, 7)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[4]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Time</th>
+      <th>ID</th>
+      <th>X</th>
+      <th>Y</th>
+      <th>Yaw</th>
+      <th>ResetID</th>
+      <th>checkCorrectness</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0 202000000</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>4.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>200</th>
+      <td>0 402000000</td>
+      <td>0</td>
+      <td>0.145788</td>
+      <td>-0.097673</td>
+      <td>-0.801413</td>
+      <td>4.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>400</th>
+      <td>0 602000000</td>
+      <td>0</td>
+      <td>0.256540</td>
+      <td>-0.132600</td>
+      <td>-1.436840</td>
+      <td>4.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>600</th>
+      <td>0 802000000</td>
+      <td>0</td>
+      <td>0.328300</td>
+      <td>-0.121642</td>
+      <td>-2.074360</td>
+      <td>4.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>800</th>
+      <td>1 2000000</td>
+      <td>0</td>
+      <td>0.386734</td>
+      <td>-0.131699</td>
+      <td>-2.530190</td>
+      <td>4.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1000</th>
+      <td>1 202000000</td>
+      <td>0</td>
+      <td>0.388289</td>
+      <td>-0.126979</td>
+      <td>-2.664740</td>
+      <td>4.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1200</th>
+      <td>0 7000000</td>
+      <td>0</td>
+      <td>0.385060</td>
+      <td>0.384344</td>
+      <td>2.068000</td>
+      <td>5.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1400</th>
+      <td>0 207000000</td>
+      <td>0</td>
+      <td>0.385988</td>
+      <td>0.383226</td>
+      <td>2.082380</td>
+      <td>5.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1600</th>
+      <td>0 407000000</td>
+      <td>0</td>
+      <td>0.388295</td>
+      <td>0.382646</td>
+      <td>2.097350</td>
+      <td>5.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1800</th>
+      <td>0 607000000</td>
+      <td>0</td>
+      <td>0.387792</td>
+      <td>0.377979</td>
+      <td>1.969430</td>
+      <td>5.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="c1">#Clean x,y data</span>
+<span class="n">df_clean</span> <span class="o">=</span> <span class="n">df_sampled</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="c1">#Clean up the data</span>
 
 <span class="c1">#Shift X and Y over so that way it could be made easier to use. Currently the world reference is at the center of the &quot;play area&quot;</span>
 <span class="n">LENGTH_OF_BOX</span> <span class="o">=</span> <span class="mf">1.127</span> <span class="c1">#This can be obtained from the .sdf file of the weazelball enclosure in gazebo</span>
 
-<span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Mount_X&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">LENGTH_OF_BOX</span> <span class="o">/</span> <span class="mi">2</span>
-<span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Mount_Y&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">LENGTH_OF_BOX</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">LENGTH_OF_BOX</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">LENGTH_OF_BOX</span> <span class="o">/</span> <span class="mi">2</span>
 <span class="n">df_clean</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -12034,7 +12133,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[27]:</div>
+<div class="prompt output_prompt">Out[6]:</div>
 
 
 
@@ -12059,151 +12158,66 @@ div#notebook {
       <th></th>
       <th>Time</th>
       <th>ID</th>
-      <th>Mount_X</th>
-      <th>Mount_Y</th>
-      <th>Mount_Yaw</th>
-      <th>Pos_x</th>
-      <th>Pos_y</th>
-      <th>Pos_z</th>
+      <th>X</th>
+      <th>Y</th>
       <th>Yaw</th>
-      <th>Pitch</th>
-      <th>...</th>
-      <th>Linear_Velocity_Z_Relative</th>
-      <th>Linear_Acceleration_X_Relative</th>
-      <th>Linear_Acceleration_Y_Relative</th>
-      <th>Linear_Acceleration_Z_Relative_Relative</th>
-      <th>Rotational_Velocity_X_Relative</th>
-      <th>Rotational_Velocity_Y_Relative</th>
-      <th>Rotational_Velocity_Z_Relative</th>
-      <th>Rotational_Acceleration_X_Relative</th>
-      <th>Rotational_Acceleration_Y_Relative</th>
-      <th>Rotational_Acceleration_Z_Relative</th>
+      <th>ResetID</th>
+      <th>checkCorrectness</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>0 0</td>
-      <td>48</td>
-      <td>0.5635</td>
-      <td>0.5635</td>
-      <td>0.000000e+00</td>
-      <td>-0.012243</td>
-      <td>-0.025526</td>
-      <td>0.010</td>
-      <td>1.20000</td>
-      <td>1.20000</td>
-      <td>...</td>
+      <td>0 202000000</td>
+      <td>0</td>
+      <td>0.563500</td>
+      <td>0.563500</td>
       <td>0.000000</td>
-      <td>0.023433</td>
-      <td>-0.578691</td>
-      <td>1.26987</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>14.0356</td>
-      <td>28.9883</td>
-      <td>11.5330</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>0 0</td>
-      <td>49</td>
-      <td>0.5635</td>
-      <td>0.5635</td>
-      <td>0.000000e+00</td>
-      <td>0.036942</td>
-      <td>0.072364</td>
-      <td>0.010</td>
-      <td>0.50150</td>
-      <td>0.50150</td>
-      <td>...</td>
-      <td>0.000000</td>
-      <td>27.562800</td>
-      <td>-10.700600</td>
-      <td>-39.59940</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>-343.1260</td>
-      <td>-1903.2400</td>
-      <td>927.5120</td>
+      <th>200</th>
+      <td>0 402000000</td>
+      <td>0</td>
+      <td>0.709288</td>
+      <td>0.465827</td>
+      <td>-0.801413</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>0 0</td>
-      <td>50</td>
-      <td>0.5635</td>
-      <td>0.5635</td>
-      <td>0.000000e+00</td>
-      <td>-0.110867</td>
-      <td>0.022535</td>
-      <td>0.010</td>
-      <td>0.08680</td>
-      <td>0.08680</td>
-      <td>...</td>
-      <td>0.000000</td>
-      <td>-1.804070</td>
-      <td>-0.274777</td>
-      <td>1.31604</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>36.6215</td>
-      <td>-37.7046</td>
-      <td>41.7151</td>
+      <th>400</th>
+      <td>0 602000000</td>
+      <td>0</td>
+      <td>0.820040</td>
+      <td>0.430900</td>
+      <td>-1.436840</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>0 0</td>
-      <td>51</td>
-      <td>0.5635</td>
-      <td>0.5635</td>
-      <td>0.000000e+00</td>
-      <td>0.088730</td>
-      <td>-0.073107</td>
-      <td>0.010</td>
-      <td>0.47689</td>
-      <td>0.47689</td>
-      <td>...</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>0.0000</td>
-      <td>0.0000</td>
-      <td>0.0000</td>
+      <th>600</th>
+      <td>0 802000000</td>
+      <td>0</td>
+      <td>0.891800</td>
+      <td>0.441858</td>
+      <td>-2.074360</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>0 1000000</td>
-      <td>48</td>
-      <td>0.5635</td>
-      <td>0.5635</td>
-      <td>-4.047560e-21</td>
-      <td>-0.009433</td>
-      <td>-0.026050</td>
-      <td>0.041</td>
-      <td>1.19860</td>
-      <td>1.19860</td>
-      <td>...</td>
-      <td>-0.104303</td>
-      <td>-20.047100</td>
-      <td>5.029310</td>
-      <td>-104.30300</td>
-      <td>-0.331358</td>
-      <td>-4.25314</td>
-      <td>-0.37465</td>
-      <td>-320.4300</td>
-      <td>-4271.8800</td>
-      <td>-366.0040</td>
+      <th>800</th>
+      <td>1 2000000</td>
+      <td>0</td>
+      <td>0.950234</td>
+      <td>0.431801</td>
+      <td>-2.530190</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 35 columns</p>
 </div>
 </div>
 
@@ -12215,10 +12229,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Discretize x,y</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1">#Discretize x,y</span>
 <span class="n">NUMBER_OF_SQUARES</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1">#This should be a square number to create equal sized squares.</span>
 <span class="n">RESOLUTION_OF_S1</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#This is used to discretize the yaw angle over 0 - 2*pi</span>
 
@@ -12226,8 +12240,8 @@ div#notebook {
 <span class="n">df_discretized</span> <span class="o">=</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">mappingBoxConstant</span> <span class="o">=</span> <span class="p">(</span><span class="n">NUMBER_OF_SQUARES</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.0</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">LENGTH_OF_BOX</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-    <span class="n">df_discretized</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Mount_X&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Mount_X&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mappingBoxConstant</span><span class="p">)</span>
-    <span class="n">df_discretized</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Mount_Y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Mount_Y&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mappingBoxConstant</span><span class="p">)</span>
+    <span class="n">df_discretized</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mappingBoxConstant</span><span class="p">)</span>
+    <span class="n">df_discretized</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mappingBoxConstant</span><span class="p">)</span>
 
 <span class="n">df_discretized</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
@@ -12242,7 +12256,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[28]:</div>
+<div class="prompt output_prompt">Out[7]:</div>
 
 
 
@@ -12267,151 +12281,66 @@ div#notebook {
       <th></th>
       <th>Time</th>
       <th>ID</th>
-      <th>Mount_X</th>
-      <th>Mount_Y</th>
-      <th>Mount_Yaw</th>
-      <th>Pos_x</th>
-      <th>Pos_y</th>
-      <th>Pos_z</th>
+      <th>X</th>
+      <th>Y</th>
       <th>Yaw</th>
-      <th>Pitch</th>
-      <th>...</th>
-      <th>Linear_Velocity_Z_Relative</th>
-      <th>Linear_Acceleration_X_Relative</th>
-      <th>Linear_Acceleration_Y_Relative</th>
-      <th>Linear_Acceleration_Z_Relative_Relative</th>
-      <th>Rotational_Velocity_X_Relative</th>
-      <th>Rotational_Velocity_Y_Relative</th>
-      <th>Rotational_Velocity_Z_Relative</th>
-      <th>Rotational_Acceleration_X_Relative</th>
-      <th>Rotational_Acceleration_Y_Relative</th>
-      <th>Rotational_Acceleration_Z_Relative</th>
+      <th>ResetID</th>
+      <th>checkCorrectness</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>0 0</td>
-      <td>48</td>
+      <td>0 202000000</td>
+      <td>0</td>
       <td>5.0</td>
       <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>-0.012243</td>
-      <td>-0.025526</td>
-      <td>0.010</td>
-      <td>1.20000</td>
-      <td>1.20000</td>
-      <td>...</td>
       <td>0.000000</td>
-      <td>0.023433</td>
-      <td>-0.578691</td>
-      <td>1.26987</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>14.0356</td>
-      <td>28.9883</td>
-      <td>11.5330</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>0 0</td>
-      <td>49</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>0.036942</td>
-      <td>0.072364</td>
-      <td>0.010</td>
-      <td>0.50150</td>
-      <td>0.50150</td>
-      <td>...</td>
-      <td>0.000000</td>
-      <td>27.562800</td>
-      <td>-10.700600</td>
-      <td>-39.59940</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>-343.1260</td>
-      <td>-1903.2400</td>
-      <td>927.5120</td>
+      <th>200</th>
+      <td>0 402000000</td>
+      <td>0</td>
+      <td>6.0</td>
+      <td>4.0</td>
+      <td>-0.801413</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>0 0</td>
-      <td>50</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>-0.110867</td>
-      <td>0.022535</td>
-      <td>0.010</td>
-      <td>0.08680</td>
-      <td>0.08680</td>
-      <td>...</td>
-      <td>0.000000</td>
-      <td>-1.804070</td>
-      <td>-0.274777</td>
-      <td>1.31604</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>36.6215</td>
-      <td>-37.7046</td>
-      <td>41.7151</td>
+      <th>400</th>
+      <td>0 602000000</td>
+      <td>0</td>
+      <td>7.0</td>
+      <td>3.0</td>
+      <td>-1.436840</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>0 0</td>
-      <td>51</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>0.088730</td>
-      <td>-0.073107</td>
-      <td>0.010</td>
-      <td>0.47689</td>
-      <td>0.47689</td>
-      <td>...</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>0.0000</td>
-      <td>0.0000</td>
-      <td>0.0000</td>
+      <th>600</th>
+      <td>0 802000000</td>
+      <td>0</td>
+      <td>7.0</td>
+      <td>3.0</td>
+      <td>-2.074360</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>0 1000000</td>
-      <td>48</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>-4.047560e-21</td>
-      <td>-0.009433</td>
-      <td>-0.026050</td>
-      <td>0.041</td>
-      <td>1.19860</td>
-      <td>1.19860</td>
-      <td>...</td>
-      <td>-0.104303</td>
-      <td>-20.047100</td>
-      <td>5.029310</td>
-      <td>-104.30300</td>
-      <td>-0.331358</td>
-      <td>-4.25314</td>
-      <td>-0.37465</td>
-      <td>-320.4300</td>
-      <td>-4271.8800</td>
-      <td>-366.0040</td>
+      <th>800</th>
+      <td>1 2000000</td>
+      <td>0</td>
+      <td>8.0</td>
+      <td>3.0</td>
+      <td>-2.530190</td>
+      <td>4.0</td>
+      <td>1.0</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 35 columns</p>
 </div>
 </div>
 
@@ -12423,14 +12352,14 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Create goal columns (x_t+1, y_t+1, z_t+1)</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1">#Create goal columns (x_t+1, y_t+1, z_t+1)</span>
 
-<span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Mount_X_Next&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Mount_X&#39;</span><span class="p">]</span>
-<span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Mount_Y_Next&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Mount_Y&#39;</span><span class="p">]</span>
-<span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Mount_Yaw_Next&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Mount_Yaw&#39;</span><span class="p">]</span>
+<span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Mount_X_Next&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span>
+<span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Mount_Y_Next&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">]</span>
+<span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Mount_Yaw_Next&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Yaw&#39;</span><span class="p">]</span>
 
 <span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Mount_X_Next&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Mount_Y_Next&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
@@ -12450,7 +12379,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[29]:</div>
+<div class="prompt output_prompt">Out[8]:</div>
 
 
 
@@ -12475,22 +12404,11 @@ div#notebook {
       <th></th>
       <th>Time</th>
       <th>ID</th>
-      <th>Mount_X</th>
-      <th>Mount_Y</th>
-      <th>Mount_Yaw</th>
-      <th>Pos_x</th>
-      <th>Pos_y</th>
-      <th>Pos_z</th>
+      <th>X</th>
+      <th>Y</th>
       <th>Yaw</th>
-      <th>Pitch</th>
-      <th>...</th>
-      <th>Linear_Acceleration_Z_Relative_Relative</th>
-      <th>Rotational_Velocity_X_Relative</th>
-      <th>Rotational_Velocity_Y_Relative</th>
-      <th>Rotational_Velocity_Z_Relative</th>
-      <th>Rotational_Acceleration_X_Relative</th>
-      <th>Rotational_Acceleration_Y_Relative</th>
-      <th>Rotational_Acceleration_Z_Relative</th>
+      <th>ResetID</th>
+      <th>checkCorrectness</th>
       <th>Mount_X_Next</th>
       <th>Mount_Y_Next</th>
       <th>Mount_Yaw_Next</th>
@@ -12499,127 +12417,71 @@ div#notebook {
   <tbody>
     <tr>
       <th>0</th>
-      <td>0 0</td>
-      <td>48</td>
+      <td>0 202000000</td>
+      <td>0</td>
       <td>5.0</td>
       <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>-0.012243</td>
-      <td>-0.025526</td>
-      <td>0.010</td>
-      <td>1.20000</td>
-      <td>1.20000</td>
-      <td>...</td>
-      <td>1.26987</td>
       <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>14.0356</td>
-      <td>28.9883</td>
-      <td>11.5330</td>
+      <td>4.0</td>
+      <td>1.0</td>
       <td>5.0</td>
       <td>5.0</td>
-      <td>0.000000e+00</td>
+      <td>0.000000</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>0 0</td>
-      <td>49</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>0.036942</td>
-      <td>0.072364</td>
-      <td>0.010</td>
-      <td>0.50150</td>
-      <td>0.50150</td>
-      <td>...</td>
-      <td>-39.59940</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>-343.1260</td>
-      <td>-1903.2400</td>
-      <td>927.5120</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
+      <th>200</th>
+      <td>0 402000000</td>
+      <td>0</td>
+      <td>6.0</td>
+      <td>4.0</td>
+      <td>-0.801413</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>6.0</td>
+      <td>4.0</td>
+      <td>-0.801413</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>0 0</td>
-      <td>50</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>-0.110867</td>
-      <td>0.022535</td>
-      <td>0.010</td>
-      <td>0.08680</td>
-      <td>0.08680</td>
-      <td>...</td>
-      <td>1.31604</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>36.6215</td>
-      <td>-37.7046</td>
-      <td>41.7151</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
+      <th>400</th>
+      <td>0 602000000</td>
+      <td>0</td>
+      <td>7.0</td>
+      <td>3.0</td>
+      <td>-1.436840</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>7.0</td>
+      <td>3.0</td>
+      <td>-1.436840</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>0 0</td>
-      <td>51</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>0.088730</td>
-      <td>-0.073107</td>
-      <td>0.010</td>
-      <td>0.47689</td>
-      <td>0.47689</td>
-      <td>...</td>
-      <td>0.00000</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>0.0000</td>
-      <td>0.0000</td>
-      <td>0.0000</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
+      <th>600</th>
+      <td>0 802000000</td>
+      <td>0</td>
+      <td>7.0</td>
+      <td>3.0</td>
+      <td>-2.074360</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>7.0</td>
+      <td>3.0</td>
+      <td>-2.074360</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>0 1000000</td>
-      <td>48</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>-4.047560e-21</td>
-      <td>-0.009433</td>
-      <td>-0.026050</td>
-      <td>0.041</td>
-      <td>1.19860</td>
-      <td>1.19860</td>
-      <td>...</td>
-      <td>-104.30300</td>
-      <td>-0.331358</td>
-      <td>-4.25314</td>
-      <td>-0.37465</td>
-      <td>-320.4300</td>
-      <td>-4271.8800</td>
-      <td>-366.0040</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>-4.047560e-21</td>
+      <th>800</th>
+      <td>1 2000000</td>
+      <td>0</td>
+      <td>8.0</td>
+      <td>3.0</td>
+      <td>-2.530190</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>8.0</td>
+      <td>3.0</td>
+      <td>-2.530190</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 38 columns</p>
 </div>
 </div>
 
@@ -12631,10 +12493,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#one-hot encode the ID</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1">#one-hot encode the ID</span>
 </pre></div>
 
 </div>
@@ -12644,11 +12506,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Split into training and testing</span>
-<span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;is_train&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="o">.</span><span class="mi">75</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1">#Split into training and testing</span>
+<span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;is_train&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_discretized</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="o">.</span><span class="mi">75</span>
 <span class="n">df_discretized</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -12662,7 +12524,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[30]:</div>
+<div class="prompt output_prompt">Out[11]:</div>
 
 
 
@@ -12687,21 +12549,11 @@ div#notebook {
       <th></th>
       <th>Time</th>
       <th>ID</th>
-      <th>Mount_X</th>
-      <th>Mount_Y</th>
-      <th>Mount_Yaw</th>
-      <th>Pos_x</th>
-      <th>Pos_y</th>
-      <th>Pos_z</th>
+      <th>X</th>
+      <th>Y</th>
       <th>Yaw</th>
-      <th>Pitch</th>
-      <th>...</th>
-      <th>Rotational_Velocity_X_Relative</th>
-      <th>Rotational_Velocity_Y_Relative</th>
-      <th>Rotational_Velocity_Z_Relative</th>
-      <th>Rotational_Acceleration_X_Relative</th>
-      <th>Rotational_Acceleration_Y_Relative</th>
-      <th>Rotational_Acceleration_Z_Relative</th>
+      <th>ResetID</th>
+      <th>checkCorrectness</th>
       <th>Mount_X_Next</th>
       <th>Mount_Y_Next</th>
       <th>Mount_Yaw_Next</th>
@@ -12711,127 +12563,76 @@ div#notebook {
   <tbody>
     <tr>
       <th>0</th>
-      <td>0 0</td>
-      <td>48</td>
+      <td>0 202000000</td>
+      <td>0</td>
       <td>5.0</td>
       <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>-0.012243</td>
-      <td>-0.025526</td>
-      <td>0.010</td>
-      <td>1.20000</td>
-      <td>1.20000</td>
-      <td>...</td>
       <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>14.0356</td>
-      <td>28.9883</td>
-      <td>11.5330</td>
+      <td>4.0</td>
+      <td>1.0</td>
       <td>5.0</td>
       <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0 0</td>
-      <td>49</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>0.036942</td>
-      <td>0.072364</td>
-      <td>0.010</td>
-      <td>0.50150</td>
-      <td>0.50150</td>
-      <td>...</td>
       <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>-343.1260</td>
-      <td>-1903.2400</td>
-      <td>927.5120</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
       <td>True</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>0 0</td>
-      <td>50</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>-0.110867</td>
-      <td>0.022535</td>
-      <td>0.010</td>
-      <td>0.08680</td>
-      <td>0.08680</td>
-      <td>...</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>36.6215</td>
-      <td>-37.7046</td>
-      <td>41.7151</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
+      <th>200</th>
+      <td>0 402000000</td>
+      <td>0</td>
+      <td>6.0</td>
+      <td>4.0</td>
+      <td>-0.801413</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>6.0</td>
+      <td>4.0</td>
+      <td>-0.801413</td>
       <td>True</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>0 0</td>
-      <td>51</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
-      <td>0.088730</td>
-      <td>-0.073107</td>
-      <td>0.010</td>
-      <td>0.47689</td>
-      <td>0.47689</td>
-      <td>...</td>
-      <td>0.000000</td>
-      <td>0.00000</td>
-      <td>0.00000</td>
-      <td>0.0000</td>
-      <td>0.0000</td>
-      <td>0.0000</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>0.000000e+00</td>
+      <th>400</th>
+      <td>0 602000000</td>
+      <td>0</td>
+      <td>7.0</td>
+      <td>3.0</td>
+      <td>-1.436840</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>7.0</td>
+      <td>3.0</td>
+      <td>-1.436840</td>
       <td>True</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>0 1000000</td>
-      <td>48</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>-4.047560e-21</td>
-      <td>-0.009433</td>
-      <td>-0.026050</td>
-      <td>0.041</td>
-      <td>1.19860</td>
-      <td>1.19860</td>
-      <td>...</td>
-      <td>-0.331358</td>
-      <td>-4.25314</td>
-      <td>-0.37465</td>
-      <td>-320.4300</td>
-      <td>-4271.8800</td>
-      <td>-366.0040</td>
-      <td>5.0</td>
-      <td>5.0</td>
-      <td>-4.047560e-21</td>
-      <td>False</td>
+      <th>600</th>
+      <td>0 802000000</td>
+      <td>0</td>
+      <td>7.0</td>
+      <td>3.0</td>
+      <td>-2.074360</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>7.0</td>
+      <td>3.0</td>
+      <td>-2.074360</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>800</th>
+      <td>1 2000000</td>
+      <td>0</td>
+      <td>8.0</td>
+      <td>3.0</td>
+      <td>-2.530190</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>8.0</td>
+      <td>3.0</td>
+      <td>-2.530190</td>
+      <td>True</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 39 columns</p>
 </div>
 </div>
 
@@ -12843,14 +12644,14 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Create dataframes based on split</span>
-<span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">df_discretized</span><span class="p">[</span><span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;is_train&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">True</span><span class="p">],</span> <span class="n">df_discretized</span><span class="p">[</span><span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;is_train&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">False</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1">#Create dataframes based on split</span>
+<span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">df_discretized</span><span class="p">[</span><span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;is_train&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">True</span><span class="p">],</span> <span class="n">df_discretized</span><span class="p">[</span><span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;is_train&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">False</span><span class="p">]</span>
 <span class="c1"># Show the number of observations for the test and training dataframes</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Number of observations in the training data:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Number of observations in the test data:&#39;</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of observations in the training data:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of observations in the test data:&#39;</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
 </pre></div>
 
 </div>
@@ -12867,8 +12668,8 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(&#39;Number of observations in the training data:&#39;, 602014)
-(&#39;Number of observations in the test data:&#39;, 200134)
+<pre>(&#39;Number of observations in the training data:&#39;, 230716)
+(&#39;Number of observations in the test data:&#39;, 76718)
 </pre>
 </div>
 </div>
@@ -12879,10 +12680,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#print list of information of each column (sanity check)</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1">#print list of information of each column (sanity check)</span>
 <span class="n">df_discretized</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </pre></div>
 
@@ -12896,7 +12697,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[32]:</div>
+<div class="prompt output_prompt">Out[13]:</div>
 
 
 
@@ -12920,23 +12721,11 @@ div#notebook {
     <tr style="text-align: right;">
       <th></th>
       <th>ID</th>
-      <th>Mount_X</th>
-      <th>Mount_Y</th>
-      <th>Mount_Yaw</th>
-      <th>Pos_x</th>
-      <th>Pos_y</th>
-      <th>Pos_z</th>
+      <th>X</th>
+      <th>Y</th>
       <th>Yaw</th>
-      <th>Pitch</th>
-      <th>Roll</th>
-      <th>...</th>
-      <th>Linear_Acceleration_Z_Relative_Relative</th>
-      <th>Rotational_Velocity_X_Relative</th>
-      <th>Rotational_Velocity_Y_Relative</th>
-      <th>Rotational_Velocity_Z_Relative</th>
-      <th>Rotational_Acceleration_X_Relative</th>
-      <th>Rotational_Acceleration_Y_Relative</th>
-      <th>Rotational_Acceleration_Z_Relative</th>
+      <th>ResetID</th>
+      <th>checkCorrectness</th>
       <th>Mount_X_Next</th>
       <th>Mount_Y_Next</th>
       <th>Mount_Yaw_Next</th>
@@ -12945,199 +12734,102 @@ div#notebook {
   <tbody>
     <tr>
       <th>count</th>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>...</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
-      <td>802148.000000</td>
+      <td>307434.0</td>
+      <td>307434.000000</td>
+      <td>307434.000000</td>
+      <td>307434.000000</td>
+      <td>307434.000000</td>
+      <td>307434.0</td>
+      <td>307434.000000</td>
+      <td>307434.000000</td>
+      <td>307434.000000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>49.500000</td>
-      <td>4.002054</td>
-      <td>4.000199</td>
-      <td>0.823019</td>
-      <td>-0.016842</td>
-      <td>-0.073193</td>
-      <td>0.041000</td>
-      <td>-0.014942</td>
-      <td>-0.014942</td>
-      <td>0.003067</td>
-      <td>...</td>
-      <td>0.061054</td>
-      <td>0.038016</td>
-      <td>-1.739983</td>
-      <td>-0.621639</td>
-      <td>-0.023886</td>
-      <td>-0.433075</td>
-      <td>-0.059419</td>
-      <td>4.002054</td>
-      <td>4.000199</td>
-      <td>0.823019</td>
+      <td>0.0</td>
+      <td>5.595962</td>
+      <td>6.631700</td>
+      <td>-0.097234</td>
+      <td>52.874402</td>
+      <td>1.0</td>
+      <td>5.595962</td>
+      <td>6.631700</td>
+      <td>-0.097234</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>1.118035</td>
-      <td>0.045280</td>
-      <td>0.014122</td>
-      <td>0.121607</td>
-      <td>0.075979</td>
-      <td>0.059830</td>
-      <td>0.000069</td>
-      <td>0.355916</td>
-      <td>0.355916</td>
-      <td>1.814801</td>
-      <td>...</td>
-      <td>3.935653</td>
-      <td>1.476612</td>
-      <td>1.246721</td>
-      <td>1.577533</td>
-      <td>79.142703</td>
-      <td>114.087070</td>
-      <td>80.230471</td>
-      <td>0.045280</td>
-      <td>0.014122</td>
-      <td>0.121607</td>
+      <td>0.0</td>
+      <td>1.674328</td>
+      <td>1.651212</td>
+      <td>1.846034</td>
+      <td>41.798299</td>
+      <td>0.0</td>
+      <td>1.674328</td>
+      <td>1.651212</td>
+      <td>1.846034</td>
     </tr>
     <tr>
       <th>min</th>
-      <td>48.000000</td>
+      <td>0.0</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>-3.141580</td>
       <td>4.000000</td>
-      <td>4.000000</td>
-      <td>-0.011652</td>
-      <td>-0.148693</td>
-      <td>-0.176816</td>
-      <td>0.010000</td>
-      <td>-1.518570</td>
-      <td>-1.518570</td>
-      <td>-3.141590</td>
-      <td>...</td>
-      <td>-390.532000</td>
-      <td>-8.693110</td>
-      <td>-11.320700</td>
-      <td>-10.548100</td>
-      <td>-5308.280000</td>
-      <td>-8986.250000</td>
-      <td>-4673.620000</td>
-      <td>4.000000</td>
-      <td>4.000000</td>
-      <td>-0.011652</td>
+      <td>1.0</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>-3.141580</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>48.750000</td>
+      <td>0.0</td>
       <td>4.000000</td>
+      <td>5.000000</td>
+      <td>-1.803095</td>
+      <td>24.000000</td>
+      <td>1.0</td>
       <td>4.000000</td>
-      <td>0.782846</td>
-      <td>-0.081025</td>
-      <td>-0.118614</td>
-      <td>0.041000</td>
-      <td>-0.224346</td>
-      <td>-0.224346</td>
-      <td>-1.566840</td>
-      <td>...</td>
-      <td>-1.573420</td>
-      <td>-0.786400</td>
-      <td>-2.404930</td>
-      <td>-1.428573</td>
-      <td>-26.497625</td>
-      <td>-36.439600</td>
-      <td>-23.385975</td>
-      <td>4.000000</td>
-      <td>4.000000</td>
-      <td>0.782846</td>
+      <td>5.000000</td>
+      <td>-1.803095</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>49.500000</td>
-      <td>4.000000</td>
-      <td>4.000000</td>
-      <td>0.850708</td>
-      <td>-0.032201</td>
-      <td>-0.074804</td>
-      <td>0.041000</td>
-      <td>0.013392</td>
-      <td>0.013392</td>
-      <td>0.004818</td>
-      <td>...</td>
-      <td>0.012268</td>
-      <td>0.020535</td>
-      <td>-2.005415</td>
-      <td>-0.520857</td>
-      <td>-1.360990</td>
-      <td>-0.591420</td>
-      <td>-0.279429</td>
-      <td>4.000000</td>
-      <td>4.000000</td>
-      <td>0.850708</td>
+      <td>0.0</td>
+      <td>5.000000</td>
+      <td>7.000000</td>
+      <td>-0.066676</td>
+      <td>43.000000</td>
+      <td>1.0</td>
+      <td>5.000000</td>
+      <td>7.000000</td>
+      <td>-0.066676</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>50.250000</td>
-      <td>4.000000</td>
-      <td>4.000000</td>
-      <td>0.916945</td>
-      <td>0.044804</td>
-      <td>-0.021552</td>
-      <td>0.041000</td>
-      <td>0.213985</td>
-      <td>0.213985</td>
-      <td>1.574613</td>
-      <td>...</td>
-      <td>1.598100</td>
-      <td>0.915959</td>
-      <td>-0.882150</td>
-      <td>0.324620</td>
-      <td>24.215025</td>
-      <td>35.531500</td>
-      <td>23.346900</td>
-      <td>4.000000</td>
-      <td>4.000000</td>
-      <td>0.916945</td>
+      <td>0.0</td>
+      <td>8.000000</td>
+      <td>8.000000</td>
+      <td>1.512370</td>
+      <td>64.000000</td>
+      <td>1.0</td>
+      <td>8.000000</td>
+      <td>8.000000</td>
+      <td>1.512370</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>51.000000</td>
-      <td>5.000000</td>
-      <td>5.000000</td>
-      <td>1.029500</td>
-      <td>0.122253</td>
-      <td>0.081919</td>
-      <td>0.041426</td>
-      <td>1.491330</td>
-      <td>1.491330</td>
-      <td>3.141590</td>
-      <td>...</td>
-      <td>225.912000</td>
-      <td>10.153900</td>
-      <td>10.769800</td>
-      <td>10.100000</td>
-      <td>3254.110000</td>
-      <td>7376.600000</td>
-      <td>5321.930000</td>
-      <td>5.000000</td>
-      <td>5.000000</td>
-      <td>1.029500</td>
+      <td>0.0</td>
+      <td>9.000000</td>
+      <td>9.000000</td>
+      <td>3.141580</td>
+      <td>204.000000</td>
+      <td>1.0</td>
+      <td>9.000000</td>
+      <td>9.000000</td>
+      <td>3.141580</td>
     </tr>
   </tbody>
 </table>
-<p>8 rows × 37 columns</p>
 </div>
 </div>
 
@@ -13149,11 +12841,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1"># Create a list of the feature column&#39;s names</span>
-<span class="n">features</span> <span class="o">=</span> <span class="n">df_discretized</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">35</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1"># Create a list of the feature column&#39;s names</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">df_discretized</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
 
 <span class="c1"># View features</span>
 <span class="n">features</span>
@@ -13169,29 +12861,13 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[33]:</div>
+<div class="prompt output_prompt">Out[14]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Index([u&#39;ID&#39;, u&#39;Mount_X&#39;, u&#39;Mount_Y&#39;, u&#39;Mount_Yaw&#39;, u&#39;Pos_x&#39;, u&#39;Pos_y&#39;,
-       u&#39;Pos_z&#39;, u&#39;Yaw&#39;, u&#39;Pitch&#39;, u&#39;Roll&#39;, u&#39;Linear_Velocity_X_World&#39;,
-       u&#39;Linear_Velocity_Y_World&#39;, u&#39;Linear_Velocity_Z_World&#39;,
-       u&#39;Linear_Acceleration_X_World&#39;, u&#39;Linear_Acceleration_Y_World&#39;,
-       u&#39;Linear_Acceleration_Z_World&#39;, u&#39;Rotational_Velocity_X_World&#39;,
-       u&#39;Rotational_Velocity_Y_World&#39;, u&#39;Rotational_Velocity_Z_World&#39;,
-       u&#39;Rotational_Acceleration_X_World&#39;, u&#39;Rotational_Acceleration_Y_World&#39;,
-       u&#39;Rotational_Acceleration_Z_World&#39;, u&#39;Linear_Velocity_X_Relative&#39;,
-       u&#39;Linear_Velocity_Y_Relative&#39;, u&#39;Linear_Velocity_Z_Relative&#39;,
-       u&#39;Linear_Acceleration_X_Relative&#39;, u&#39;Linear_Acceleration_Y_Relative&#39;,
-       u&#39;Linear_Acceleration_Z_Relative_Relative&#39;,
-       u&#39;Rotational_Velocity_X_Relative&#39;, u&#39;Rotational_Velocity_Y_Relative&#39;,
-       u&#39;Rotational_Velocity_Z_Relative&#39;,
-       u&#39;Rotational_Acceleration_X_Relative&#39;,
-       u&#39;Rotational_Acceleration_Y_Relative&#39;,
-       u&#39;Rotational_Acceleration_Z_Relative &#39;],
-      dtype=&#39;object&#39;)</pre>
+<pre>Index([u&#39;X&#39;, u&#39;Y&#39;, u&#39;Yaw&#39;], dtype=&#39;object&#39;)</pre>
 </div>
 
 </div>
@@ -13202,10 +12878,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Train the classifier</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1">#Train the classifier</span>
 <span class="n">clf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">features</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;Mount_X_Next&#39;</span><span class="p">])</span>
 </pre></div>
@@ -13224,15 +12900,15 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=-1)]: Done   6 out of  10 | elapsed:    2.4s remaining:    1.6s
-[Parallel(n_jobs=-1)]: Done  10 out of  10 | elapsed:    3.4s finished
+<pre>[Parallel(n_jobs=-1)]: Done   6 out of  10 | elapsed:    0.2s remaining:    0.1s
+[Parallel(n_jobs=-1)]: Done  10 out of  10 | elapsed:    0.3s finished
 </pre>
 </div>
 </div>
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[38]:</div>
+<div class="prompt output_prompt">Out[15]:</div>
 
 
 
@@ -13255,10 +12931,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1"># Apply the Classifier we trained to the test data </span>
+<div class=" highlight hl-ipython3"><pre><span class="c1"># Apply the Classifier we trained to the test data </span>
 <span class="n">preds</span><span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">features</span><span class="p">])</span>
 </pre></div>
 
@@ -13277,7 +12953,7 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>[Parallel(n_jobs=8)]: Done   6 out of  10 | elapsed:    0.0s remaining:    0.0s
-[Parallel(n_jobs=8)]: Done  10 out of  10 | elapsed:    0.0s finished
+[Parallel(n_jobs=8)]: Done  10 out of  10 | elapsed:    0.1s finished
 </pre>
 </div>
 </div>
@@ -13288,10 +12964,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1"># View the predicted probabilities of the first 10 observations</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1"># View the predicted probabilities of the first 10 observations</span>
 <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">features</span><span class="p">])[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
 </pre></div>
 
@@ -13310,29 +12986,29 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>[Parallel(n_jobs=8)]: Done   6 out of  10 | elapsed:    0.0s remaining:    0.0s
-[Parallel(n_jobs=8)]: Done  10 out of  10 | elapsed:    0.0s finished
+[Parallel(n_jobs=8)]: Done  10 out of  10 | elapsed:    0.1s finished
 </pre>
 </div>
 </div>
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[40]:</div>
+<div class="prompt output_prompt">Out[17]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>array([[0. , 1. ],
-       [0.1, 0.9],
-       [0. , 1. ],
-       [0. , 1. ],
-       [0. , 1. ],
-       [0. , 1. ],
-       [0. , 1. ],
-       [0. , 1. ],
-       [0.1, 0.9],
-       [0. , 1. ]])</pre>
+<pre>array([[0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.]])</pre>
 </div>
 
 </div>
@@ -13343,10 +13019,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1"># Create confusion matrix</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1"># Create confusion matrix</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;Mount_X_Next&#39;</span><span class="p">],</span> <span class="n">preds</span><span class="p">,</span> <span class="n">rownames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Actual Species&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Predicted Species&#39;</span><span class="p">])</span>
 </pre></div>
 
@@ -13360,7 +13036,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[41]:</div>
+<div class="prompt output_prompt">Out[18]:</div>
 
 
 
@@ -13383,25 +13059,137 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th>Predicted Species</th>
+      <th>1.0</th>
+      <th>2.0</th>
+      <th>3.0</th>
       <th>4.0</th>
       <th>5.0</th>
+      <th>6.0</th>
+      <th>7.0</th>
+      <th>8.0</th>
+      <th>9.0</th>
     </tr>
     <tr>
       <th>Actual Species</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
       <th></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <th>1.0</th>
+      <td>589</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2.0</th>
+      <td>0</td>
+      <td>309</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3.0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>864</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
       <th>4.0</th>
-      <td>199741</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>22556</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>5.0</th>
       <td>0</td>
-      <td>393</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>24607</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6.0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1293</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>7.0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>7018</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>8.0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>19470</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>9.0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
     </tr>
   </tbody>
 </table>
@@ -13416,10 +13204,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1"># View a list of the features and their importance scores</span>
+<div class=" highlight hl-ipython3"><pre><span class="c1"># View a list of the features and their importance scores</span>
 <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">features</span><span class="p">],</span> <span class="n">clf</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">))</span>
 </pre></div>
 
@@ -13433,46 +13221,15 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[42]:</div>
+<div class="prompt output_prompt">Out[19]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[(&#39;ID&#39;, 0.0009665704155942106),
- (&#39;Mount_X&#39;, 0.6275507754647671),
- (&#39;Mount_Y&#39;, 0.02731782808666657),
- (&#39;Mount_Yaw&#39;, 0.1103825773448234),
- (&#39;Pos_x&#39;, 0.015647197388796892),
- (&#39;Pos_y&#39;, 0.009749489787305677),
- (&#39;Pos_z&#39;, 0.0015296893523177317),
- (&#39;Yaw&#39;, 0.05484189660446007),
- (&#39;Pitch&#39;, 0.02798901593101783),
- (&#39;Roll&#39;, 0.014887470205248965),
- (&#39;Linear_Velocity_X_World&#39;, 0.0051829179137507135),
- (&#39;Linear_Velocity_Y_World&#39;, 0.013830285926463487),
- (&#39;Linear_Velocity_Z_World&#39;, 0.00013591251083640993),
- (&#39;Linear_Acceleration_X_World&#39;, 0.00037324934219456606),
- (&#39;Linear_Acceleration_Y_World&#39;, 0.002216184429118267),
- (&#39;Linear_Acceleration_Z_World&#39;, 7.173001382583407e-05),
- (&#39;Rotational_Velocity_X_World&#39;, 0.016300857616531807),
- (&#39;Rotational_Velocity_Y_World&#39;, 0.012517428233013637),
- (&#39;Rotational_Velocity_Z_World&#39;, 0.011167566157900813),
- (&#39;Rotational_Acceleration_X_World&#39;, 6.998161272509284e-07),
- (&#39;Rotational_Acceleration_Y_World&#39;, 0.0024055146508218735),
- (&#39;Rotational_Acceleration_Z_World&#39;, 0.0008764090799444037),
- (&#39;Linear_Velocity_X_Relative&#39;, 0.007677394398727715),
- (&#39;Linear_Velocity_Y_Relative&#39;, 0.002380976953914001),
- (&#39;Linear_Velocity_Z_Relative&#39;, 0.00982237138940193),
- (&#39;Linear_Acceleration_X_Relative&#39;, 0.001976875486808012),
- (&#39;Linear_Acceleration_Y_Relative&#39;, 0.0011442696470026655),
- (&#39;Linear_Acceleration_Z_Relative_Relative&#39;, 0.00011193466583531236),
- (&#39;Rotational_Velocity_X_Relative&#39;, 0.00829723143419531),
- (&#39;Rotational_Velocity_Y_Relative&#39;, 0.004341615045102058),
- (&#39;Rotational_Velocity_Z_Relative&#39;, 0.002659113964340828),
- (&#39;Rotational_Acceleration_X_Relative&#39;, 7.551778607057707e-05),
- (&#39;Rotational_Acceleration_Y_Relative&#39;, 0.00015699671177213327),
- (&#39;Rotational_Acceleration_Z_Relative &#39;, 0.005414436245301827)]</pre>
+<pre>[(&#39;X&#39;, 0.8687527764537268),
+ (&#39;Y&#39;, 0.0661201934669394),
+ (&#39;Yaw&#39;, 0.06512703007933371)]</pre>
 </div>
 
 </div>
