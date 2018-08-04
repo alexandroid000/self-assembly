@@ -19,6 +19,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <math.h>
 
 #include <tuple>
 #include "../include/common.h"
@@ -59,7 +60,7 @@ namespace gazebo
     event::ConnectionPtr _updateWorldReset;  //< Gazebo update callback
     event::ConnectionPtr _updateCollision;  //< Gazebo update callback
 
-    physics::WorldPtr _world;                        //< Gazebo world pointer
+    physics::WorldPtr world_;                        //< Gazebo world pointer
 	std::vector<physics::ModelPtr> weaselballs;
 	std::vector<sensors::ContactSensorPtr> bumpSensor;
 	std::vector<physics::ModelPtr> structures;
@@ -83,7 +84,7 @@ namespace gazebo
 	std::vector<physics::ModelPtr> getModels(std::string modelName)
 	{
 		std::vector<physics::ModelPtr> ret;
-		std::vector<physics::ModelPtr> allModels = this->_world->GetModels();
+		std::vector<physics::ModelPtr> allModels = this->world_->GetModels();
 		for(auto it : allModels)
 		{
 			std::string name = it->GetName();
@@ -123,6 +124,7 @@ namespace gazebo
 			this->collectionFile << data.rotationalAccelerationRelative[0] << "," << data.rotationalAccelerationRelative[1] << "," << data.rotationalAccelerationRelative[2] << ",";	
 			this->collectionFile << this->resetCounter << ",";
 			this->collectionFile << checkCorrectness() << ",";
+			this->collectionFile << data.numberOfWalls << ",";
 			this->collectionFile << "\n";
 		}
 		else if(this->recordingType_ == 1)
@@ -142,12 +144,51 @@ namespace gazebo
 	//The purpose of the function is to check that everything at a high level looks like it is working well in the simulator	
 	bool checkCorrectness()
 	{
-	//Get Max distance between a structure
-	//Make sure none of the balls are over the Max distance away from eachother + lil extra (say 1.2 times)
-		//I measured this distance by between the 2 farthest awayy balls
-		double MAX_DISTANCE = 0.20591;
-		
-		return 1;
+		//The system is correct if all of the balls are in a hub and are within the enclosure
+		std::vector<physics::ModelPtr> weaselballs = getModels(NAME_OF_WEASELBALLS);
+		std::vector<physics::ModelPtr> structures = getModels(NAME_OF_MOUNTS);
+		double MOUNT_RADIUS = 0.0504;
+		double ENCLOSURE_MAX_X = 0.52;
+		double ENCLOSURE_MAX_Y = 0.52;
+		double ENCLOSURE_MIN_X = -0.52;
+		double ENCLOSURE_MIN_Y = -0.52;
+		bool valid = 1;
+		for (auto it : weaselballs)
+		{
+			math::Vector3 ballPose = it->GetWorldPose().pos;
+			bool flag = 0;
+			//Make sure the balls are in a hub
+			for (auto structure : structures)
+			{
+				std::vector<physics::LinkPtr> links = structure->GetLinks();
+				for (auto link : links)
+				{
+					math::Vector3 linkPose = link->GetWorldPose().pos;
+					double foo = pow(linkPose[0]-ballPose[0],2) + pow(linkPose[1]-ballPose[1],2);
+					if (pow(foo,0.5) < MOUNT_RADIUS)
+					{
+						flag = 1;
+						break;
+					}
+				}	
+				if(flag)
+					break;
+			}
+			valid = flag;	
+			if(!valid)
+				break;
+
+			//Make sure ball is within the enclosure
+			if(ballPose[0] < ENCLOSURE_MIN_X || ballPose[0] > ENCLOSURE_MAX_X || ballPose[1] < ENCLOSURE_MIN_Y || ballPose[1] > ENCLOSURE_MAX_Y)	
+				valid = 0;
+				break;
+
+		}
+		if(!valid)
+		{
+			this->world_->Reset();
+		}
+		return valid;
 
 	}
 	
@@ -178,7 +219,7 @@ namespace gazebo
     //-------------------------------------------------------------------------
     // Gazebo callback.  Called when the simulation is starting up
     virtual void Load( physics::WorldPtr world, sdf::ElementPtr sdf ) {
-	  this->_world = world;
+	  this->world_ = world;
       this->_updateConnection = event::Events::ConnectWorldUpdateBegin(
         boost::bind( &StateCollector::Update, this ) );
       this->_updateWorldReset = event::Events::ConnectWorldReset(
@@ -362,7 +403,7 @@ namespace gazebo
 	
 	void getSimTime(weaselballData* data)
 	{
-		data->timeStamp = this->_world->GetSimTime();
+		data->timeStamp = this->world_->GetSimTime();
 	}
 
 	void getMountXYZ(physics::ModelPtr mount, weaselballData* data)
