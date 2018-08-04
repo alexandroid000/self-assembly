@@ -14,9 +14,9 @@ RANDOMIZE_STRUCTURES=1
 
 RUN_TRIALS=1
 #If you want this to run forever, set NUMBER_OF_TRIALS_CYCLES to -1
-NUMBER_OF_TRIALS_CYCLES=2
+NUMBER_OF_TRIALS_CYCLES=-1
 #The simulator has a hard time working when this is very low (below 5 or so)
-INDIVIDUAL_TRIAL_TIME=10
+INDIVIDUAL_TRIAL_TIME=300
 
 #The following dont do anything besides screw up the math, so dont touch it. I am putting it in here for completion
 #This will likely be replaced by a data structure in the future when we consider control over multiple structures
