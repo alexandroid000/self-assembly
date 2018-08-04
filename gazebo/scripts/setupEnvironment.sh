@@ -11,7 +11,7 @@ source Robot_Config.txt
 FILE=$WORKSPACE_PATH/src/weaselball_gazebo/include/common.h
 
 
-#____________ECHO_________________
+#____________ECHO_TO_COMMON_H________
 
 
 echo "#ifndef _COMMON_H_
