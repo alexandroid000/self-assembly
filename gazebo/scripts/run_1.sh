@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-source Robot_Config.txt
 
 killall gzserver
 killall gzclient
@@ -7,9 +6,16 @@ killall gzclient
 #Get Workspace Path
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 WORKSPACE_PATH="$(dirname "$SCRIPT_PATH")"
+cwd=$PWD
+source $WORKSPACE_PATH/scripts/Robot_Config.txt
 
 source $WORKSPACE_PATH/devel/setup.sh
+#Upload the test file to make sure everything is connected fine
+cd $WORKSPACE_PATH/data/collections
+chmod +x upload.sh
+sh ./upload.sh s3://vrmsl/1
 
+cd $cwd
 export GAZEBO_MODEL_PATH=$WORKSPACE_PATH/src/weaselball_description/meshes:$GAZEBO_MODEL_PATH
 export GAZEBO_RESOURCE_PATH=$WORKSPACE_PATH/src/weaselball_gazebo/worlds:$GAZEBO_RESOURCE_PATH
 
@@ -30,6 +36,6 @@ killall gzclient
 echo "1 Finished"
 
 if [ "$RUNNING_ON_AWS" -eq "1" ]; then
-	exit
+    sudo shutdown now
 fi
 

@@ -19,9 +19,9 @@ RANDOMIZE_STRUCTURES=1
 
 RUN_TRIALS=1
 #If you want this to run forever, set NUMBER_OF_TRIALS_CYCLES to -1
-NUMBER_OF_TRIALS_CYCLES=1
+NUMBER_OF_TRIALS_CYCLES=2
 #The simulator has a hard time working when this is very low (below 5 or so)
-INDIVIDUAL_TRIAL_TIME=600
+INDIVIDUAL_TRIAL_TIME=10
 #In terms of diameter of the weaselballs list the longest sequence of weaselballs.
 #For example 2 weaselballs will have a length of 2 diameter. A 4T shape will have a length of 3 diameter.
 LONGEST_WEASELBALL_SEQUENCE=1

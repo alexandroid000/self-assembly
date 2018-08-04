@@ -4,7 +4,7 @@
 
 // Note: assumes build path is a subdirectory of the source directory and the
 // data directory is in the same parent directory as the source directory
-#define DATA_ROOT_PATH "/home/justin/Documents/bouncy/self-assembly/gazebo/data"
+#define DATA_ROOT_PATH "/home/ubuntu/self-assembly/gazebo/data"
 
 #define PI 3.14159265359
 
@@ -36,8 +36,8 @@
 //Definitions used in state recorder
 #define RANDOMIZE_STRUCTURES 1
 #define RUN_TRIALS 1
-#define NUMBER_OF_TRIALS_CYCLES 1
-#define INDIVIDUAL_TRIAL_TIME 600
+#define NUMBER_OF_TRIALS_CYCLES 2
+#define INDIVIDUAL_TRIAL_TIME 10
 #define RANDOMIZE_BALLS 1
 #define NUMBER_OF_WEASELBALLS 1
 #define NUMBER_OF_STRUCTURES 1
@@ -46,5 +46,5 @@
 #define SHELL_STRING "shell"
 #define LONGEST_WEASELBALL_SEQUENCE 1
 #define DIAMETER_OF_WEASELBALLS 0.108
-#define COLLECTION_PATH "/home/justin/Documents/bouncy/self-assembly/gazebo/data/collections/"
+#define COLLECTION_PATH "/home/ubuntu/self-assembly/gazebo/data/collections/"
 #endif // _COMMON_H_
