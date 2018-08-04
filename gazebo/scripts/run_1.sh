@@ -13,12 +13,12 @@ source $WORKSPACE_PATH/devel/setup.sh
 export GAZEBO_MODEL_PATH=$WORKSPACE_PATH/src/weaselball_description/meshes:$GAZEBO_MODEL_PATH
 export GAZEBO_RESOURCE_PATH=$WORKSPACE_PATH/src/weaselball_gazebo/worlds:$GAZEBO_RESOURCE_PATH
 
-roslaunch weaselball_gazebo 4T.launch init_cond:=$doit
+roslaunch weaselball_gazebo 1.launch init_cond:=$doit
 
 if [ "$UPLOAD_DATA" -eq "1" ]; then
 	cd $WORKSPACE_PATH/data/collections
 	chmod +x upload.sh
-	sh ./upload.sh s3://vrmsl/4T
+	sh ./upload.sh s3://vrmsl/1
 	if [ "$DELETE_AFTER_UPLOAD" -eq "1" ]; then
 		rm *.csv
 	fi
@@ -27,9 +27,9 @@ fi
 
 killall gzserver
 killall gzclient
-echo "4T Finished"
-
+echo "1 Finished"
 
 if [ "$RUNNING_ON_AWS" -eq "1" ]; then
 	exit
 fi
+
