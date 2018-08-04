@@ -66,6 +66,8 @@ echo "//Definitions used in state recorder
 #define NAME_OF_WEASELBALLS \"swarmbot\"
 #define NAME_OF_MOUNTS \"mount\"
 #define SHELL_STRING \"shell\"
+#define LONGEST_WEASELBALL_SEQUENCE $LONGEST_WEASELBALL_SEQUENCE
+#define DIAMETER_OF_WEASELBALLS 0.108
 #define COLLECTION_PATH \"$WORKSPACE_PATH/data/collections/\"" >> $FILE
                       
 

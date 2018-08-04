@@ -103,18 +103,38 @@ namespace gazebo
 					this->resetFlag_ = 0;
 			}
 		}
+		//This function is used in cycle test to be able to 
+	    math::Vector3 getNewPos()
+		{
+			//Use Maximum length of weaselball structure to figure out spawn box in the enclosure that wont cause the weaselball structure to spawn on the walls.
+			//The corners of the inner enclosure are at (0.52, 0.52) (-0.52, 0.52) (-0.52, -0.52) (0.52, -0.52)
+			double offset = LONGEST_WEASELBALL_SEQUENCE*DIAMETER_OF_WEASELBALLS;
+			offset /= 2; //Divide by 2 because normally gazebo will have the center of the longest part be the center of the model (This is approximate true, it uses average volume)
+			double max_offset = 0.52-offset;
+			double dist = max_offset * 2;  
+			double increments = dist / 5.0; //Breaking up the x and y's into 5 by 5 grids
+			
+			double new_x = (this->cycleCounter_ / 5) % 5;
+			double new_y = (this->cycleCounter_ % 5);
+			
+			math::Vector3 pos(-max_offset + new_x*increments,-max_offset + new_y*increments,0);
+			return pos;
+
+
+		}
 		void cycleTest()
 		{
 		//The point of cycle test is to move the weaselball configuration into meaningful areas to collect better data for the markov chain
 //  ---------------------
-//  |x        x         |
+//  |x   x    x   x   x |
 //  |                   |
+//  |x   x    x   x   x |
 //  |                   |
-//  |         x         |
+//  |x   x    x   x   x |
 //  |                   |
+//  |x   x    x   x   x |
 //  |                   |
-//  |                   |
-//  |                   |
+//  |x   x    x   x   x |
 //  ---------------------
 // The x's in the above show the approximate spots where the weaselball structure will start
 // Due to symmetry of the of the board the robot is in this is all of the areas we need to test
@@ -131,7 +151,8 @@ namespace gazebo
 					math::Vector3 rotation(0,0,0);
 					rotation = worldPoseWeaselball.rot.GetAsEuler();
 					
-					math::Vector3 pos = this->positions_[this->cycleCounter_ % 3];	
+					//Get New Position.
+					math::Vector3 pos = getNewPos();
 					
 					math::Pose newPose(pos, rotation);
 					it->SetWorldPose(newPose);

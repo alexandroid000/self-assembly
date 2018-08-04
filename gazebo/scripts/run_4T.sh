@@ -19,6 +19,9 @@ if [ "$UPLOAD_DATA" -eq "1" ]; then
 	cd $WORKSPACE_PATH/data/collections
 	chmod +x upload.sh
 	sh ./upload.sh s3://vrmsl/4T
+	if [ "$DELETE_AFTER_UPLOAD" -eq "1" ]; then
+		rm *.csv
+	fi
 fi
 
 
