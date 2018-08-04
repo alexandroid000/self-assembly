@@ -39,10 +39,12 @@
 #define NUMBER_OF_TRIALS_CYCLES -1
 #define INDIVIDUAL_TRIAL_TIME 300
 #define RANDOMIZE_BALLS 1
-#define NUMBER_OF_WEASELBALLS 4
+#define NUMBER_OF_WEASELBALLS 1
 #define NUMBER_OF_STRUCTURES 1
 #define NAME_OF_WEASELBALLS "swarmbot"
 #define NAME_OF_MOUNTS "mount"
 #define SHELL_STRING "shell"
+#define LONGEST_WEASELBALL_SEQUENCE 1
+#define DIAMETER_OF_WEASELBALLS 0.108
 #define COLLECTION_PATH "/home/justin/Documents/bouncy/self-assembly/gazebo/data/collections/"
 #endif // _COMMON_H_
