@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[197]:
+# In[1]:
 
 
 #!/usr/bin/env python
@@ -18,7 +18,7 @@ fig_prefix = "../figures/2018-07-22-jw-weaselball-starting_location_"
 data_prefix = "../data/2018-07-22-jw-weaselball-starting_location_"
 
 
-# In[198]:
+# In[2]:
 
 
 df = pd.read_csv('../data/2018-07-22-jw-weaselball_analysis_translation_matrix_out.csv')
@@ -27,7 +27,7 @@ df = df.apply(pd.to_numeric)
 df.head()
 
 
-# In[199]:
+# In[3]:
 
 
 df_import_m = pd.read_csv('../data/2018-07-22-jw-weaselball_analysis_magnitude_vector_out.csv',  header=None);
@@ -37,7 +37,7 @@ magnitude_V = magnitude_V.astype(float)
 magnitude_V.head()
 
 
-# In[200]:
+# In[4]:
 
 
 NUMBER_OF_SQUARES = 100 #This should be a square number to create equal sized squares.
@@ -50,7 +50,7 @@ END_YAW = 0
 counter = 0
 
 
-# In[201]:
+# In[5]:
 
 
 #The formula for mapping a 3D array to 1D is
@@ -62,14 +62,14 @@ YAW_MAX = (2 * np.pi) / RESOLUTION_OF_S1
 mapping = Mapping(X_MAX, Y_MAX, YAW_MAX)#Fill in the logical areas that the system can reach (For now I am assuming it can go up/down 2 yaw states or the surronding (x,y) blocks)
 
 
-# In[202]:
+# In[6]:
 
 
 #https://vknight.org/unpeudemath/code/2015/11/15/Visualising-markov-chains.html
 #http://www.blackarbs.com/blog/introduction-hidden-markov-models-python-networkx-sklearn/2/9/2017
 
 
-# In[203]:
+# In[7]:
 
 
 #Use Dijkstras to find shortest path to goal
@@ -104,7 +104,7 @@ def dijkstra(edges, f, t):
     return (float("inf"),)
 
 
-# In[211]:
+# In[51]:
 
 
 #Convert translation matrix into edges for graph
@@ -113,10 +113,12 @@ total_runs = magnitude_V.sum()
 for col in df.columns:
     for idx in df.index:
         if(df.loc[idx,col] != 0):
-            edges.append((int(col), int(idx), -df.loc[idx,col] * (magnitude_V[idx]/total_runs)))
+            edges.append((int(col), int(idx), -df.loc[idx,col] ))
+            # I am considering appending *(magnitude_V[idx]/total_runs) to df.loc so that way we also consider how often a state has been visited
+            
 
 
-# In[212]:
+# In[52]:
 
 
 
@@ -134,7 +136,7 @@ print "Min is x = {} with P = {}".format(i,m)
 
 
 
-# In[213]:
+# In[53]:
 
 
 #Take best path and make it into list of x,y,yaw points
@@ -148,7 +150,7 @@ best_list = map(mapping.map1Dto3D, best_list)
 best_list
 
 
-# In[214]:
+# In[54]:
 
 
 #Turn (x,y,yaw) into lists that quiver likes X_start, Y_start, X_end, Y_end for all arrows
@@ -161,35 +163,28 @@ for i in range(len(best_list)-1):
     next_tuple = best_list[i+1]
     start_X.append(curr_tuple[0])
     start_Y.append(curr_tuple[1])
-    end_X.append(next_tuple[0])
-    end_Y.append(next_tuple[1])
+    end_X.append(next_tuple[0] - curr_tuple[0])
+    end_Y.append(next_tuple[1] - curr_tuple[1])
 
 
-# In[215]:
+# In[55]:
 
 
 xvalues = np.array(range(int(X_MAX)))
 yvalues = np.array(range(int(Y_MAX)))
 
 
-# In[216]:
+# In[56]:
 
 
 xx, yy = np.meshgrid(xvalues, yvalues)
-fig = plt.figure(figsize=(8, 8))
+fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.quiver(start_X, start_Y, end_X, end_Y, units = 'xy', scale = 1)
+ax.quiver(start_X, start_Y, end_X, end_Y, angles='xy', scale_units='xy', scale = 1)
 plt.axis('equal')
 plt.xticks(range(10))
 plt.yticks(range(10))
 
 plt.grid()
 plt.plot(xx, yy, marker='.', color='k', linestyle=' ')
-
-
-# In[218]:
-
-
-#This tells us how often the 0 to 99 case occurs
-print(df.iloc[0,99] * magnitude_V[0])
 
