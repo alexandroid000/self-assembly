@@ -42,7 +42,7 @@ magnitude_V = magnitude_V.astype(float)
 magnitude_V.head()
 
 
-# In[ ]:
+# In[36]:
 
 
 sumDiagnol = 0
@@ -56,14 +56,14 @@ for index, row in df.iterrows():
             sumNotDiagnol += df.iat[index,i]
 
 
-# In[ ]:
+# In[37]:
 
 
 sumDiagnolAveraged = sumDiagnol/(df.shape[0])
 sumNotDiagnolAveraged = sumNotDiagnol/(df.shape[0]**2 - df.shape[0])
 
 
-# In[ ]:
+# In[38]:
 
 
 #This graphically shows that my hypothesis is true
@@ -75,7 +75,7 @@ plot = barplot.get_figure()
 plot.savefig(fig_prefix + "diagnol_log_p.png")
 
 
-# In[ ]:
+# In[39]:
 
 
 print sumDiagnol

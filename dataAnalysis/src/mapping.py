@@ -22,6 +22,8 @@ class Mapping():
             return 1
         
     def checkValid3DMap(self,x,y,yaw):
+        if(x < 0 or y < 0 or yaw < 0 or x >= self.X_MAX or y >= self.Y_MAX or yaw >= self.Z_MAX):
+            return 0
         return self.checkValid1DMap(self.map3Dto1D(x,y,yaw))
 if __name__ == "__main__":
     mapping = Mapping(5,4,3)

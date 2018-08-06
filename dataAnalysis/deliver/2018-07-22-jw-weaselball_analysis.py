@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[132]:
+# In[35]:
 
 
 import pandas as pd
@@ -14,7 +14,7 @@ fig_prefix = "../figuires/2018-07-22-jw-weaselball_analysis"
 data_prefix = "../data/2018-07-22-jw-weaselball_analysis_"
 
 
-# In[133]:
+# In[36]:
 
 
 FLOAT_ERROR_TOLERANCE = 0.00000000001 #See IEEE 754 for why a floating point is never perfect
@@ -28,13 +28,13 @@ df = df.apply(pd.to_numeric)
 df.head(10)
 
 
-# In[134]:
+# In[37]:
 
 
 df.tail(10)
 
 
-# In[135]:
+# In[38]:
 
 
 #Sample the data
@@ -44,7 +44,7 @@ print("Size of new DF is {}".format(df_sampled.shape))
 df_sampled.head(10)
 
 
-# In[136]:
+# In[39]:
 
 
 #Break data into 3 parts. S = {Near 2 Walls, Near 1 Wall, Near No Walls}
@@ -54,7 +54,7 @@ df_sampled.head(10)
 #df = df0
 
 
-# In[137]:
+# In[40]:
 
 
 #Clean up the data
@@ -66,7 +66,7 @@ df_clean.index = range(df_clean.shape[0])
 df_clean.head()
 
 
-# In[138]:
+# In[41]:
 
 
 #Clean up the data
@@ -82,7 +82,7 @@ if(df_clean['Yaw'].max() > 2 * np.pi or df_clean['Yaw'].min() < 0):
 df_clean.head()
 
 
-# In[139]:
+# In[42]:
 
 
 #Clean up the data
@@ -99,7 +99,7 @@ if (df_clean['X'].max() > LENGTH_OF_BOX or df_clean['Y'].max() > LENGTH_OF_BOX o
 df_clean.head()
 
 
-# In[140]:
+# In[43]:
 
 
 #Clean up the data
@@ -108,7 +108,7 @@ df_clean.head()
 #TODO
 
 
-# In[141]:
+# In[44]:
 
 
 #Discretize the data
@@ -127,7 +127,7 @@ df_discretized.head()
 df_discretized.describe()
 
 
-# In[142]:
+# In[45]:
 
 
 #Verify Discretizing suceeded by checking that number of states generated is the number of states we expeted or less (Sometimes these things dont visit all states)
@@ -137,10 +137,10 @@ if (df_discretized['X'].max() > (NUMBER_OF_SQUARES ** (1/2.0)) or df_discretized
     print("Y = ({} - {}) X = ({} to {})".format(df_clean['Y'].min(), df_clean['Y'].max(), df_clean['X'].min(), df_clean['X'].max()))
 
 
-# In[143]:
+# In[46]:
 
 
-TRANSLATION_MATRIX_INITIAL_VALUE = 0
+TRANSLATION_MATRIX_INITIAL_VALUE = 1
 #Create the matrix representing the Markov Chain
 #I am assuming we are discretizing the space into equal sized boxes
 #The transition matrix A is of size 
@@ -157,7 +157,7 @@ translation_matrix = pd.DataFrame(0, index=range(n), columns=range(n))#We use 1 
 translation_matrix.head()
 
 
-# In[144]:
+# In[47]:
 
 
 
@@ -171,7 +171,7 @@ YAW_MAX = (2 * np.pi) / RESOLUTION_OF_S1
 mapping = Mapping(X_MAX, Y_MAX, YAW_MAX)#Fill in the logical areas that the system can reach (For now I am assuming it can go up/down 2 yaw states or the surronding (x,y) blocks)
 
 
-# In[145]:
+# In[48]:
 
 
 #HUERISTIC: Add a +1 to any logical possible state the structure would likely end up in.
@@ -199,7 +199,7 @@ for index, row in translation_matrix.iterrows():
 translation_matrix.head()    
 
 
-# In[146]:
+# In[49]:
 
 
 #Create a dictionary for storing the transition states analysis
@@ -228,13 +228,13 @@ print "[DEBUG] Skipped {} events".format(skipCount)
 d
 
 
-# In[147]:
+# In[50]:
 
 
 mapping.map3Dto1D(0.0,0.0,4.0)
 
 
-# In[148]:
+# In[51]:
 
 
 
@@ -253,7 +253,7 @@ for key, value in d.iteritems():
    # print("key = {}, elements = {}, {}".format(key, element_t, element_t_plus_1))
 
 
-# In[149]:
+# In[52]:
 
 
 #Check sum of "events" per matrix
@@ -265,27 +265,27 @@ print("Total Events is {}".format(totalEvents))
 print("Size of data point df is {}".format(df_discretized.size))
 
 
-# In[150]:
+# In[53]:
 
 
 #Divide the whole dataframe by number of data collections to get the probabilities.
 
 
-#magnitudeVector = pd.Series(0, index=range(n + 1))
+magnitudeVector = pd.Series(0, index=range(n + 1))
 
 
 
-#for index, row in translation_matrix.iterrows():
-#    totalActionsInThisState = row.sum()
-#    magnitudeVector.iloc[index] = totalActionsInThisState
-#    if totalActionsInThisState == 0:
-#        continue
-#    translation_matrix.iloc[index] /= totalActionsInThisState
+for index, row in translation_matrix.iterrows():
+    totalActionsInThisState = row.sum()
+    magnitudeVector.iloc[index] = totalActionsInThisState
+    if totalActionsInThisState == 0:
+        continue
+    translation_matrix.iloc[index] /= totalActionsInThisState
 
-#translation_matrix.head()
+translation_matrix.head()
 
 
-# In[151]:
+# In[54]:
 
 
 #validate the matrix (all rows == 1)
@@ -296,7 +296,7 @@ for index, row in translation_matrix.iterrows():
         print(row.sum())
 
 
-# In[152]:
+# In[55]:
 
 
 #Make matrix into CSV
