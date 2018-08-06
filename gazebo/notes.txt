@@ -25,6 +25,11 @@ response) ?
 data science) Use Principle Component Analysis to reduce the dimensionality of our data set. This would make work faster computation when we use markov chains to predict the movement of the robot ie (X,Y) based off of lots of variables. 
 response) Using PCA isn't that helpful since the features depend on eachother. It would be smarter to figure out whether we should use relative or world for data collection to remove an equal amount of features which can have redundency.
 
+Finding good sampling rate
+at 100 ) diagnol = 484 not-diagnol = 517
+at 200 ) diagnol = 128 not-diagnol = 372
+at 250 ) diagnol = 66 not-diagnol = 334
+
 Starting Position of Balls:
 (-0.073094, 030629)
 (-0.035330, -0.078100)

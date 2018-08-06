@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[8]:
 
 
 #The purpose of this test is to show that there are currently more samples for the diagnol than there are for the non diagnol parts of the matrix
@@ -9,7 +9,7 @@
 #I beleive this occurs because the simulator samples very quickly
 
 
-# In[2]:
+# In[33]:
 
 
 #!/usr/bin/env python
@@ -25,14 +25,24 @@ fig_prefix = "../figures/2018-07-22-jw-weaselball-diagnol_"
 data_prefix = "../data/2018-07-22-jw-weaselball-diagnol_"
 
 
-# In[3]:
+# In[34]:
 
 
 df = pd.read_csv('../data/2018-07-22-jw-weaselball_analysis_translation_matrix_out.csv')
 df.head()
 
 
-# In[4]:
+# In[35]:
+
+
+df_import_m = pd.read_csv('../data/2018-07-22-jw-weaselball_analysis_magnitude_vector_out.csv',  header=None);
+magnitude_V = df_import_m.iloc[:,0]
+magnitude_V = magnitude_V.apply(pd.to_numeric)
+magnitude_V = magnitude_V.astype(float)
+magnitude_V.head()
+
+
+# In[ ]:
 
 
 sumDiagnol = 0
@@ -46,21 +56,29 @@ for index, row in df.iterrows():
             sumNotDiagnol += df.iat[index,i]
 
 
-# In[5]:
+# In[ ]:
 
 
 sumDiagnolAveraged = sumDiagnol/(df.shape[0])
-sumNotDiagnolAveraged = sumDiagnol/(df.shape[0]**2 - df.shape[0])
+sumNotDiagnolAveraged = sumNotDiagnol/(df.shape[0]**2 - df.shape[0])
 
 
-# In[6]:
+# In[ ]:
 
 
 #This graphically shows that my hypothesis is true
 #As can be seen the average "Not Diagnol" probability is orders of magnitude smaller than the average "Diagnol" probability.
-data = pd.Series([sumDiagnolAveraged,sumNotDiagnolAveraged], index=['Diagnol', 'Not Diagnol'])
+data = pd.Series([sumDiagnol,sumNotDiagnol], index=['Diagnol', 'Not Diagnol'])
 x = ["Diagnol","Not Diagnol"]
 barplot = sns.barplot(x=x, y =np.log(data) )
 plot = barplot.get_figure()
 plot.savefig(fig_prefix + "diagnol_log_p.png")
+
+
+# In[ ]:
+
+
+print sumDiagnol
+print sumNotDiagnol
+print df.shape
 
