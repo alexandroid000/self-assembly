@@ -104,7 +104,7 @@ def dijkstra(edges, f, t):
     return (float("inf"),)
 
 
-# In[51]:
+# In[8]:
 
 
 #Convert translation matrix into edges for graph
@@ -118,7 +118,7 @@ for col in df.columns:
             
 
 
-# In[52]:
+# In[9]:
 
 
 
@@ -136,7 +136,7 @@ print "Min is x = {} with P = {}".format(i,m)
 
 
 
-# In[53]:
+# In[10]:
 
 
 #Take best path and make it into list of x,y,yaw points
@@ -150,7 +150,7 @@ best_list = map(mapping.map1Dto3D, best_list)
 best_list
 
 
-# In[54]:
+# In[11]:
 
 
 #Turn (x,y,yaw) into lists that quiver likes X_start, Y_start, X_end, Y_end for all arrows
@@ -167,14 +167,14 @@ for i in range(len(best_list)-1):
     end_Y.append(next_tuple[1] - curr_tuple[1])
 
 
-# In[55]:
+# In[12]:
 
 
 xvalues = np.array(range(int(X_MAX)))
 yvalues = np.array(range(int(Y_MAX)))
 
 
-# In[56]:
+# In[13]:
 
 
 xx, yy = np.meshgrid(xvalues, yvalues)

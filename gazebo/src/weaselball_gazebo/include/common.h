@@ -4,7 +4,7 @@
 
 // Note: assumes build path is a subdirectory of the source directory and the
 // data directory is in the same parent directory as the source directory
-#define DATA_ROOT_PATH "/home/ubuntu/self-assembly/gazebo/data"
+#define DATA_ROOT_PATH "/home/justin/Documents/bouncy/self-assembly/gazebo/data"
 
 #define PI 3.14159265359
 
@@ -46,5 +46,5 @@
 #define SHELL_STRING "shell"
 #define LONGEST_WEASELBALL_SEQUENCE 1
 #define DIAMETER_OF_WEASELBALLS 0.108
-#define COLLECTION_PATH "/home/ubuntu/self-assembly/gazebo/data/collections/"
+#define COLLECTION_PATH "/home/justin/Documents/bouncy/self-assembly/gazebo/data/collections/"
 #endif // _COMMON_H_
