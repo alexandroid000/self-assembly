@@ -18,12 +18,15 @@ data_prefix = "../data/2018-07-22-jw-weaselball_analysis_"
 
 
 FLOAT_ERROR_TOLERANCE = 0.00000000001 #See IEEE 754 for why a floating point is never perfect
-df1 = pd.read_csv('../data/08-05-2018_09-50-39.csv', index_col=False)
-print(df1.shape)
-frames = [df1]
+df_strings = ['../data/08-10-2018_09-24-59.csv']
+frames = []
+for csv in df_strings:
+    temp = pd.read_csv(csv,index_col=False )
+    frames.append(temp)
 df = pd.concat(frames,ignore_index=True)
 print(df.shape)
 df = df.drop(columns=['Time'])
+df = df.dropna() #Get rid of any rows with NA in it.
 df = df.apply(pd.to_numeric)
 df.head(10)
 

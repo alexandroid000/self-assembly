@@ -11812,12 +11812,15 @@ div#notebook {
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="n">FLOAT_ERROR_TOLERANCE</span> <span class="o">=</span> <span class="mf">0.00000000001</span> <span class="c1">#See IEEE 754 for why a floating point is never perfect</span>
-<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/08-05-2018_09-50-39.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">df1</span><span class="p">]</span>
+<span class="n">df_strings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;../data/08-10-2018_09-24-59.csv&#39;</span><span class="p">]</span>
+<span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">csv</span> <span class="ow">in</span> <span class="n">df_strings</span><span class="p">:</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="bp">False</span> <span class="p">)</span>
+    <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span><span class="n">ignore_index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span> <span class="c1">#Get rid of any rows with NA in it.</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>

@@ -10,6 +10,7 @@
 
 #include "../include/gazebo_log.h"
 
+#include <ros/ros.h>
 #include <ros/console.h>
 #include <ctime>
 #include <stdlib.h>
@@ -207,7 +208,6 @@ namespace gazebo
 		gazebo::sensors::SensorManager* mgr = sensors::SensorManager::Instance();
 		std::vector<sensors::SensorPtr> sensorsList = mgr->GetSensors();
 		std::vector<sensors::ContactSensorPtr> ret;
-		std::cout << "Sensor size is " << sensorsList.size() << std::endl;
 		for(auto it : sensorsList)
 		{
 			ret.push_back(std::dynamic_pointer_cast<sensors::ContactSensor>(it));
@@ -259,7 +259,7 @@ namespace gazebo
 
 	//Get structure object and store it
 	
-	  std::cout << "State Collector has loaded!" << std::endl;
+	  ROS_INFO("State Collector has loaded!");
     }
 	void onCollision()
 	{
@@ -273,7 +273,7 @@ namespace gazebo
 				//If it is a swarmbot or the ground ignore it
 				std::string model1Name = contacts.contact(i).collision1();
 				std::string model2Name = contacts.contact(i).collision2();
-				ROS_DEBUG("CONTACT");
+				ROS_INFO("CONTACT");
 
 				std::map<std::string, physics::Contact> mapping = contactSensor->Contacts(model1Name);
 				physics::ModelPtr mount;
@@ -327,7 +327,7 @@ namespace gazebo
 			std::vector<sensors::ContactSensorPtr> bumpSensor = getContactSensor();
 			if( checkAllModelsInit(weaselballs, structures) and bumpSensor.size() != 0)
 			{
-				std::cout << "[DEBUG] Found all the models and Sensors!" << std::endl;
+				ROS_INFO("Found all the models and Sensors!");
 				this->getModelsFlag = 0;
 				this->weaselballs = weaselballs;
 				this->structures = structures;
@@ -335,9 +335,10 @@ namespace gazebo
 				for (auto it : bumpSensor)
 				{
 					it->Init();
+					it->SetActive(1);
 					this->_updateCollision = it->ConnectUpdated(
 						std::bind(&StateCollector::onCollision,  this));
-					std::cout << "Sensor status = " << it->IsActive() << std::endl;
+					ROS_INFO("Sensor status = %d", it->IsActive());
 
 				}
 			}
