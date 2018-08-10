@@ -1,6 +1,8 @@
 #include "../include/bumpSensor.h"
 #include <regex>
 #include <unistd.h>
+#include <ros/ros.h>
+#include <ros/console.h>
 
 using namespace gazebo;
 using namespace std;

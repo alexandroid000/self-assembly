@@ -1,8 +1,8 @@
 #The point of this file is to have an easy access point to changing the settings of the simulator.
 #After editing this file to your liking please run setupEnvironment.sh in the scripts directory.
 
-MOCAP_DATA_PATH=\"raw_experiment/vicon/\"
-VIDEO_DATA_PATH=\"interpreted/signals/\"
+MOCAP_DATA_PATH=raw_experiment/vicon/
+VIDEO_DATA_PATH=interpreted/signals/
 EXPERIMENTAL_SESSIONS=10
 EXPERIMENTAL_SESSIONS_ID=10
 VICON_SAMPLE_RATE=100.0
@@ -11,7 +11,7 @@ VIDEO_LED_TIME_FACTOR=20.0
 
 #In order to upload data to the AWS S3 you will need to setup AWS using "aws configure command"
 #Please contact the AWS admin to get your user account details. 
-UPLOAD_DATA=1
+UPLOAD_DATA=0
 DELETE_AFTER_UPLOAD=1
 
 RANDOMIZE_BALLS=1
@@ -26,7 +26,7 @@ INDIVIDUAL_TRIAL_TIME=10
 #For example 2 weaselballs will have a length of 2 diameter. A 4T shape will have a length of 3 diameter.
 LONGEST_WEASELBALL_SEQUENCE=1
 #This is enabled if we are running on AWS, this will shutdown the computer so that way we dont pay for it while its not running anything.
-RUNNING_ON_AWS=1
+RUNNING_ON_AWS=0
 
 #The following dont do anything besides screw up the math, so dont touch it unless you are changing number of weaselballs based on what test is being run. I am putting it in here for completion
 #This will likely be replaced by a data structure in the future when we consider control over multiple structures
