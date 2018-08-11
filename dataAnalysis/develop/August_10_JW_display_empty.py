@@ -7,7 +7,7 @@
 
 # ## Import modules and define a few magic numbers
 
-# In[4]:
+# In[1]:
 
 
 import pandas as pd
@@ -24,7 +24,7 @@ data_prefix = "../data/2018-07-22-jw-weaselball_analysis_"
 
 # ### First get the data
 
-# In[5]:
+# In[2]:
 
 
 FLOAT_ERROR_TOLERANCE = 0.00000000001 #See IEEE 754 for why a floating point is never perfect
@@ -43,7 +43,7 @@ df.head(10)
 
 # ### Sample the data
 
-# In[6]:
+# In[3]:
 
 
 SAMPLING_RATE = 250 #Keep 1 row for every SAMPLING_RATE
@@ -52,7 +52,7 @@ print("Size of new DF is {}".format(df_sampled.shape))
 df_sampled.head(10)
 
 
-# In[7]:
+# In[4]:
 
 
 #Clean up the data
@@ -67,7 +67,7 @@ df_clean.head()
 
 # ### Shift the data
 
-# In[8]:
+# In[5]:
 
 
 #Clean up the data
@@ -83,7 +83,7 @@ if(df_clean['Yaw'].max() > 2 * np.pi or df_clean['Yaw'].min() < 0):
 df_clean.head()
 
 
-# In[9]:
+# In[6]:
 
 
 #Clean up the data
@@ -102,7 +102,7 @@ df_clean.head()
 
 # ### Discretize the data
 
-# In[10]:
+# In[7]:
 
 
 #Discretize the data
@@ -122,7 +122,7 @@ df_discretized.describe()
 
 # ### Initialize a few variables/objects used in the experiment
 
-# In[14]:
+# In[8]:
 
 
 
@@ -152,7 +152,7 @@ n
 
 # ### Create artificial data if needed
 
-# In[15]:
+# In[9]:
 
 
 #HUERISTIC: Add a +1 to any logical possible state the structure would likely end up in.
@@ -182,7 +182,7 @@ for index in range(n):
 
 # ### Fill in the dictionary with actual data from the experiment
 
-# In[16]:
+# In[10]:
 
 
 #Our keys to the dictionary will look like (x_t, y_t, yaw_t, x_t+1, y_t+1, yaw_t+1)
@@ -213,7 +213,7 @@ print "[DEBUG] Skipped {} events".format(skipCount)
 
 # ### Pandas dataframe
 
-# In[26]:
+# In[11]:
 
 
 import time
@@ -222,7 +222,7 @@ pandas_start_time = time.time()
 
 # #### Fill in matrix with dictionary data
 
-# In[27]:
+# In[12]:
 
 
 translation_matrix = pd.DataFrame(0, index=range(n), columns=range(n))
@@ -237,7 +237,7 @@ for key, value in d.iteritems():
 
 # #### Make the rows have a magnitude of 1
 
-# In[28]:
+# In[13]:
 
 
 for index, row in translation_matrix.iterrows():
@@ -247,7 +247,7 @@ for index, row in translation_matrix.iterrows():
     translation_matrix.iloc[index] /= totalActionsInThisState
 
 
-# In[29]:
+# In[14]:
 
 
 pandas_creation_time = time.time() - pandas_start_time
@@ -255,7 +255,7 @@ pandas_creation_time = time.time() - pandas_start_time
 
 # ### SciPy Sparse matrix
 
-# In[30]:
+# In[15]:
 
 
 from scipy import sparse
@@ -263,26 +263,27 @@ from sklearn.preprocessing import normalize
 scipy_start_time = time.time()
 
 
-# In[31]:
+# #### Fill in matrix with dictionary data
 
-
-#### Fill in matrix with dictionary data
-
-
-# In[32]:
+# In[ ]:
 
 
 sparse_matrix = sparse.dok_matrix((n, n), dtype=np.float32)
+
+
+# In[20]:
+
+
 for key, value in d.iteritems():
-    element_t = mapping.map3Dto1D(key[0], key[1], key[2]/RESOLUTION_OF_S1)
-    element_t_plus_1 = mapping.map3Dto1D(key[3], key[4], key[5]/RESOLUTION_OF_S1)
-    sparse_matrix[element_t, element_t_plus_1] = value + element_t_plus_1[element_t, element_t_plus_1]
+    element_t = mapping.map3Dto1D(key[0], key[1], key[2])
+    element_t_plus_1 = mapping.map3Dto1D(key[3], key[4], key[5])
+    sparse_matrix[element_t, element_t_plus_1] = value + sparse_matrix[element_t, element_t_plus_1]
     
 #Convert matrix to csr since csr can do multiplication a lot faster
 sparse_matrix = sparse_matrix.transpose().tocsr()
 
 
-# In[ ]:
+# In[21]:
 
 
 #### Make the rows have a magnitude of 1
@@ -295,16 +296,24 @@ sparse_matrix_normalized = normalize(sparse_matrix, norm='l1', axis=1)
 scipy_creation_time = time.time() - scipy_start_time
 
 
-# ## Cross product test
+# ## Dot product test
 
-# ### Pandas Cross Product Test
+# ### Pandas Dot Product Test
 
 # In[ ]:
 
 
-pandas_cross_start_time = time.time()
-foo = numpy.cross(translation_matrix,translation_matrix)
-pandas_cross_time = time.time() - pandas_cross_start_time
+pandas_dot_start_time = time.time()
+foo = translation_matrix.dot(translation_matrix)
+pandas_dot_time = time.time() - pandas_cross_start_time
 
 
-# ### Scipy Sparse Matrix Cross Product Test
+# ### Scipy Sparse Matrix Dot Product Test
+
+# In[ ]:
+
+
+pandas_dot_start_time = time.time()
+foo = translation_matrix.dot(translation_matrix)
+pandas_dot_time = time.time() - pandas_cross_start_time
+
