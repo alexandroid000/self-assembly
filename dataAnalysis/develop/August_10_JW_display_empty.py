@@ -213,7 +213,7 @@ print "[DEBUG] Skipped {} events".format(skipCount)
 
 # ### Pandas dataframe
 
-# In[11]:
+# In[33]:
 
 
 import time
@@ -222,7 +222,7 @@ pandas_start_time = time.time()
 
 # #### Fill in matrix with dictionary data
 
-# In[12]:
+# In[34]:
 
 
 translation_matrix = pd.DataFrame(0, index=range(n), columns=range(n))
@@ -237,7 +237,7 @@ for key, value in d.iteritems():
 
 # #### Make the rows have a magnitude of 1
 
-# In[13]:
+# In[35]:
 
 
 for index, row in translation_matrix.iterrows():
@@ -247,7 +247,7 @@ for index, row in translation_matrix.iterrows():
     translation_matrix.iloc[index] /= totalActionsInThisState
 
 
-# In[14]:
+# In[36]:
 
 
 pandas_creation_time = time.time() - pandas_start_time
@@ -255,7 +255,7 @@ pandas_creation_time = time.time() - pandas_start_time
 
 # ### SciPy Sparse matrix
 
-# In[15]:
+# In[37]:
 
 
 from scipy import sparse
@@ -265,13 +265,13 @@ scipy_start_time = time.time()
 
 # #### Fill in matrix with dictionary data
 
-# In[ ]:
+# In[38]:
 
 
 sparse_matrix = sparse.dok_matrix((n, n), dtype=np.float32)
 
 
-# In[20]:
+# In[39]:
 
 
 for key, value in d.iteritems():
@@ -283,14 +283,14 @@ for key, value in d.iteritems():
 sparse_matrix = sparse_matrix.transpose().tocsr()
 
 
-# In[21]:
+# In[40]:
 
 
 #### Make the rows have a magnitude of 1
 sparse_matrix_normalized = normalize(sparse_matrix, norm='l1', axis=1)
 
 
-# In[ ]:
+# In[41]:
 
 
 scipy_creation_time = time.time() - scipy_start_time
@@ -300,20 +300,52 @@ scipy_creation_time = time.time() - scipy_start_time
 
 # ### Pandas Dot Product Test
 
-# In[ ]:
+# In[43]:
 
 
 pandas_dot_start_time = time.time()
 foo = translation_matrix.dot(translation_matrix)
-pandas_dot_time = time.time() - pandas_cross_start_time
+pandas_dot_time = time.time() - pandas_dot_start_time
 
 
 # ### Scipy Sparse Matrix Dot Product Test
 
-# In[ ]:
+# In[44]:
 
 
-pandas_dot_start_time = time.time()
-foo = translation_matrix.dot(translation_matrix)
-pandas_dot_time = time.time() - pandas_cross_start_time
+scipy_dot_start_time = time.time()
+bar = sparse_matrix_normalized.dot(sparse_matrix_normalized)
+scipy_dot_time = time.time() - scipy_dot_start_time
+
+
+# ## Cross product test
+
+# In[45]:
+
+
+#TODO
+
+
+# ## RESULTS
+
+# In[46]:
+
+
+#Calculate how empty the transition matrix is
+emptyPercent = 1 - (float(len(d.keys())) / (float(n*n)))
+print("The tranistion matrix is {}% empty".format(emptyPercent * 100))
+
+
+# In[47]:
+
+
+print("The time it took to create the full transition matrix was {} seconds.".format(pandas_creation_time))
+print("The time it took to create the sparse transition matrix was {} seconds.".format(scipy_creation_time))
+
+
+# In[48]:
+
+
+print("The time it took to take the dot product of 2 full tranisition matrix was {} seconds".format(pandas_dot_time))
+print("The time it took to take the dot product of 2 sparse tranisition matrix was {} seconds".format(scipy_dot_time))
 
