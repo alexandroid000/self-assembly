@@ -1,7 +1,13 @@
 
 # coding: utf-8
 
-# In[35]:
+# # The purpose of this journal is to prove that the markov transition matrices are very empty so we should consider using a different data structure
+# 
+# This experiment will be done by comparing the time to make and do operations on different data structures. Namely I will be focusing on the time to make the data structures (as this is a large bottleneck in 2018-07-22-jw-weaselball_analysis.ipynb), as well as the time it takes to do a cross product on 2 of the same data structure matrices.
+
+# ## Import modules and define a few magic numbers
+
+# In[4]:
 
 
 import pandas as pd
@@ -14,11 +20,15 @@ fig_prefix = "../figuires/2018-07-22-jw-weaselball_analysis"
 data_prefix = "../data/2018-07-22-jw-weaselball_analysis_"
 
 
-# In[36]:
+# ## Get the data we want and clean it
+
+# ### First get the data
+
+# In[5]:
 
 
 FLOAT_ERROR_TOLERANCE = 0.00000000001 #See IEEE 754 for why a floating point is never perfect
-df_strings = ['../data/08-10-2018_09-24-59.csv']
+df_strings = ['../data/08-04-2018_23-37-09.csv']
 frames = []
 for csv in df_strings:
     temp = pd.read_csv(csv,index_col=False )
@@ -31,45 +41,33 @@ df = df.apply(pd.to_numeric)
 df.head(10)
 
 
-# In[37]:
+# ### Sample the data
+
+# In[6]:
 
 
-df.tail(10)
-
-
-# In[38]:
-
-
-#Sample the data
 SAMPLING_RATE = 250 #Keep 1 row for every SAMPLING_RATE
 df_sampled = df.iloc[::SAMPLING_RATE,:]
 print("Size of new DF is {}".format(df_sampled.shape))
 df_sampled.head(10)
 
 
-# In[39]:
-
-
-#Break data into 3 parts. S = {Near 2 Walls, Near 1 Wall, Near No Walls}
-#df2 = df_sampled.loc[df_sampled['ResetID'] % 3 == 2]
-#df1 = df_sampled.loc[df_sampled['ResetID'] % 3 == 1]
-#df0 = df_sampled.loc[df_sampled['ResetID'] % 3 == 0]
-#df = df0
-
-
-# In[40]:
+# In[7]:
 
 
 #Clean up the data
 df_clean = df_sampled.copy()
 
+#Replace the row indexes with a range from 0..n because originally on import of multiple data files it will start from 1 for each file
 df_clean.index = range(df_clean.shape[0])
 #When the gazebo run it may collect some data of the robots when they aren't moving for the first few 50 or so samples.
 #TODO
 df_clean.head()
 
 
-# In[41]:
+# ### Shift the data
+
+# In[8]:
 
 
 #Clean up the data
@@ -85,7 +83,7 @@ if(df_clean['Yaw'].max() > 2 * np.pi or df_clean['Yaw'].min() < 0):
 df_clean.head()
 
 
-# In[42]:
+# In[9]:
 
 
 #Clean up the data
@@ -102,19 +100,12 @@ if (df_clean['X'].max() > LENGTH_OF_BOX or df_clean['Y'].max() > LENGTH_OF_BOX o
 df_clean.head()
 
 
-# In[43]:
+# ### Discretize the data
+
+# In[10]:
 
 
-#Clean up the data
-
-#Clean the time data since gazebo prints it weird...
-#TODO
-
-
-# In[44]:
-
-
-'#Discretize the data
+#Discretize the data
 NUMBER_OF_SQUARES = 100 #This should be a square number to create equal sized squares.
 RESOLUTION_OF_S1 = 0.1 #This is used to discretize the yaw angle over 0 - 2*pi
 
@@ -126,40 +117,12 @@ for index, row in df_clean.iterrows():
     df_discretized.at[index, 'Y'] = int(row['Y'] * mappingBoxConstant)
     df_discretized.at[index, 'Yaw'] = int(row['Yaw'] / RESOLUTION_OF_S1) * RESOLUTION_OF_S1
         
-df_discretized.describe()'
+df_discretized.describe()
 
 
-# In[45]:
+# ### Initialize a few variables/objects used in the experiment
 
-
-#Verify Discretizing suceeded by checking that number of states generated is the number of states we expeted or less (Sometimes these things dont visit all states)
-
-if (df_discretized['X'].max() > (NUMBER_OF_SQUARES ** (1/2.0)) or df_discretized['Y'].max() > (NUMBER_OF_SQUARES ** (1/2.0)) or df_discretized['X'].min() < 0 or df_discretized['Y'].min() < 0):
-    print("[ERROR] Discretizing X/Y failed, Make sure the points are between 0 and (NUMBER_OF_SQUARES ** (1/2.0)")
-    print("Y = ({} - {}) X = ({} to {})".format(df_clean['Y'].min(), df_clean['Y'].max(), df_clean['X'].min(), df_clean['X'].max()))
-
-
-# In[46]:
-
-
-TRANSLATION_MATRIX_INITIAL_VALUE = 1
-#Create the matrix representing the Markov Chain
-#I am assuming we are discretizing the space into equal sized boxes
-#The transition matrix A is of size 
-#( # of states of X * # of states of Y * # of states of Yaw)
-#( # of states of X and Y = mappingBoxConstant * LENGTH_OF_BOX )
-#( # of states of Yaw = int(2*pi / RESOLUTION_OF_S1)+1)
-number_of_x_states = mappingBoxConstant * LENGTH_OF_BOX
-number_of_y_states = mappingBoxConstant * LENGTH_OF_BOX
-number_of_s1_states = int(2*np.pi / RESOLUTION_OF_S1) + 1
-
-n = int(number_of_x_states * number_of_y_states * number_of_s1_states)
-print("[DEBUG] Size of n is {}".format(n))
-translation_matrix = pd.DataFrame(0, index=range(n), columns=range(n))#We use 1 here to set the whole matrix elements to 1
-translation_matrix.head()
-
-
-# In[47]:
+# In[14]:
 
 
 
@@ -171,17 +134,30 @@ X_MAX = NUMBER_OF_SQUARES ** (1/2.0)
 Y_MAX = NUMBER_OF_SQUARES ** (1/2.0)
 YAW_MAX = (2 * np.pi) / RESOLUTION_OF_S1
 mapping = Mapping(X_MAX, Y_MAX, YAW_MAX)#Fill in the logical areas that the system can reach (For now I am assuming it can go up/down 2 yaw states or the surronding (x,y) blocks)
+d = {} #d is used to hold all the transitions and keep a counter of how often each occur
+
+TRANSLATION_MATRIX_INITIAL_VALUE = 1
+#Create the matrix representing the Markov Chain
+#I am assuming we are discretizing the space into equal sized boxes
+#The transition matrix A is of size 
+#( # of states of X * # of states of Y * # of states of Yaw)
+#( # of states of X and Y = mappingBoxConstant * LENGTH_OF_BOX )
+#( # of states of Yaw = int(2*pi / RESOLUTION_OF_S1)+1)
+number_of_x_states = mappingBoxConstant * LENGTH_OF_BOX
+number_of_y_states = mappingBoxConstant * LENGTH_OF_BOX
+number_of_s1_states = int(2*np.pi / RESOLUTION_OF_S1) + 1
+n = int(number_of_x_states * number_of_y_states * number_of_s1_states) #n is the size of the transition matrix
+n
 
 
-# In[48]:
+# ### Create artificial data if needed
+
+# In[15]:
 
 
 #HUERISTIC: Add a +1 to any logical possible state the structure would likely end up in.
 #This lowers the amount of artifiical data in the matrix (most of which isnt needed)
-
-
-
-for index, row in translation_matrix.iterrows():
+for index in range(n):
     if(TRANSLATION_MATRIX_INITIAL_VALUE == 0):
         break
     (x,y,yaw) = mapping.map1Dto3D(index)
@@ -197,15 +173,18 @@ for index, row in translation_matrix.iterrows():
                 if(mapping.checkValid3DMap(x+x_p, y+y_p, yaw+yaw_p)):
                     possible_spots.append( (x+x_p, y+y_p, yaw+yaw_p) )
     for pose in possible_spots:
-        translation_matrix.at[mapping.map3Dto1D(x,y,yaw), mapping.map3Dto1D(pose[0],pose[1],pose[2])] = translation_matrix.at[mapping.map3Dto1D(x,y,yaw), mapping.map3Dto1D(pose[0],pose[1],pose[2])] +TRANSLATION_MATRIX_INITIAL_VALUE
-translation_matrix.head()    
+        key = (x,y,yaw, pose[0],pose[1],pose[2])
+        if key in d:
+            d[key] += 1
+        else:
+            d[key] = 1
 
 
-# In[49]:
+# ### Fill in the dictionary with actual data from the experiment
+
+# In[16]:
 
 
-#Create a dictionary for storing the transition states analysis
-d ={}
 #Our keys to the dictionary will look like (x_t, y_t, yaw_t, x_t+1, y_t+1, yaw_t+1)
 #Go through all but last row since t+1 isnt defined there...
 skipCount = 0
@@ -227,87 +206,105 @@ except Exception as e:
     print e
     
 print "[DEBUG] Skipped {} events".format(skipCount)
-d
 
 
-# In[50]:
+# ## Test data structures
+# Now that the data has been imported into a dictionary, the different data sturctures can be compared.
+
+# ### Pandas dataframe
+
+# In[26]:
 
 
-mapping.map3Dto1D(0.0,0.0,4.0)
+import time
+pandas_start_time = time.time()
 
 
-# In[51]:
+# #### Fill in matrix with dictionary data
+
+# In[27]:
 
 
-
-#Fill in matrix with dictionary data
-
+translation_matrix = pd.DataFrame(0, index=range(n), columns=range(n))
 
 for key, value in d.iteritems():
     #we need to map yaw to an int state
-    element_t = mapping.map3Dto1D(key[0], key[1], key[2]/RESOLUTION_OF_S1)
-    element_t_plus_1 = mapping.map3Dto1D(key[3], key[4], key[5]/RESOLUTION_OF_S1)
-    #Use the following to verify we the math above is fine
-    if((mapping.checkValid1DMap(element_t)) & (mapping.checkValid1DMap(element_t_plus_1)) == 0 ):
-        print "[ERROR] BAD MAPPING!"
-    
+
+    element_t = mapping.map3Dto1D(key[0], key[1], key[2])
+    element_t_plus_1 = mapping.map3Dto1D(key[3], key[4], key[5])
     translation_matrix.at[element_t, element_t_plus_1] = value + translation_matrix.at[element_t, element_t_plus_1]
-   # print("key = {}, elements = {}, {}".format(key, element_t, element_t_plus_1))
 
 
-# In[52]:
+# #### Make the rows have a magnitude of 1
 
-
-#Check sum of "events" per matrix
-
-totalEvents = 0
-for index,row in translation_matrix.iterrows():
-    totalEvents += row.sum()
-print("Total Events is {}".format(totalEvents))
-print("Size of data point df is {}".format(df_discretized.size))
-
-
-# In[53]:
-
-
-#Divide the whole dataframe by number of data collections to get the probabilities.
-
-
-magnitudeVector = pd.Series(0, index=range(n + 1))
-
+# In[28]:
 
 
 for index, row in translation_matrix.iterrows():
     totalActionsInThisState = row.sum()
-    magnitudeVector.iloc[index] = totalActionsInThisState
     if totalActionsInThisState == 0:
         continue
     translation_matrix.iloc[index] /= totalActionsInThisState
 
-translation_matrix.head()
+
+# In[29]:
 
 
-# In[54]:
+pandas_creation_time = time.time() - pandas_start_time
 
 
-#validate the matrix (all rows == 1)
-for index, row in translation_matrix.iterrows():
-    if(abs(row.sum() - 1.0) > FLOAT_ERROR_TOLERANCE):
-        print("[ERROR] Row probability not equal to one!")
-        print(index)
-        print(row.sum())
+# ### SciPy Sparse matrix
+
+# In[30]:
 
 
-# In[55]:
+from scipy import sparse
+from sklearn.preprocessing import normalize
+scipy_start_time = time.time()
 
 
-#Make matrix into CSV
-translation_matrix.to_csv(data_prefix + 'translation_matrix_out.csv', encoding='utf-8', index=False)
+# In[31]:
 
 
-# In[153]:
+#### Fill in matrix with dictionary data
 
 
-#Make csv of the number of instances for each row
-#magnitudeVector.to_csv(data_prefix + 'magnitude_vector_out.csv', encoding='utf-8', index=False)
+# In[32]:
 
+
+sparse_matrix = sparse.dok_matrix((n, n), dtype=np.float32)
+for key, value in d.iteritems():
+    element_t = mapping.map3Dto1D(key[0], key[1], key[2]/RESOLUTION_OF_S1)
+    element_t_plus_1 = mapping.map3Dto1D(key[3], key[4], key[5]/RESOLUTION_OF_S1)
+    sparse_matrix[element_t, element_t_plus_1] = value + element_t_plus_1[element_t, element_t_plus_1]
+    
+#Convert matrix to csr since csr can do multiplication a lot faster
+sparse_matrix = sparse_matrix.transpose().tocsr()
+
+
+# In[ ]:
+
+
+#### Make the rows have a magnitude of 1
+sparse_matrix_normalized = normalize(sparse_matrix, norm='l1', axis=1)
+
+
+# In[ ]:
+
+
+scipy_creation_time = time.time() - scipy_start_time
+
+
+# ## Cross product test
+
+# ### Pandas Cross Product Test
+
+# In[ ]:
+
+
+pandas_cross_start_time = time.time()
+foo = numpy.cross(translation_matrix,translation_matrix)
+pandas_cross_time = time.time() - pandas_cross_start_time
+
+
+# ### Scipy Sparse Matrix Cross Product Test

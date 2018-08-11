@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>2018-07-22-jw-weaselball_analysis</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>August_10_JW_display_empty</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11767,9 +11767,26 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="The-purpose-of-this-journal-is-to-prove-that-the-markov-transition-matrices-are-very-empty-so-we-should-consider-using-a-different-data-structure">The purpose of this journal is to prove that the markov transition matrices are very empty so we should consider using a different data structure<a class="anchor-link" href="#The-purpose-of-this-journal-is-to-prove-that-the-markov-transition-matrices-are-very-empty-so-we-should-consider-using-a-different-data-structure">&#182;</a></h1><p>This experiment will be done by comparing the time to make and do operations on different data structures. Namely I will be focusing on the time to make the data structures (as this is a large bottleneck in 2018-07-22-jw-weaselball_analysis.ipynb), as well as the time it takes to do a cross product on 2 of the same data structure matrices.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Import-modules-and-define-a-few-magic-numbers">Import modules and define a few magic numbers<a class="anchor-link" href="#Import-modules-and-define-a-few-magic-numbers">&#182;</a></h2>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
@@ -11786,33 +11803,30 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>The version_information extension is already loaded. To reload it, use:
-  %reload_ext version_information
-</pre>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Get-the-data-we-want-and-clean-it">Get the data we want and clean it<a class="anchor-link" href="#Get-the-data-we-want-and-clean-it">&#182;</a></h2>
 </div>
 </div>
-
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="First-get-the-data">First get the data<a class="anchor-link" href="#First-get-the-data">&#182;</a></h3>
 </div>
 </div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="n">FLOAT_ERROR_TOLERANCE</span> <span class="o">=</span> <span class="mf">0.00000000001</span> <span class="c1">#See IEEE 754 for why a floating point is never perfect</span>
-<span class="n">df_strings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;../data/08-10-2018_09-24-59.csv&#39;</span><span class="p">]</span>
+<span class="n">df_strings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;../data/08-04-2018_23-37-09.csv&#39;</span><span class="p">]</span>
 <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">csv</span> <span class="ow">in</span> <span class="n">df_strings</span><span class="p">:</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="bp">False</span> <span class="p">)</span>
@@ -11839,15 +11853,14 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(100195, 8)
-(100195, 8)
+<pre>(56740222, 8)
 </pre>
 </div>
 </div>
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[36]:</div>
+<div class="prompt output_prompt">Out[5]:</div>
 
 
 
@@ -11884,101 +11897,101 @@ div#notebook {
       <th>0</th>
       <td>0</td>
       <td>0.000000</td>
+      <td>0.0000</td>
       <td>0.000000</td>
-      <td>0.000000</td>
-      <td>1</td>
       <td>1</td>
       <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
       <td>0</td>
-      <td>-0.013727</td>
-      <td>-0.007675</td>
-      <td>-0.001930</td>
+      <td>-0.466000</td>
+      <td>-0.2796</td>
+      <td>0.292237</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
       <td>0</td>
-      <td>-0.013766</td>
-      <td>-0.007730</td>
-      <td>-0.001908</td>
+      <td>-0.465999</td>
+      <td>-0.2796</td>
+      <td>0.292237</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>3</th>
       <td>0</td>
-      <td>-0.013806</td>
-      <td>-0.007784</td>
-      <td>-0.001886</td>
+      <td>-0.465999</td>
+      <td>-0.2796</td>
+      <td>0.292237</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>4</th>
       <td>0</td>
-      <td>-0.013846</td>
-      <td>-0.007839</td>
-      <td>-0.001864</td>
+      <td>-0.465999</td>
+      <td>-0.2796</td>
+      <td>0.292237</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>5</th>
       <td>0</td>
-      <td>-0.013885</td>
-      <td>-0.007894</td>
-      <td>-0.001842</td>
+      <td>-0.465999</td>
+      <td>-0.2796</td>
+      <td>0.292237</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>6</th>
       <td>0</td>
-      <td>-0.013925</td>
-      <td>-0.007948</td>
-      <td>-0.001820</td>
+      <td>-0.465998</td>
+      <td>-0.2796</td>
+      <td>0.292237</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>7</th>
       <td>0</td>
-      <td>-0.013964</td>
-      <td>-0.008003</td>
-      <td>-0.001798</td>
+      <td>-0.465998</td>
+      <td>-0.2796</td>
+      <td>0.292237</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>8</th>
       <td>0</td>
-      <td>-0.014003</td>
-      <td>-0.008058</td>
-      <td>-0.001776</td>
+      <td>-0.465998</td>
+      <td>-0.2796</td>
+      <td>0.292237</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>9</th>
       <td>0</td>
-      <td>-0.014043</td>
-      <td>-0.008112</td>
-      <td>-0.001754</td>
+      <td>-0.465998</td>
+      <td>-0.2796</td>
+      <td>0.292237</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>
@@ -11991,175 +12004,20 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</pre></div>
-
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Sample-the-data">Sample the data<a class="anchor-link" href="#Sample-the-data">&#182;</a></h3>
 </div>
 </div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[37]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>ID</th>
-      <th>X</th>
-      <th>Y</th>
-      <th>Yaw</th>
-      <th>ResetID</th>
-      <th>checkCorrectness</th>
-      <th>NumberOfWalls</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>100185</th>
-      <td>0</td>
-      <td>-0.320272</td>
-      <td>-0.039614</td>
-      <td>1.00076</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>100186</th>
-      <td>0</td>
-      <td>-0.320031</td>
-      <td>-0.038934</td>
-      <td>1.00094</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>100187</th>
-      <td>0</td>
-      <td>-0.319790</td>
-      <td>-0.038253</td>
-      <td>1.00111</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>100188</th>
-      <td>0</td>
-      <td>-0.319554</td>
-      <td>-0.037578</td>
-      <td>1.00128</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>100189</th>
-      <td>0</td>
-      <td>-0.319307</td>
-      <td>-0.036895</td>
-      <td>1.00144</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>100190</th>
-      <td>0</td>
-      <td>-0.319061</td>
-      <td>-0.036213</td>
-      <td>1.00161</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>100191</th>
-      <td>0</td>
-      <td>-0.318817</td>
-      <td>-0.035533</td>
-      <td>1.00178</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>100192</th>
-      <td>0</td>
-      <td>-0.318575</td>
-      <td>-0.034855</td>
-      <td>1.00195</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>100193</th>
-      <td>0</td>
-      <td>-0.318335</td>
-      <td>-0.034179</td>
-      <td>1.00211</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>100194</th>
-      <td>0</td>
-      <td>-0.318083</td>
-      <td>-0.033493</td>
-      <td>1.00228</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Sample the data</span>
-<span class="n">SAMPLING_RATE</span> <span class="o">=</span> <span class="mi">250</span> <span class="c1">#Keep 1 row for every SAMPLING_RATE</span>
+<div class=" highlight hl-ipython2"><pre><span class="n">SAMPLING_RATE</span> <span class="o">=</span> <span class="mi">250</span> <span class="c1">#Keep 1 row for every SAMPLING_RATE</span>
 <span class="n">df_sampled</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="n">SAMPLING_RATE</span><span class="p">,:]</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Size of new DF is {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df_sampled</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
 <span class="n">df_sampled</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
@@ -12179,14 +12037,14 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Size of new DF is (401, 7)
+<pre>Size of new DF is (226961, 7)
 </pre>
 </div>
 </div>
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[38]:</div>
+<div class="prompt output_prompt">Out[6]:</div>
 
 
 
@@ -12226,98 +12084,98 @@ div#notebook {
       <td>0.000000</td>
       <td>0.000000</td>
       <td>1</td>
-      <td>1</td>
       <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>250</th>
       <td>0</td>
-      <td>0.022322</td>
-      <td>-0.019050</td>
-      <td>-0.015921</td>
+      <td>-0.482503</td>
+      <td>-0.306513</td>
+      <td>0.311928</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>500</th>
       <td>0</td>
-      <td>0.039587</td>
-      <td>0.049080</td>
-      <td>0.024035</td>
+      <td>-0.481564</td>
+      <td>-0.273259</td>
+      <td>0.297979</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>750</th>
       <td>0</td>
-      <td>0.062461</td>
-      <td>0.185013</td>
-      <td>0.038152</td>
+      <td>-0.444129</td>
+      <td>-0.303773</td>
+      <td>0.261811</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>1000</th>
       <td>0</td>
-      <td>0.111415</td>
-      <td>0.322394</td>
-      <td>0.046604</td>
+      <td>-0.373807</td>
+      <td>-0.350501</td>
+      <td>0.262825</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>1250</th>
       <td>0</td>
-      <td>0.117263</td>
-      <td>0.384895</td>
-      <td>0.040384</td>
+      <td>-0.290904</td>
+      <td>-0.402638</td>
+      <td>0.268619</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>1500</th>
       <td>0</td>
-      <td>0.131066</td>
-      <td>0.431850</td>
-      <td>0.034632</td>
+      <td>-0.211749</td>
+      <td>-0.479484</td>
+      <td>0.257386</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>1750</th>
       <td>0</td>
-      <td>0.142592</td>
-      <td>0.493684</td>
-      <td>0.039029</td>
+      <td>-0.164203</td>
+      <td>-0.493754</td>
+      <td>-0.095464</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>2000</th>
       <td>0</td>
-      <td>0.141882</td>
-      <td>0.493063</td>
-      <td>0.025782</td>
+      <td>-0.112374</td>
+      <td>-0.441557</td>
+      <td>-0.535227</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>2250</th>
       <td>0</td>
-      <td>0.142203</td>
-      <td>0.442015</td>
-      <td>0.034420</td>
+      <td>-0.137613</td>
+      <td>-0.347291</td>
+      <td>-0.874043</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>
@@ -12332,29 +12190,13 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Break data into 3 parts. S = {Near 2 Walls, Near 1 Wall, Near No Walls}</span>
-<span class="c1">#df2 = df_sampled.loc[df_sampled[&#39;ResetID&#39;] % 3 == 2]</span>
-<span class="c1">#df1 = df_sampled.loc[df_sampled[&#39;ResetID&#39;] % 3 == 1]</span>
-<span class="c1">#df0 = df_sampled.loc[df_sampled[&#39;ResetID&#39;] % 3 == 0]</span>
-<span class="c1">#df = df0</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c1">#Clean up the data</span>
 <span class="n">df_clean</span> <span class="o">=</span> <span class="n">df_sampled</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
+<span class="c1">#Replace the row indexes with a range from 0..n because originally on import of multiple data files it will start from 1 for each file</span>
 <span class="n">df_clean</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">df_clean</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="c1">#When the gazebo run it may collect some data of the robots when they aren&#39;t moving for the first few 50 or so samples.</span>
 <span class="c1">#TODO</span>
@@ -12371,7 +12213,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[40]:</div>
+<div class="prompt output_prompt">Out[7]:</div>
 
 
 
@@ -12411,48 +12253,48 @@ div#notebook {
       <td>0.000000</td>
       <td>0.000000</td>
       <td>1</td>
-      <td>1</td>
       <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
       <td>0</td>
-      <td>0.022322</td>
-      <td>-0.019050</td>
-      <td>-0.015921</td>
+      <td>-0.482503</td>
+      <td>-0.306513</td>
+      <td>0.311928</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
       <td>0</td>
-      <td>0.039587</td>
-      <td>0.049080</td>
-      <td>0.024035</td>
+      <td>-0.481564</td>
+      <td>-0.273259</td>
+      <td>0.297979</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>3</th>
       <td>0</td>
-      <td>0.062461</td>
-      <td>0.185013</td>
-      <td>0.038152</td>
+      <td>-0.444129</td>
+      <td>-0.303773</td>
+      <td>0.261811</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>4</th>
       <td>0</td>
-      <td>0.111415</td>
-      <td>0.322394</td>
-      <td>0.046604</td>
+      <td>-0.373807</td>
+      <td>-0.350501</td>
+      <td>0.262825</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>
@@ -12465,9 +12307,17 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Shift-the-data">Shift the data<a class="anchor-link" href="#Shift-the-data">&#182;</a></h3>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c1">#Clean up the data</span>
@@ -12493,7 +12343,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[41]:</div>
+<div class="prompt output_prompt">Out[8]:</div>
 
 
 
@@ -12533,48 +12383,48 @@ div#notebook {
       <td>0.000000</td>
       <td>3.141593</td>
       <td>1</td>
-      <td>1</td>
       <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
       <td>0</td>
-      <td>0.022322</td>
-      <td>-0.019050</td>
-      <td>3.125672</td>
+      <td>-0.482503</td>
+      <td>-0.306513</td>
+      <td>3.453521</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
       <td>0</td>
-      <td>0.039587</td>
-      <td>0.049080</td>
-      <td>3.165627</td>
+      <td>-0.481564</td>
+      <td>-0.273259</td>
+      <td>3.439572</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>3</th>
       <td>0</td>
-      <td>0.062461</td>
-      <td>0.185013</td>
-      <td>3.179745</td>
+      <td>-0.444129</td>
+      <td>-0.303773</td>
+      <td>3.403404</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>4</th>
       <td>0</td>
-      <td>0.111415</td>
-      <td>0.322394</td>
-      <td>3.188197</td>
+      <td>-0.373807</td>
+      <td>-0.350501</td>
+      <td>3.404418</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>
@@ -12589,7 +12439,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c1">#Clean up the data</span>
@@ -12616,7 +12466,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[42]:</div>
+<div class="prompt output_prompt">Out[9]:</div>
 
 
 
@@ -12656,48 +12506,48 @@ div#notebook {
       <td>0.563500</td>
       <td>3.141593</td>
       <td>1</td>
-      <td>1</td>
       <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
       <td>0</td>
-      <td>0.585822</td>
-      <td>0.544450</td>
-      <td>3.125672</td>
+      <td>0.080997</td>
+      <td>0.256987</td>
+      <td>3.453521</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
       <td>0</td>
-      <td>0.603087</td>
-      <td>0.612580</td>
-      <td>3.165627</td>
+      <td>0.081936</td>
+      <td>0.290241</td>
+      <td>3.439572</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>3</th>
       <td>0</td>
-      <td>0.625961</td>
-      <td>0.748513</td>
-      <td>3.179745</td>
+      <td>0.119371</td>
+      <td>0.259727</td>
+      <td>3.403404</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>4</th>
       <td>0</td>
-      <td>0.674915</td>
-      <td>0.885894</td>
-      <td>3.188197</td>
+      <td>0.189693</td>
+      <td>0.212999</td>
+      <td>3.404418</td>
+      <td>2</td>
       <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>
@@ -12710,28 +12560,20 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Clean up the data</span>
-
-<span class="c1">#Clean the time data since gazebo prints it weird...</span>
-<span class="c1">#TODO</span>
-</pre></div>
-
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Discretize-the-data">Discretize the data<a class="anchor-link" href="#Discretize-the-data">&#182;</a></h3>
 </div>
 </div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="s1">&#39;#Discretize the data</span>
+<div class=" highlight hl-ipython2"><pre><span class="c1">#Discretize the data</span>
 <span class="n">NUMBER_OF_SQUARES</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1">#This should be a square number to create equal sized squares.</span>
 <span class="n">RESOLUTION_OF_S1</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#This is used to discretize the yaw angle over 0 - 2*pi</span>
 
@@ -12743,7 +12585,7 @@ div#notebook {
     <span class="n">df_discretized</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mappingBoxConstant</span><span class="p">)</span>
     <span class="n">df_discretized</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Yaw&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Yaw&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">RESOLUTION_OF_S1</span><span class="p">)</span> <span class="o">*</span> <span class="n">RESOLUTION_OF_S1</span>
         
-<span class="n">df_discretized</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="s1">&#39;</span>
+<span class="n">df_discretized</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -12756,7 +12598,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[44]:</div>
+<div class="prompt output_prompt">Out[10]:</div>
 
 
 
@@ -12791,32 +12633,32 @@ div#notebook {
   <tbody>
     <tr>
       <th>count</th>
-      <td>401.0</td>
-      <td>401.000000</td>
-      <td>401.000000</td>
-      <td>401.000000</td>
-      <td>401.0</td>
-      <td>401.0</td>
-      <td>401.0</td>
+      <td>226961.0</td>
+      <td>226961.000000</td>
+      <td>226961.000000</td>
+      <td>226961.000000</td>
+      <td>226961.000000</td>
+      <td>226961.000000</td>
+      <td>226961.0</td>
     </tr>
     <tr>
       <th>mean</th>
       <td>0.0</td>
-      <td>3.907731</td>
-      <td>4.246883</td>
-      <td>2.520698</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>4.471028</td>
+      <td>4.510374</td>
+      <td>3.089414</td>
+      <td>48.706143</td>
+      <td>0.999996</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>std</th>
       <td>0.0</td>
-      <td>2.745718</td>
-      <td>2.841020</td>
-      <td>1.217721</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>2.954671</td>
+      <td>2.972139</td>
+      <td>1.809770</td>
+      <td>27.254503</td>
+      <td>0.002099</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -12824,39 +12666,39 @@ div#notebook {
       <td>0.0</td>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>0.200000</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>25%</th>
       <td>0.0</td>
-      <td>1.000000</td>
       <td>2.000000</td>
-      <td>1.300000</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>2.000000</td>
+      <td>1.500000</td>
+      <td>25.000000</td>
+      <td>1.000000</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>50%</th>
       <td>0.0</td>
       <td>4.000000</td>
-      <td>4.000000</td>
-      <td>2.800000</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>5.000000</td>
+      <td>3.100000</td>
+      <td>49.000000</td>
+      <td>1.000000</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>75%</th>
       <td>0.0</td>
-      <td>6.000000</td>
       <td>7.000000</td>
-      <td>3.200000</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>7.000000</td>
+      <td>4.600000</td>
+      <td>72.000000</td>
+      <td>1.000000</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -12864,9 +12706,9 @@ div#notebook {
       <td>0.0</td>
       <td>9.000000</td>
       <td>9.000000</td>
-      <td>6.100000</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>6.200000</td>
+      <td>96.000000</td>
+      <td>1.000000</td>
       <td>0.0</td>
     </tr>
   </tbody>
@@ -12880,29 +12722,29 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Verify Discretizing suceeded by checking that number of states generated is the number of states we expeted or less (Sometimes these things dont visit all states)</span>
-
-<span class="k">if</span> <span class="p">(</span><span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">NUMBER_OF_SQUARES</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.0</span><span class="p">))</span> <span class="ow">or</span> <span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">NUMBER_OF_SQUARES</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.0</span><span class="p">))</span> <span class="ow">or</span> <span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">df_discretized</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] Discretizing X/Y failed, Make sure the points are between 0 and (NUMBER_OF_SQUARES ** (1/2.0)&quot;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Y = ({} - {}) X = ({} to {})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
-</pre></div>
-
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Initialize-a-few-variables/objects-used-in-the-experiment">Initialize a few variables/objects used in the experiment<a class="anchor-link" href="#Initialize-a-few-variables/objects-used-in-the-experiment">&#182;</a></h3>
 </div>
 </div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="n">TRANSLATION_MATRIX_INITIAL_VALUE</span> <span class="o">=</span> <span class="mi">1</span>
+<div class=" highlight hl-ipython2"><pre><span class="c1">#The formula for mapping a 3D array to 1D is</span>
+<span class="c1">#(z * xMax * yMax) + (y * xMax) + x;</span>
+<span class="c1">#https://stackoverflow.com/questions/7367770/how-to-flatten-or-index-3d-array-in-1d-array</span>
+<span class="n">X_MAX</span> <span class="o">=</span> <span class="n">NUMBER_OF_SQUARES</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">Y_MAX</span> <span class="o">=</span> <span class="n">NUMBER_OF_SQUARES</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">YAW_MAX</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="n">RESOLUTION_OF_S1</span>
+<span class="n">mapping</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">(</span><span class="n">X_MAX</span><span class="p">,</span> <span class="n">Y_MAX</span><span class="p">,</span> <span class="n">YAW_MAX</span><span class="p">)</span><span class="c1">#Fill in the logical areas that the system can reach (For now I am assuming it can go up/down 2 yaw states or the surronding (x,y) blocks)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1">#d is used to hold all the transitions and keep a counter of how often each occur</span>
+
+<span class="n">TRANSLATION_MATRIX_INITIAL_VALUE</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="c1">#Create the matrix representing the Markov Chain</span>
 <span class="c1">#I am assuming we are discretizing the space into equal sized boxes</span>
 <span class="c1">#The transition matrix A is of size </span>
@@ -12912,11 +12754,8 @@ div#notebook {
 <span class="n">number_of_x_states</span> <span class="o">=</span> <span class="n">mappingBoxConstant</span> <span class="o">*</span> <span class="n">LENGTH_OF_BOX</span>
 <span class="n">number_of_y_states</span> <span class="o">=</span> <span class="n">mappingBoxConstant</span> <span class="o">*</span> <span class="n">LENGTH_OF_BOX</span>
 <span class="n">number_of_s1_states</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">RESOLUTION_OF_S1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-
-<span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number_of_x_states</span> <span class="o">*</span> <span class="n">number_of_y_states</span> <span class="o">*</span> <span class="n">number_of_s1_states</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;[DEBUG] Size of n is {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-<span class="n">translation_matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="c1">#We use 1 here to set the whole matrix elements to 1</span>
-<span class="n">translation_matrix</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number_of_x_states</span> <span class="o">*</span> <span class="n">number_of_y_states</span> <span class="o">*</span> <span class="n">number_of_s1_states</span><span class="p">)</span> <span class="c1">#n is the size of the transition matrix</span>
+<span class="n">n</span>
 </pre></div>
 
 </div>
@@ -12929,188 +12768,13 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[DEBUG] Size of n is 6300
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[46]:</div>
+<div class="prompt output_prompt">Out[14]:</div>
 
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>0</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-      <th>5</th>
-      <th>6</th>
-      <th>7</th>
-      <th>8</th>
-      <th>9</th>
-      <th>...</th>
-      <th>6290</th>
-      <th>6291</th>
-      <th>6292</th>
-      <th>6293</th>
-      <th>6294</th>
-      <th>6295</th>
-      <th>6296</th>
-      <th>6297</th>
-      <th>6298</th>
-      <th>6299</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 6300 columns</p>
-</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>6300</pre>
 </div>
 
 </div>
@@ -13119,36 +12783,22 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#The formula for mapping a 3D array to 1D is</span>
-<span class="c1">#(z * xMax * yMax) + (y * xMax) + x;</span>
-<span class="c1">#https://stackoverflow.com/questions/7367770/how-to-flatten-or-index-3d-array-in-1d-array</span>
-<span class="n">X_MAX</span> <span class="o">=</span> <span class="n">NUMBER_OF_SQUARES</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
-<span class="n">Y_MAX</span> <span class="o">=</span> <span class="n">NUMBER_OF_SQUARES</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
-<span class="n">YAW_MAX</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="n">RESOLUTION_OF_S1</span>
-<span class="n">mapping</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">(</span><span class="n">X_MAX</span><span class="p">,</span> <span class="n">Y_MAX</span><span class="p">,</span> <span class="n">YAW_MAX</span><span class="p">)</span><span class="c1">#Fill in the logical areas that the system can reach (For now I am assuming it can go up/down 2 yaw states or the surronding (x,y) blocks)</span>
-</pre></div>
-
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Create-artificial-data-if-needed">Create artificial data if needed<a class="anchor-link" href="#Create-artificial-data-if-needed">&#182;</a></h3>
 </div>
 </div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c1">#HUERISTIC: Add a +1 to any logical possible state the structure would likely end up in.</span>
 <span class="c1">#This lowers the amount of artifiical data in the matrix (most of which isnt needed)</span>
-
-
-
-<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">translation_matrix</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+<span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="k">if</span><span class="p">(</span><span class="n">TRANSLATION_MATRIX_INITIAL_VALUE</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
         <span class="k">break</span>
     <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">yaw</span><span class="p">)</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">map1Dto3D</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
@@ -13164,207 +12814,32 @@ div#notebook {
                 <span class="k">if</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">checkValid3DMap</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">x_p</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">y_p</span><span class="p">,</span> <span class="n">yaw</span><span class="o">+</span><span class="n">yaw_p</span><span class="p">)):</span>
                     <span class="n">possible_spots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">x_p</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">y_p</span><span class="p">,</span> <span class="n">yaw</span><span class="o">+</span><span class="n">yaw_p</span><span class="p">)</span> <span class="p">)</span>
     <span class="k">for</span> <span class="n">pose</span> <span class="ow">in</span> <span class="n">possible_spots</span><span class="p">:</span>
-        <span class="n">translation_matrix</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">mapping</span><span class="o">.</span><span class="n">map3Dto1D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">yaw</span><span class="p">),</span> <span class="n">mapping</span><span class="o">.</span><span class="n">map3Dto1D</span><span class="p">(</span><span class="n">pose</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pose</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">pose</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span> <span class="o">=</span> <span class="n">translation_matrix</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">mapping</span><span class="o">.</span><span class="n">map3Dto1D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">yaw</span><span class="p">),</span> <span class="n">mapping</span><span class="o">.</span><span class="n">map3Dto1D</span><span class="p">(</span><span class="n">pose</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pose</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">pose</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span> <span class="o">+</span><span class="n">TRANSLATION_MATRIX_INITIAL_VALUE</span>
-<span class="n">translation_matrix</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>    
+        <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">yaw</span><span class="p">,</span> <span class="n">pose</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pose</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">pose</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[48]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>0</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-      <th>5</th>
-      <th>6</th>
-      <th>7</th>
-      <th>8</th>
-      <th>9</th>
-      <th>...</th>
-      <th>6290</th>
-      <th>6291</th>
-      <th>6292</th>
-      <th>6293</th>
-      <th>6294</th>
-      <th>6295</th>
-      <th>6296</th>
-      <th>6297</th>
-      <th>6298</th>
-      <th>6299</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 6300 columns</p>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Fill-in-the-dictionary-with-actual-data-from-the-experiment">Fill in the dictionary with actual data from the experiment<a class="anchor-link" href="#Fill-in-the-dictionary-with-actual-data-from-the-experiment">&#182;</a></h3>
 </div>
 </div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[49]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Create a dictionary for storing the transition states analysis</span>
-<span class="n">d</span> <span class="o">=</span><span class="p">{}</span>
-<span class="c1">#Our keys to the dictionary will look like (x_t, y_t, yaw_t, x_t+1, y_t+1, yaw_t+1)</span>
+<div class=" highlight hl-ipython2"><pre><span class="c1">#Our keys to the dictionary will look like (x_t, y_t, yaw_t, x_t+1, y_t+1, yaw_t+1)</span>
 <span class="c1">#Go through all but last row since t+1 isnt defined there...</span>
 <span class="n">skipCount</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">try</span><span class="p">:</span>
@@ -13385,7 +12860,6 @@ div#notebook {
     <span class="k">print</span> <span class="n">e</span>
     
 <span class="k">print</span> <span class="s2">&quot;[DEBUG] Skipped {} events&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">skipCount</span><span class="p">)</span>
-<span class="n">d</span>
 </pre></div>
 
 </div>
@@ -13402,462 +12876,92 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[DEBUG] Skipped 0 events
+<pre>[DEBUG] Skipped 95 events
 </pre>
 </div>
 </div>
 
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[49]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>{(0.0, 0.0, 4.4, 0.0, 0.0, 4.5): 1,
- (0.0, 0.0, 4.4, 1.0, 0.0, 4.4): 1,
- (0.0, 0.0, 4.5, 0.0, 0.0, 4.4): 1,
- (0.0, 1.0, 0.6, 1.0, 1.0, 0.6): 1,
- (0.0, 1.0, 2.6, 0.0, 1.0, 2.6): 1,
- (0.0, 1.0, 2.6, 1.0, 1.0, 2.6): 1,
- (0.0, 1.0, 4.1, 0.0, 1.0, 4.5): 1,
- (0.0, 1.0, 4.4, 0.0, 0.0, 4.4): 1,
- (0.0, 1.0, 4.5, 0.0, 1.0, 4.4): 1,
- (0.0, 1.0, 4.5, 0.0, 1.0, 4.5): 1,
- (0.0, 2.0, 0.7, 0.0, 1.0, 0.6): 1,
- (0.0, 2.0, 0.8, 0.0, 2.0, 0.7): 1,
- (0.0, 2.0, 0.9, 0.0, 2.0, 0.8): 1,
- (0.0, 2.0, 2.8, 0.0, 1.0, 2.6): 1,
- (0.0, 3.0, 2.9, 0.0, 3.0, 3.0): 1,
- (0.0, 3.0, 3.0, 0.0, 4.0, 3.2): 1,
- (0.0, 3.0, 3.9, 1.0, 3.0, 3.6): 1,
- (0.0, 4.0, 1.3, 0.0, 4.0, 1.3): 1,
- (0.0, 4.0, 1.3, 1.0, 4.0, 1.2): 1,
- (0.0, 4.0, 3.2, 0.0, 5.0, 3.2): 1,
- (0.0, 4.0, 4.2, 0.0, 3.0, 3.9): 1,
- (0.0, 4.0, 4.4, 0.0, 4.0, 4.2): 1,
- (0.0, 5.0, 3.2, 1.0, 6.0, 3.3): 1,
- (0.0, 6.0, 3.0, 0.0, 6.0, 3.0): 1,
- (0.0, 6.0, 3.0, 0.0, 6.0, 3.1): 2,
- (0.0, 6.0, 3.0, 0.0, 7.0, 2.8): 1,
- (0.0, 6.0, 3.1, 0.0, 6.0, 3.0): 1,
- (0.0, 6.0, 3.1, 0.0, 6.0, 3.1): 1,
- (0.0, 6.0, 3.1, 1.0, 6.0, 3.0): 1,
- (0.0, 7.0, 1.2, 0.0, 7.0, 1.7): 1,
- (0.0, 7.0, 1.7, 0.0, 7.0, 2.0): 1,
- (0.0, 7.0, 2.0, 1.0, 8.0, 2.3): 1,
- (0.0, 7.0, 2.6, 0.0, 8.0, 2.9): 1,
- (0.0, 7.0, 2.8, 1.0, 7.0, 2.7): 1,
- (0.0, 8.0, 0.5, 0.0, 9.0, 0.6): 1,
- (0.0, 8.0, 2.9, 0.0, 9.0, 3.3): 1,
- (0.0, 8.0, 3.3, 1.0, 9.0, 3.2): 1,
- (0.0, 8.0, 3.6, 0.0, 8.0, 3.3): 1,
- (0.0, 9.0, 0.6, 0.0, 9.0, 0.7): 1,
- (0.0, 9.0, 0.7, 1.0, 9.0, 0.7): 1,
- (0.0, 9.0, 3.3, 0.0, 9.0, 3.6): 1,
- (0.0, 9.0, 3.6, 1.0, 8.0, 3.9): 1,
- (1.0, 0.0, 3.9, 0.0, 1.0, 4.1): 1,
- (1.0, 0.0, 4.0, 1.0, 0.0, 4.0): 2,
- (1.0, 0.0, 4.0, 1.0, 1.0, 4.0): 1,
- (1.0, 0.0, 4.4, 2.0, 0.0, 4.5): 1,
- (1.0, 1.0, 0.6, 2.0, 2.0, 0.5): 1,
- (1.0, 1.0, 0.9, 1.0, 2.0, 0.9): 1,
- (1.0, 1.0, 2.6, 1.0, 2.0, 2.7): 1,
- (1.0, 1.0, 2.8, 1.0, 2.0, 2.8): 1,
- (1.0, 1.0, 4.0, 1.0, 0.0, 4.0): 1,
- (1.0, 1.0, 4.0, 1.0, 1.0, 4.0): 2,
- (1.0, 1.0, 4.0, 1.0, 2.0, 4.0): 1,
- (1.0, 2.0, 0.9, 1.0, 4.0, 0.9): 1,
- (1.0, 2.0, 2.7, 2.0, 2.0, 2.7): 1,
- (1.0, 2.0, 2.8, 0.0, 2.0, 2.8): 1,
- (1.0, 2.0, 2.8, 0.0, 3.0, 2.9): 1,
- (1.0, 2.0, 4.0, 1.0, 1.0, 4.0): 1,
- (1.0, 2.0, 4.0, 1.0, 3.0, 4.1): 1,
- (1.0, 3.0, 1.2, 1.0, 3.0, 1.2): 1,
- (1.0, 3.0, 1.2, 2.0, 3.0, 1.3): 1,
- (1.0, 3.0, 3.6, 2.0, 2.0, 3.3): 1,
- (1.0, 3.0, 4.0, 1.0, 2.0, 4.0): 1,
- (1.0, 4.0, 0.8, 1.0, 4.0, 0.8): 1,
- (1.0, 4.0, 0.8, 2.0, 5.0, 0.9): 1,
- (1.0, 4.0, 0.9, 0.0, 2.0, 0.9): 1,
- (1.0, 4.0, 0.9, 1.0, 4.0, 0.8): 1,
- (1.0, 4.0, 1.2, 1.0, 3.0, 1.2): 1,
- (1.0, 4.0, 1.3, 0.0, 4.0, 1.3): 1,
- (1.0, 4.0, 1.3, 1.0, 4.0, 1.3): 1,
- (1.0, 4.0, 4.0, 1.0, 3.0, 4.0): 1,
- (1.0, 5.0, 0.8, 1.0, 5.0, 0.8): 1,
- (1.0, 5.0, 0.8, 2.0, 4.0, 0.8): 1,
- (1.0, 5.0, 4.0, 1.0, 4.0, 4.0): 1,
- (1.0, 5.0, 4.0, 1.0, 5.0, 4.0): 1,
- (1.0, 5.0, 4.3, 0.0, 4.0, 4.4): 1,
- (1.0, 6.0, 0.3, 1.0, 6.0, 0.7): 1,
- (1.0, 6.0, 0.7, 0.0, 7.0, 1.2): 1,
- (1.0, 6.0, 0.8, 1.0, 5.0, 0.8): 1,
- (1.0, 6.0, 3.0, 0.0, 6.0, 3.0): 2,
- (1.0, 6.0, 3.3, 1.0, 7.0, 3.3): 1,
- (1.0, 6.0, 4.1, 1.0, 6.0, 4.2): 1,
- (1.0, 6.0, 4.2, 1.0, 5.0, 4.3): 1,
- (1.0, 7.0, 0.5, 1.0, 8.0, 0.5): 1,
- (1.0, 7.0, 0.8, 1.0, 6.0, 0.8): 1,
- (1.0, 7.0, 2.6, 0.0, 7.0, 2.6): 1,
- (1.0, 7.0, 2.6, 1.0, 7.0, 2.6): 1,
- (1.0, 7.0, 2.7, 1.0, 7.0, 2.6): 1,
- (1.0, 7.0, 3.3, 1.0, 7.0, 3.4): 1,
- (1.0, 7.0, 3.4, 1.0, 8.0, 3.4): 1,
- (1.0, 7.0, 3.9, 1.0, 5.0, 4.0): 1,
- (1.0, 7.0, 4.0, 1.0, 6.0, 4.1): 1,
- (1.0, 8.0, 0.5, 0.0, 8.0, 0.5): 1,
- (1.0, 8.0, 0.7, 1.0, 7.0, 0.8): 1,
- (1.0, 8.0, 2.3, 2.0, 8.0, 2.7): 1,
- (1.0, 8.0, 3.4, 1.0, 9.0, 3.5): 1,
- (1.0, 8.0, 3.6, 0.0, 8.0, 3.6): 1,
- (1.0, 8.0, 3.6, 1.0, 8.0, 3.6): 1,
- (1.0, 8.0, 3.7, 1.0, 7.0, 3.9): 1,
- (1.0, 8.0, 3.9, 1.0, 7.0, 4.0): 1,
- (1.0, 9.0, 0.7, 1.0, 8.0, 0.7): 1,
- (1.0, 9.0, 3.2, 1.0, 9.0, 3.4): 1,
- (1.0, 9.0, 3.4, 1.0, 9.0, 3.6): 1,
- (1.0, 9.0, 3.5, 1.0, 9.0, 3.6): 1,
- (1.0, 9.0, 3.6, 1.0, 8.0, 3.6): 1,
- (1.0, 9.0, 3.6, 1.0, 8.0, 3.7): 1,
- (2.0, 0.0, 0.8, 2.0, 0.0, 0.8): 1,
- (2.0, 0.0, 0.8, 2.0, 1.0, 0.8): 1,
- (2.0, 0.0, 2.7, 1.0, 1.0, 2.8): 1,
- (2.0, 0.0, 3.7, 1.0, 0.0, 3.9): 1,
- (2.0, 0.0, 4.5, 3.0, 0.0, 4.2): 1,
- (2.0, 1.0, 0.8, 2.0, 0.0, 0.8): 1,
- (2.0, 1.0, 0.8, 2.0, 1.0, 0.8): 1,
- (2.0, 1.0, 0.8, 2.0, 1.0, 0.9): 1,
- (2.0, 1.0, 0.9, 1.0, 1.0, 0.9): 1,
- (2.0, 1.0, 0.9, 2.0, 1.0, 0.8): 1,
- (2.0, 1.0, 2.7, 2.0, 0.0, 2.7): 1,
- (2.0, 1.0, 3.0, 3.0, 1.0, 2.8): 1,
- (2.0, 2.0, 0.5, 3.0, 2.0, 0.5): 1,
- (2.0, 2.0, 0.9, 2.0, 1.0, 0.9): 1,
- (2.0, 2.0, 2.7, 3.0, 3.0, 2.6): 1,
- (2.0, 2.0, 2.8, 1.0, 2.0, 2.8): 1,
- (2.0, 2.0, 3.3, 2.0, 1.0, 3.0): 1,
- (2.0, 3.0, 1.3, 3.0, 2.0, 1.3): 1,
- (2.0, 3.0, 2.8, 2.0, 2.0, 2.8): 1,
- (2.0, 4.0, 0.8, 2.0, 2.0, 0.9): 1,
- (2.0, 4.0, 0.9, 1.0, 4.0, 0.9): 1,
- (2.0, 4.0, 1.3, 1.0, 4.0, 1.3): 1,
- (2.0, 4.0, 1.3, 2.0, 4.0, 1.3): 1,
- (2.0, 4.0, 1.3, 2.0, 5.0, 1.3): 1,
- (2.0, 4.0, 5.7, 2.0, 5.0, 6.1): 1,
- (2.0, 5.0, 0.9, 2.0, 4.0, 0.9): 1,
- (2.0, 5.0, 0.9, 2.0, 5.0, 0.9): 1,
- (2.0, 5.0, 0.9, 2.0, 6.0, 0.9): 1,
- (2.0, 5.0, 1.3, 2.0, 6.0, 1.4): 1,
- (2.0, 5.0, 6.1, 1.0, 6.0, 0.3): 1,
- (2.0, 6.0, 0.9, 2.0, 7.0, 0.9): 1,
- (2.0, 6.0, 1.4, 2.0, 7.0, 1.4): 1,
- (2.0, 7.0, 0.5, 1.0, 7.0, 0.5): 1,
- (2.0, 7.0, 0.9, 3.0, 8.0, 0.9): 1,
- (2.0, 7.0, 1.0, 2.0, 5.0, 0.9): 1,
- (2.0, 7.0, 1.4, 2.0, 8.0, 1.3): 1,
- (2.0, 8.0, 1.1, 2.0, 7.0, 1.0): 1,
- (2.0, 8.0, 1.1, 2.0, 8.0, 1.1): 1,
- (2.0, 8.0, 1.3, 2.0, 9.0, 1.4): 1,
- (2.0, 8.0, 2.7, 3.0, 8.0, 3.0): 1,
- (2.0, 9.0, 1.2, 2.0, 8.0, 1.1): 1,
- (2.0, 9.0, 1.3, 2.0, 9.0, 1.2): 1,
- (2.0, 9.0, 1.4, 2.0, 9.0, 1.3): 1,
- (3.0, 0.0, 2.6, 2.0, 1.0, 2.7): 1,
- (3.0, 0.0, 2.6, 3.0, 0.0, 2.6): 1,
- (3.0, 0.0, 3.7, 2.0, 0.0, 3.7): 1,
- (3.0, 0.0, 4.2, 4.0, 0.0, 4.0): 1,
- (3.0, 1.0, 2.8, 3.0, 0.0, 2.6): 1,
- (3.0, 1.0, 3.7, 3.0, 0.0, 3.7): 1,
- (3.0, 2.0, 0.5, 4.0, 2.0, 0.5): 1,
- (3.0, 2.0, 1.3, 5.0, 2.0, 1.3): 1,
- (3.0, 2.0, 4.4, 3.0, 3.0, 4.9): 1,
- (3.0, 3.0, 1.3, 2.0, 4.0, 1.3): 1,
- (3.0, 3.0, 2.6, 4.0, 4.0, 2.6): 1,
- (3.0, 3.0, 4.9, 3.0, 4.0, 5.3): 1,
- (3.0, 4.0, 1.3, 2.0, 4.0, 1.3): 1,
- (3.0, 4.0, 2.8, 2.0, 3.0, 2.8): 1,
- (3.0, 4.0, 5.3, 2.0, 4.0, 5.7): 1,
- (3.0, 5.0, 2.8, 3.0, 4.0, 2.8): 1,
- (3.0, 6.0, 0.5, 2.0, 7.0, 0.5): 1,
- (3.0, 6.0, 3.0, 1.0, 6.0, 3.0): 1,
- (3.0, 7.0, 2.7, 3.0, 8.0, 2.7): 1,
- (3.0, 8.0, 0.9, 3.0, 8.0, 0.9): 1,
- (3.0, 8.0, 0.9, 4.0, 9.0, 1.1): 1,
- (3.0, 8.0, 2.7, 3.0, 9.0, 2.7): 1,
- (3.0, 8.0, 2.8, 3.0, 8.0, 2.8): 1,
- (3.0, 8.0, 2.8, 4.0, 8.0, 2.8): 1,
- (3.0, 8.0, 3.0, 4.0, 9.0, 3.3): 1,
- (3.0, 9.0, 2.7, 3.0, 8.0, 2.8): 1,
- (3.0, 9.0, 2.7, 3.0, 9.0, 2.7): 2,
- (4.0, 0.0, 3.5, 4.0, 1.0, 3.9): 1,
- (4.0, 0.0, 4.0, 5.0, 0.0, 3.9): 1,
- (4.0, 1.0, 3.7, 3.0, 1.0, 3.7): 1,
- (4.0, 1.0, 3.9, 3.0, 2.0, 4.4): 1,
- (4.0, 2.0, 0.5, 4.0, 2.0, 0.5): 1,
- (4.0, 2.0, 0.5, 5.0, 2.0, 0.5): 1,
- (4.0, 2.0, 1.3, 3.0, 3.0, 1.3): 1,
- (4.0, 2.0, 2.7, 4.0, 3.0, 2.7): 1,
- (4.0, 3.0, 2.7, 4.0, 4.0, 2.7): 1,
- (4.0, 3.0, 3.1, 4.0, 4.0, 3.1): 1,
- (4.0, 4.0, 1.3, 3.0, 4.0, 1.3): 1,
- (4.0, 4.0, 2.6, 4.0, 4.0, 2.6): 1,
- (4.0, 4.0, 2.6, 5.0, 4.0, 2.7): 1,
- (4.0, 4.0, 2.7, 4.0, 4.0, 2.7): 1,
- (4.0, 4.0, 2.7, 4.0, 6.0, 2.7): 1,
- (4.0, 4.0, 3.1, 4.0, 4.0, 3.1): 1,
- (4.0, 4.0, 3.1, 4.0, 5.0, 3.1): 1,
- (4.0, 5.0, 0.4, 4.0, 6.0, 0.4): 1,
- (4.0, 5.0, 0.5, 4.0, 5.0, 0.4): 1,
- (4.0, 5.0, 2.8, 3.0, 5.0, 2.8): 1,
- (4.0, 5.0, 2.8, 4.0, 5.0, 2.8): 1,
- (4.0, 5.0, 3.1, 4.0, 6.0, 3.1): 1,
- (4.0, 6.0, 0.4, 3.0, 6.0, 0.5): 1,
- (4.0, 6.0, 2.7, 4.0, 7.0, 2.7): 1,
- (4.0, 6.0, 3.0, 3.0, 6.0, 3.0): 1,
- (4.0, 6.0, 3.1, 4.0, 7.0, 3.1): 1,
- (4.0, 7.0, 2.7, 3.0, 7.0, 2.7): 1,
- (4.0, 7.0, 2.7, 4.0, 5.0, 2.8): 1,
- (4.0, 7.0, 3.0, 4.0, 7.0, 3.1): 1,
- (4.0, 7.0, 3.1, 4.0, 6.0, 3.0): 1,
- (4.0, 7.0, 3.1, 4.0, 8.0, 3.1): 1,
- (4.0, 8.0, 2.8, 4.0, 7.0, 2.7): 1,
- (4.0, 8.0, 3.1, 4.0, 9.0, 3.1): 1,
- (4.0, 8.0, 3.2, 5.0, 8.0, 3.2): 1,
- (4.0, 9.0, 1.1, 4.0, 9.0, 1.5): 1,
- (4.0, 9.0, 1.5, 5.0, 9.0, 1.9): 1,
- (4.0, 9.0, 3.1, 4.0, 9.0, 3.2): 1,
- (4.0, 9.0, 3.2, 4.0, 8.0, 3.2): 1,
- (4.0, 9.0, 3.2, 4.0, 9.0, 3.2): 1,
- (4.0, 9.0, 3.3, 4.0, 9.0, 3.7): 1,
- (4.0, 9.0, 3.7, 5.0, 9.0, 4.2): 1,
- (5.0, 0.0, 2.6, 5.0, 0.0, 3.0): 1,
- (5.0, 0.0, 3.0, 4.0, 0.0, 3.5): 1,
- (5.0, 0.0, 3.4, 6.0, 1.0, 3.2): 1,
- (5.0, 0.0, 3.7, 5.0, 0.0, 3.4): 1,
- (5.0, 0.0, 3.9, 5.0, 0.0, 3.7): 1,
- (5.0, 1.0, 1.2, 5.0, 1.0, 1.2): 1,
- (5.0, 1.0, 1.2, 5.0, 2.0, 1.2): 1,
- (5.0, 1.0, 2.6, 5.0, 1.0, 2.6): 1,
- (5.0, 1.0, 2.6, 6.0, 0.0, 2.6): 1,
- (5.0, 1.0, 2.8, 4.0, 2.0, 2.7): 1,
- (5.0, 1.0, 2.8, 5.0, 1.0, 2.8): 1,
- (5.0, 1.0, 3.2, 5.0, 2.0, 3.2): 1,
- (5.0, 1.0, 3.6, 4.0, 1.0, 3.7): 1,
- (5.0, 2.0, 0.5, 7.0, 2.0, 0.5): 1,
- (5.0, 2.0, 1.2, 4.0, 2.0, 1.3): 1,
- (5.0, 2.0, 1.2, 7.0, 2.0, 1.3): 1,
- (5.0, 2.0, 1.3, 5.0, 2.0, 1.2): 1,
- (5.0, 2.0, 1.3, 5.0, 2.0, 1.3): 1,
- (5.0, 2.0, 2.6, 5.0, 1.0, 2.6): 1,
- (5.0, 2.0, 3.0, 6.0, 3.0, 2.8): 1,
- (5.0, 2.0, 3.2, 4.0, 3.0, 3.1): 1,
- (5.0, 4.0, 0.5, 4.0, 5.0, 0.5): 1,
- (5.0, 4.0, 1.3, 4.0, 4.0, 1.3): 1,
- (5.0, 4.0, 1.3, 5.0, 4.0, 1.3): 1,
- (5.0, 4.0, 2.5, 5.0, 6.0, 2.5): 1,
- (5.0, 4.0, 2.6, 5.0, 2.0, 2.6): 1,
- (5.0, 4.0, 2.6, 5.0, 4.0, 2.5): 1,
- (5.0, 4.0, 2.6, 5.0, 4.0, 2.6): 1,
- (5.0, 4.0, 2.7, 6.0, 4.0, 2.6): 1,
- (5.0, 4.0, 3.1, 5.0, 5.0, 3.1): 1,
- (5.0, 5.0, 2.6, 5.0, 4.0, 2.6): 1,
- (5.0, 5.0, 3.1, 5.0, 4.0, 3.1): 1,
- (5.0, 5.0, 3.1, 5.0, 6.0, 3.1): 1,
- (5.0, 6.0, 2.5, 5.0, 7.0, 2.5): 1,
- (5.0, 6.0, 2.7, 5.0, 5.0, 2.6): 1,
- (5.0, 6.0, 3.0, 4.0, 7.0, 3.0): 1,
- (5.0, 6.0, 3.1, 5.0, 7.0, 3.1): 1,
- (5.0, 7.0, 2.5, 5.0, 7.0, 2.5): 1,
- (5.0, 7.0, 2.5, 5.0, 8.0, 2.5): 1,
- (5.0, 7.0, 2.6, 6.0, 6.0, 2.9): 1,
- (5.0, 7.0, 3.1, 6.0, 8.0, 3.1): 1,
- (5.0, 8.0, 2.3, 5.0, 7.0, 2.6): 1,
- (5.0, 8.0, 2.5, 5.0, 9.0, 2.5): 1,
- (5.0, 8.0, 2.6, 6.0, 8.0, 2.7): 1,
- (5.0, 8.0, 3.2, 5.0, 8.0, 3.2): 1,
- (5.0, 8.0, 3.2, 6.0, 6.0, 3.1): 1,
- (5.0, 8.0, 4.5, 6.0, 7.0, 4.9): 1,
- (5.0, 9.0, 1.9, 5.0, 8.0, 2.3): 1,
- (5.0, 9.0, 2.5, 5.0, 9.0, 2.5): 1,
- (5.0, 9.0, 2.5, 6.0, 9.0, 2.6): 1,
- (5.0, 9.0, 4.2, 5.0, 8.0, 4.5): 1,
- (6.0, 0.0, 2.6, 5.0, 0.0, 2.6): 1,
- (6.0, 0.0, 2.6, 6.0, 0.0, 2.6): 5,
- (6.0, 0.0, 2.7, 6.0, 1.0, 2.8): 1,
- (6.0, 0.0, 2.8, 6.0, 0.0, 2.7): 1,
- (6.0, 0.0, 3.1, 6.0, 0.0, 3.1): 1,
- (6.0, 0.0, 3.1, 6.0, 0.0, 3.2): 1,
- (6.0, 0.0, 3.2, 6.0, 1.0, 3.2): 1,
- (6.0, 0.0, 3.7, 7.0, 0.0, 3.7): 1,
- (6.0, 1.0, 1.2, 5.0, 1.0, 1.2): 1,
- (6.0, 1.0, 2.8, 5.0, 1.0, 2.8): 1,
- (6.0, 1.0, 2.9, 6.0, 0.0, 2.8): 1,
- (6.0, 1.0, 3.0, 6.0, 1.0, 2.9): 1,
- (6.0, 1.0, 3.1, 6.0, 0.0, 3.1): 1,
- (6.0, 1.0, 3.2, 5.0, 1.0, 3.2): 1,
- (6.0, 1.0, 3.2, 5.0, 2.0, 3.0): 1,
- (6.0, 1.0, 3.4, 6.0, 1.0, 3.5): 1,
- (6.0, 1.0, 3.5, 5.0, 1.0, 3.6): 1,
- (6.0, 1.0, 3.7, 7.0, 2.0, 3.7): 1,
- (6.0, 2.0, 3.0, 6.0, 1.0, 3.0): 1,
- (6.0, 2.0, 3.2, 6.0, 1.0, 3.1): 1,
- (6.0, 3.0, 0.6, 5.0, 4.0, 0.5): 1,
- (6.0, 3.0, 2.8, 5.0, 4.0, 2.6): 1,
- (6.0, 3.0, 3.0, 6.0, 2.0, 3.0): 1,
- (6.0, 3.0, 3.1, 6.0, 2.0, 3.2): 1,
- (6.0, 4.0, 1.3, 5.0, 4.0, 1.3): 1,
- (6.0, 4.0, 2.6, 7.0, 4.0, 2.6): 1,
- (6.0, 4.0, 3.0, 6.0, 3.0, 3.0): 1,
- (6.0, 4.0, 3.2, 6.0, 3.0, 3.1): 1,
- (6.0, 4.0, 3.4, 7.0, 2.0, 3.5): 1,
- (6.0, 5.0, 3.0, 6.0, 4.0, 3.0): 1,
- (6.0, 5.0, 3.0, 6.0, 5.0, 3.2): 1,
- (6.0, 5.0, 3.1, 6.0, 4.0, 3.2): 1,
- (6.0, 5.0, 3.1, 6.0, 5.0, 3.0): 1,
- (6.0, 5.0, 3.2, 6.0, 4.0, 3.4): 1,
- (6.0, 5.0, 3.2, 6.0, 5.0, 3.1): 1,
- (6.0, 6.0, 2.9, 6.0, 5.0, 3.0): 1,
- (6.0, 6.0, 3.1, 6.0, 5.0, 3.1): 1,
- (6.0, 6.0, 3.2, 6.0, 5.0, 3.2): 1,
- (6.0, 7.0, 2.7, 5.0, 6.0, 2.7): 1,
- (6.0, 7.0, 3.2, 6.0, 6.0, 3.2): 1,
- (6.0, 7.0, 4.9, 7.0, 7.0, 5.3): 1,
- (6.0, 8.0, 2.6, 5.0, 8.0, 2.6): 1,
- (6.0, 8.0, 2.7, 6.0, 7.0, 2.7): 1,
- (6.0, 8.0, 2.7, 6.0, 9.0, 2.7): 1,
- (6.0, 8.0, 2.8, 6.0, 8.0, 2.7): 1,
- (6.0, 8.0, 3.1, 6.0, 8.0, 3.1): 1,
- (6.0, 8.0, 3.1, 6.0, 9.0, 3.1): 1,
- (6.0, 8.0, 3.1, 6.0, 9.0, 3.2): 1,
- (6.0, 9.0, 2.6, 6.0, 8.0, 2.6): 1,
- (6.0, 9.0, 2.7, 6.0, 9.0, 2.8): 1,
- (6.0, 9.0, 2.8, 6.0, 8.0, 2.8): 1,
- (6.0, 9.0, 3.1, 6.0, 8.0, 3.1): 1,
- (6.0, 9.0, 3.1, 6.0, 9.0, 3.1): 1,
- (6.0, 9.0, 3.2, 7.0, 8.0, 3.2): 1,
- (7.0, 0.0, 3.7, 6.0, 0.0, 3.7): 1,
- (7.0, 0.0, 3.7, 7.0, 1.0, 3.7): 1,
- (7.0, 1.0, 3.2, 6.0, 1.0, 3.4): 1,
- (7.0, 1.0, 3.7, 6.0, 1.0, 3.7): 1,
- (7.0, 1.0, 3.7, 7.0, 0.0, 3.7): 1,
- (7.0, 2.0, 0.5, 8.0, 2.0, 0.5): 1,
- (7.0, 2.0, 0.6, 6.0, 3.0, 0.6): 1,
- (7.0, 2.0, 1.3, 8.0, 2.0, 1.3): 1,
- (7.0, 2.0, 3.5, 7.0, 2.0, 3.6): 1,
- (7.0, 2.0, 3.6, 7.0, 1.0, 3.7): 1,
- (7.0, 2.0, 3.7, 7.0, 4.0, 3.7): 1,
- (7.0, 4.0, 1.1, 6.0, 4.0, 1.3): 1,
- (7.0, 4.0, 2.6, 7.0, 4.0, 2.6): 1,
- (7.0, 4.0, 2.6, 8.0, 4.0, 2.6): 1,
- (7.0, 4.0, 3.6, 8.0, 5.0, 3.6): 1,
- (7.0, 4.0, 3.7, 7.0, 4.0, 3.6): 1,
- (7.0, 4.0, 3.7, 7.0, 4.0, 3.7): 1,
- (7.0, 6.0, 3.0, 5.0, 6.0, 3.0): 1,
- (7.0, 6.0, 5.7, 8.0, 6.0, 6.1): 1,
- (7.0, 7.0, 5.3, 7.0, 6.0, 5.7): 1,
- (7.0, 8.0, 3.2, 6.0, 7.0, 3.2): 1,
- (8.0, 1.0, 1.2, 6.0, 1.0, 1.2): 1,
- (8.0, 2.0, 0.5, 8.0, 2.0, 0.5): 2,
- (8.0, 2.0, 0.5, 8.0, 2.0, 0.6): 1,
- (8.0, 2.0, 0.5, 9.0, 2.0, 0.5): 1,
- (8.0, 2.0, 0.6, 7.0, 2.0, 0.6): 1,
- (8.0, 2.0, 1.3, 8.0, 2.0, 1.3): 1,
- (8.0, 2.0, 1.3, 9.0, 2.0, 1.3): 1,
- (8.0, 2.0, 3.1, 7.0, 1.0, 3.2): 1,
- (8.0, 4.0, 1.0, 7.0, 4.0, 1.1): 1,
- (8.0, 4.0, 2.6, 9.0, 4.0, 2.7): 1,
- (8.0, 4.0, 2.7, 9.0, 3.0, 2.7): 1,
- (8.0, 5.0, 3.6, 9.0, 6.0, 3.6): 1,
- (8.0, 6.0, 2.9, 9.0, 6.0, 3.0): 1,
- (8.0, 6.0, 3.0, 7.0, 6.0, 3.0): 1,
- (8.0, 6.0, 3.0, 8.0, 6.0, 3.0): 1,
- (8.0, 6.0, 6.1, 9.0, 5.0, 0.2): 1,
- (9.0, 1.0, 1.2, 8.0, 1.0, 1.2): 1,
- (9.0, 2.0, 0.3, 9.0, 2.0, 0.3): 3,
- (9.0, 2.0, 0.3, 9.0, 2.0, 0.5): 1,
- (9.0, 2.0, 0.4, 9.0, 2.0, 0.3): 1,
- (9.0, 2.0, 0.4, 9.0, 2.0, 0.4): 1,
- (9.0, 2.0, 0.5, 8.0, 2.0, 0.5): 1,
- (9.0, 2.0, 0.5, 9.0, 2.0, 0.4): 1,
- (9.0, 2.0, 1.2, 9.0, 1.0, 1.2): 1,
- (9.0, 2.0, 1.2, 9.0, 2.0, 1.2): 2,
- (9.0, 2.0, 1.3, 9.0, 2.0, 1.2): 1,
- (9.0, 2.0, 3.0, 8.0, 2.0, 3.1): 1,
- (9.0, 3.0, 2.7, 9.0, 2.0, 3.0): 1,
- (9.0, 4.0, 2.7, 8.0, 4.0, 2.7): 1,
- (9.0, 4.0, 2.7, 9.0, 4.0, 2.7): 4,
- (9.0, 5.0, 0.2, 9.0, 5.0, 0.6): 1,
- (9.0, 5.0, 0.6, 9.0, 5.0, 0.9): 1,
- (9.0, 5.0, 0.9, 8.0, 4.0, 1.0): 1,
- (9.0, 6.0, 2.9, 9.0, 7.0, 2.9): 1,
- (9.0, 6.0, 3.0, 8.0, 6.0, 3.0): 1,
- (9.0, 6.0, 3.0, 9.0, 6.0, 2.9): 1,
- (9.0, 6.0, 3.0, 9.0, 6.0, 3.0): 1,
- (9.0, 6.0, 3.1, 9.0, 6.0, 3.0): 1,
- (9.0, 6.0, 3.4, 9.0, 6.0, 3.1): 1,
- (9.0, 6.0, 3.6, 9.0, 6.0, 3.4): 1,
- (9.0, 7.0, 2.9, 8.0, 6.0, 2.9): 1}</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Test-data-structures">Test data structures<a class="anchor-link" href="#Test-data-structures">&#182;</a></h2><p>Now that the data has been imported into a dictionary, the different data sturctures can be compared.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Pandas-dataframe">Pandas dataframe<a class="anchor-link" href="#Pandas-dataframe">&#182;</a></h3>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[50]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="n">mapping</span><span class="o">.</span><span class="n">map3Dto1D</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">4.0</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span class="kn">import</span> <span class="nn">time</span>
+<span class="n">pandas_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[50]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>400</pre>
 </div>
-
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
-
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Fill-in-matrix-with-dictionary-data">Fill in matrix with dictionary data<a class="anchor-link" href="#Fill-in-matrix-with-dictionary-data">&#182;</a></h4>
 </div>
 </div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[51]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Fill in matrix with dictionary data</span>
-
+<div class=" highlight hl-ipython2"><pre><span class="n">translation_matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
 
 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
     <span class="c1">#we need to map yaw to an int state</span>
-    <span class="n">element_t</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">map3Dto1D</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">RESOLUTION_OF_S1</span><span class="p">)</span>
-    <span class="n">element_t_plus_1</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">map3Dto1D</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">/</span><span class="n">RESOLUTION_OF_S1</span><span class="p">)</span>
-    <span class="c1">#Use the following to verify we the math above is fine</span>
-    <span class="k">if</span><span class="p">((</span><span class="n">mapping</span><span class="o">.</span><span class="n">checkValid1DMap</span><span class="p">(</span><span class="n">element_t</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">checkValid1DMap</span><span class="p">(</span><span class="n">element_t_plus_1</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">):</span>
-        <span class="k">print</span> <span class="s2">&quot;[ERROR] BAD MAPPING!&quot;</span>
-    
+
+    <span class="n">element_t</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">map3Dto1D</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">element_t_plus_1</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">map3Dto1D</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
     <span class="n">translation_matrix</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">element_t</span><span class="p">,</span> <span class="n">element_t_plus_1</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span> <span class="o">+</span> <span class="n">translation_matrix</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">element_t</span><span class="p">,</span> <span class="n">element_t_plus_1</span><span class="p">]</span>
-   <span class="c1"># print(&quot;key = {}, elements = {}, {}&quot;.format(key, element_t, element_t_plus_1))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Make-the-rows-have-a-magnitude-of-1">Make the rows have a magnitude of 1<a class="anchor-link" href="#Make-the-rows-have-a-magnitude-of-1">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">translation_matrix</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">totalActionsInThisState</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">totalActionsInThisState</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="n">translation_matrix</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">/=</span> <span class="n">totalActionsInThisState</span>
 </pre></div>
 
 </div>
@@ -13867,16 +12971,66 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[52]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Check sum of &quot;events&quot; per matrix</span>
+<div class=" highlight hl-ipython2"><pre><span class="n">pandas_creation_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">pandas_start_time</span>
+</pre></div>
 
-<span class="n">totalEvents</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">translation_matrix</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-    <span class="n">totalEvents</span> <span class="o">+=</span> <span class="n">row</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Total Events is {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">totalEvents</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Size of data point df is {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df_discretized</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="SciPy-Sparse-matrix">SciPy Sparse matrix<a class="anchor-link" href="#SciPy-Sparse-matrix">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">normalize</span>
+<span class="n">scipy_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="c1">#### Fill in matrix with dictionary data</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="n">sparse_matrix</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">dok_matrix</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="n">element_t</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">map3Dto1D</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">RESOLUTION_OF_S1</span><span class="p">)</span>
+    <span class="n">element_t_plus_1</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">map3Dto1D</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">/</span><span class="n">RESOLUTION_OF_S1</span><span class="p">)</span>
+    <span class="n">sparse_matrix</span><span class="p">[</span><span class="n">element_t</span><span class="p">,</span> <span class="n">element_t_plus_1</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span> <span class="o">+</span> <span class="n">element_t_plus_1</span><span class="p">[</span><span class="n">element_t</span><span class="p">,</span> <span class="n">element_t_plus_1</span><span class="p">]</span>
+    
+<span class="c1">#Convert matrix to csr since csr can do multiplication a lot faster</span>
+<span class="n">sparse_matrix</span> <span class="o">=</span> <span class="n">sparse_matrix</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -13892,10 +13046,18 @@ div#notebook {
 <div class="prompt"></div>
 
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Total Events is 146776
-Size of data point df is 2807
-</pre>
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-32-cd883450ac1c&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span>     element_t <span class="ansi-blue-fg">=</span> mapping<span class="ansi-blue-fg">.</span>map3Dto1D<span class="ansi-blue-fg">(</span>key<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> key<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> key<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">/</span>RESOLUTION_OF_S1<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span>     element_t_plus_1 <span class="ansi-blue-fg">=</span> mapping<span class="ansi-blue-fg">.</span>map3Dto1D<span class="ansi-blue-fg">(</span>key<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> key<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">4</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> key<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">5</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">/</span>RESOLUTION_OF_S1<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg">     </span>sparse_matrix<span class="ansi-blue-fg">[</span>element_t<span class="ansi-blue-fg">,</span> element_t_plus_1<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> value <span class="ansi-blue-fg">+</span> element_t_plus_1<span class="ansi-blue-fg">[</span>element_t<span class="ansi-blue-fg">,</span> element_t_plus_1<span class="ansi-blue-fg">]</span>
+<span class="ansi-green-intense-fg ansi-bold">      6</span> 
+<span class="ansi-green-intense-fg ansi-bold">      7</span> <span class="ansi-red-fg">#Convert matrix to csr since csr can do multiplication a lot faster</span>
+
+<span class="ansi-red-fg">TypeError</span>: &#39;int&#39; object has no attribute &#39;__getitem__&#39;</pre>
 </div>
 </div>
 
@@ -13905,226 +13067,11 @@ Size of data point df is 2807
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[53]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Divide the whole dataframe by number of data collections to get the probabilities.</span>
-
-
-<span class="n">magnitudeVector</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-
-
-
-<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">translation_matrix</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-    <span class="n">totalActionsInThisState</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-    <span class="n">magnitudeVector</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">totalActionsInThisState</span>
-    <span class="k">if</span> <span class="n">totalActionsInThisState</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">continue</span>
-    <span class="n">translation_matrix</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">/=</span> <span class="n">totalActionsInThisState</span>
-
-<span class="n">translation_matrix</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[53]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>0</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-      <th>5</th>
-      <th>6</th>
-      <th>7</th>
-      <th>8</th>
-      <th>9</th>
-      <th>...</th>
-      <th>6290</th>
-      <th>6291</th>
-      <th>6292</th>
-      <th>6293</th>
-      <th>6294</th>
-      <th>6295</th>
-      <th>6296</th>
-      <th>6297</th>
-      <th>6298</th>
-      <th>6299</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.125000</td>
-      <td>0.125000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0.083333</td>
-      <td>0.083333</td>
-      <td>0.083333</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.000000</td>
-      <td>0.083333</td>
-      <td>0.083333</td>
-      <td>0.083333</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.083333</td>
-      <td>0.083333</td>
-      <td>0.083333</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.083333</td>
-      <td>0.083333</td>
-      <td>0.083333</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 6300 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[54]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#validate the matrix (all rows == 1)</span>
-<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">translation_matrix</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-    <span class="k">if</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">FLOAT_ERROR_TOLERANCE</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] Row probability not equal to one!&quot;</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<div class=" highlight hl-ipython2"><pre><span class="c1">#### Make the rows have a magnitude of 1</span>
+<span class="n">sparse_matrix_normalized</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">sparse_matrix</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;l1&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -14134,31 +13081,55 @@ Size of data point df is 2807
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[55]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Make matrix into CSV</span>
-<span class="n">translation_matrix</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">data_prefix</span> <span class="o">+</span> <span class="s1">&#39;translation_matrix_out.csv&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span class="n">scipy_creation_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">scipy_start_time</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Cross-product-test">Cross product test<a class="anchor-link" href="#Cross-product-test">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Pandas-Cross-Product-Test">Pandas Cross Product Test<a class="anchor-link" href="#Pandas-Cross-Product-Test">&#182;</a></h3>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[153]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c1">#Make csv of the number of instances for each row</span>
-<span class="c1">#magnitudeVector.to_csv(data_prefix + &#39;magnitude_vector_out.csv&#39;, encoding=&#39;utf-8&#39;, index=False)</span>
+<div class=" highlight hl-ipython2"><pre><span class="n">pandas_cross_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">foo</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">translation_matrix</span><span class="p">,</span><span class="n">translation_matrix</span><span class="p">)</span>
+<span class="n">pandas_cross_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">pandas_cross_start_time</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Scipy-Sparse-Matrix-Cross-Product-Test">Scipy Sparse Matrix Cross Product Test<a class="anchor-link" href="#Scipy-Sparse-Matrix-Cross-Product-Test">&#182;</a></h3>
+</div>
+</div>
 </div>
     </div>
   </div>
