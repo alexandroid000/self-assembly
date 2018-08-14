@@ -27,7 +27,7 @@ data_prefix = "../data/2018-07-22-jw-weaselball-starting_location_"
 
 
 FLOAT_ERROR_TOLERANCE = 0.00000000001 #See IEEE 754 for why a floating point is never perfect
-df_strings = ['../data/08-10-2018_09-24-59.csv']
+df_strings = ['../data/08-11-2018_17-59-32.csv']
 frames = []
 for csv in df_strings:
     temp = pd.read_csv(csv,index_col=False )
