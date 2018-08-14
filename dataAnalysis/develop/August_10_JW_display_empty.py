@@ -7,7 +7,7 @@
 
 # ## Import modules and define a few magic numbers
 
-# In[1]:
+# In[68]:
 
 
 import pandas as pd
@@ -24,7 +24,7 @@ data_prefix = "../data/2018-07-22-jw-weaselball_analysis_"
 
 # ### First get the data
 
-# In[2]:
+# In[ ]:
 
 
 FLOAT_ERROR_TOLERANCE = 0.00000000001 #See IEEE 754 for why a floating point is never perfect
@@ -43,7 +43,7 @@ df.head(10)
 
 # ### Sample the data
 
-# In[3]:
+# In[ ]:
 
 
 SAMPLING_RATE = 250 #Keep 1 row for every SAMPLING_RATE
@@ -52,7 +52,7 @@ print("Size of new DF is {}".format(df_sampled.shape))
 df_sampled.head(10)
 
 
-# In[4]:
+# In[ ]:
 
 
 #Clean up the data
@@ -67,7 +67,7 @@ df_clean.head()
 
 # ### Shift the data
 
-# In[5]:
+# In[ ]:
 
 
 #Clean up the data
@@ -83,7 +83,7 @@ if(df_clean['Yaw'].max() > 2 * np.pi or df_clean['Yaw'].min() < 0):
 df_clean.head()
 
 
-# In[6]:
+# In[ ]:
 
 
 #Clean up the data
@@ -102,7 +102,7 @@ df_clean.head()
 
 # ### Discretize the data
 
-# In[7]:
+# In[ ]:
 
 
 #Discretize the data
@@ -122,7 +122,7 @@ df_discretized.describe()
 
 # ### Initialize a few variables/objects used in the experiment
 
-# In[8]:
+# In[ ]:
 
 
 
@@ -152,7 +152,7 @@ n
 
 # ### Create artificial data if needed
 
-# In[9]:
+# In[ ]:
 
 
 #HUERISTIC: Add a +1 to any logical possible state the structure would likely end up in.
@@ -182,7 +182,7 @@ for index in range(n):
 
 # ### Fill in the dictionary with actual data from the experiment
 
-# In[10]:
+# In[ ]:
 
 
 #Our keys to the dictionary will look like (x_t, y_t, yaw_t, x_t+1, y_t+1, yaw_t+1)
@@ -213,7 +213,7 @@ print "[DEBUG] Skipped {} events".format(skipCount)
 
 # ### Pandas dataframe
 
-# In[11]:
+# In[ ]:
 
 
 import time
@@ -222,7 +222,7 @@ pandas_start_time = time.time()
 
 # #### Fill in matrix with dictionary data
 
-# In[12]:
+# In[ ]:
 
 
 translation_matrix = pd.DataFrame(0, index=range(n), columns=range(n))
@@ -237,7 +237,7 @@ for key, value in d.iteritems():
 
 # #### Make the rows have a magnitude of 1
 
-# In[13]:
+# In[ ]:
 
 
 for index, row in translation_matrix.iterrows():
@@ -247,7 +247,7 @@ for index, row in translation_matrix.iterrows():
     translation_matrix.iloc[index] /= totalActionsInThisState
 
 
-# In[14]:
+# In[ ]:
 
 
 pandas_creation_time = time.time() - pandas_start_time
@@ -255,7 +255,7 @@ pandas_creation_time = time.time() - pandas_start_time
 
 # ### SciPy Sparse matrix
 
-# In[15]:
+# In[ ]:
 
 
 from scipy import sparse
@@ -265,13 +265,13 @@ scipy_start_time = time.time()
 
 # #### Fill in matrix with dictionary data
 
-# In[16]:
+# In[ ]:
 
 
 sparse_matrix = sparse.dok_matrix((n, n), dtype=np.float32)
 
 
-# In[17]:
+# In[ ]:
 
 
 for key, value in d.iteritems():
@@ -283,14 +283,14 @@ for key, value in d.iteritems():
 sparse_matrix = sparse_matrix.transpose().tocsr()
 
 
-# In[18]:
+# In[ ]:
 
 
 #### Make the rows have a magnitude of 1
 sparse_matrix_normalized = normalize(sparse_matrix, norm='l1', axis=1)
 
 
-# In[19]:
+# In[ ]:
 
 
 scipy_creation_time = time.time() - scipy_start_time
@@ -300,7 +300,7 @@ scipy_creation_time = time.time() - scipy_start_time
 
 # ### Pandas Dot Product Test
 
-# In[20]:
+# In[ ]:
 
 
 pandas_dot_start_time = time.time()
@@ -310,7 +310,7 @@ pandas_dot_time = time.time() - pandas_dot_start_time
 
 # ### Scipy Sparse Matrix Dot Product Test
 
-# In[21]:
+# In[ ]:
 
 
 scipy_dot_start_time = time.time()
@@ -321,7 +321,7 @@ scipy_dot_time = time.time() - scipy_dot_start_time
 # ## Cross product test
 # This code was supplied by Tauhid at https://github.com/tauhid03/MarkovChainAnalysis/blob/master/CrossDiagonalStatesHittingtime.py
 
-# In[22]:
+# In[ ]:
 
 
 from numpy import linalg as LA
@@ -329,7 +329,7 @@ from numpy import linalg as LA
 from discreteMarkovChain import markovChain
 
 
-# In[23]:
+# In[ ]:
 
 
 M1=np.matrix([[ 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
@@ -592,7 +592,7 @@ M2=np.matrix([[ 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 
 [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0.15 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0.7 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0.15 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]])
 
 
-# In[24]:
+# In[ ]:
 
 
 def crossproduct(P,Q):
@@ -607,10 +607,12 @@ def crossproduct(P,Q):
     return PQ
 
 
-# In[79]:
+# In[ ]:
 
 
 def crossproduct_sparse(P,Q):
+    k = 3 #K is used for the number of states each configuration can be in. This needs to be the same for all configurations
+            # And this isnt a bad assumption because all of the configurations should be discretized the same way
     if(P.get_shape()[0] != P.get_shape()[1] or Q.get_shape()[0] != Q.get_shape()[1]):
         print("[Error] the transition matrices should be square!")
         print(P.get_shape())
@@ -634,44 +636,42 @@ def crossproduct_sparse(P,Q):
     for key_1,value_1 in d_M1.iteritems():
         for key_2,value_2 in d_M2.iteritems():
             #The new key is in the format of (x_1,y_1,yaw_1,x_2,y_2,yaw_2,...,x_n,y_n,yaw_n, [1,2,...,n])
-            #Note: The (x,y,yaw) can also just be a map3dTo1D
+            #Note: The (x,y,yaw) should also just be a map3dTo1D
             #By doing this format we can track back the states of different configurations
             combined_key = key_1[:-1] + key_2[:-1] + (key_1[-1] + key_2[-1],)
-            print key_1
-            print key_2
-            print(combined_key)
-            PQ[combined_key] = value_1 * value_2
- #   for l in range((length)):
- #       for k in range((length)):
- #           for j in range ((length)): 
- #               for i in range ((length)):
- #                   PQ[k+length*l,i+length*j]=P[k, i]* Q[l, j]
+            x_map = y_map = 0
+            for i in range(len(key_1[-1] + key_2[-1],)):
+                x_map += combined_key[2 * i] * (k ** i)
+                y_map += combined_key[1 + 2 * i] * (k ** i)
+            PQ[x_map,y_map] = value_1 * value_2
+            
     return PQ
 
 
-# In[80]:
+# In[ ]:
 
 
 # Calculate the cross product of two Markov chains using pandas 
-#numpy_cross_product_start = time.time()
-#M=crossproduct(M1,M2)
-#numpy_cross_product_time = time.time() - numpy_cross_product_start
+numpy_cross_product_start = time.time()
+M=crossproduct(M1,M2)
+numpy_cross_product_time = time.time() - numpy_cross_product_start
+M
 
 
-# In[81]:
+# In[ ]:
 
 
 sparse_M1 = sparse.dok_matrix(M1)
 sparse_M2 = sparse.dok_matrix(M2)
 
 
-
-# In[82]:
+# In[ ]:
 
 
 sparse_cross_product_start = time.time()
 M_cross = crossproduct_sparse(sparse_M1, sparse_M2)
 sparse_cross_product_time = time.time() - sparse_cross_product_start
+M_cross.todense()
 
 
 # ## RESULTS
@@ -701,6 +701,6 @@ print("The time it took to take the dot product of 2 sparse tranisition matrix w
 # In[ ]:
 
 
-print("The time it took to take the dot product of 2 full tranisition matrix was {} seconds".format(numpy_cross_product_time))
-print("The time it took to take the dot product of 2 sparse tranisition matrix was {} seconds".format(sparse_cross_product_time))
+print("The time it took to take the cross product of 2 full tranisition matrix was {} seconds".format(numpy_cross_product_time))
+print("The time it took to take the cross product of 2 sparse tranisition matrix was {} seconds".format(sparse_cross_product_time))
 
