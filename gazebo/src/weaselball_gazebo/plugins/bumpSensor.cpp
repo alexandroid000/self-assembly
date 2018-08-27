@@ -54,8 +54,8 @@ void BumpSensor::Load(sensors::SensorPtr _sensor, sdf::ElementPtr /*_sdf*/)
 
     std::stringstream ss;
 	ss << COLLECTION_PATH << str << "_bump.csv";
-	this->collectionFile.open (ss.str(),std::ofstream::out);
-	this->collectionFile << "Time, Number_Of_Walls\n";
+//	this->collectionFile.open (ss.str(),std::ofstream::out);
+//	this->collectionFile << "Time, Number_Of_Walls\n";
 
 
     std::cout << "Contact Sensor Succesfully Initialzied" << std::endl;

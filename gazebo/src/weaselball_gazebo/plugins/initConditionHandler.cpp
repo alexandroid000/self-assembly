@@ -4,6 +4,8 @@
 #include <gazebo/common/Events.hh>
 #include <gazebo/physics/physics.hh>
 
+#include <ros/ros.h>
+#include <ros/console.h>
 #include "../include/gazebo_log.h"
 #include "../include/common.h"
 
@@ -61,6 +63,7 @@ namespace gazebo
 
 		void worldReset()
 		{
+
 			this->resetFlag_ = 1;
 		}
 
@@ -87,6 +90,7 @@ namespace gazebo
 				}
 				if(this->world_->GetSimTime().sec > INDIVIDUAL_TRIAL_TIME)
 				{
+					ROS_INFO("Reseting World to change robot position!");
 					this->world_->Reset();
 
 				}
@@ -249,6 +253,7 @@ namespace gazebo
 					
 				math::Pose newPose(pos, rot);
 				it->SetWorldPose(newPose);
+			
 			}				
 		}
 

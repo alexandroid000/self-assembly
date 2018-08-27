@@ -1,0 +1,98 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='2'>
+      <link name='mountlink_1'>
+        <collision name='coll'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://mount/meshes/mount_collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+	   <sensor name='contactSensor' type='contact'>
+	   <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
+	      <contact>
+		    <collision>coll1</collision>
+	      </contact>
+	   </sensor>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <inertia>
+          <ixx>0.00055873</ixx>
+          <ixy>0.0000</ixy>
+          <ixz>0.00000</ixz>
+          <iyy>0.00055873</iyy>
+          <iyz>0.00000/iyz></iyz>
+          <izz>0.0010789</izz>
+          </inertia>
+          <mass>0.028</mass>
+        </inertial>
+        <visual name='mountvisual1'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://mount/meshes/mount.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+		<pose frame=''>-0.012243 -0.025526 0 0 -0 0</pose>
+      </link>
+      <link name='mountlink_2'>
+        <collision name='coll2'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://mount/meshes/mount_collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+	   <sensor name='contactSensor' type='contact'>
+	   <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
+	      <contact>
+		    <collision>coll</collision>
+	      </contact>
+	   </sensor>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <inertia>
+          <ixx>0.00055873</ixx>
+          <ixy>0.0000</ixy>
+          <ixz>0.00000</ixz>
+          <iyy>0.00055873</iyy>
+          <iyz>0.00000/iyz></iyz>
+          <izz>0.0010789</izz>
+          </inertia>
+          <mass>0.028</mass>
+        </inertial>
+        <visual name='mountvisual2'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://mount/meshes/mount.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+		 <pose frame=''>0.03438 0.076098 0.0025 0 -0 0</pose>
+      </link>
+    <joint name='mountlink_JOINT_3' type='fixed'>
+      <parent>mountlink_1</parent>
+      <child>mountlink_2</child>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <static>0</static>
+    <allow_auto_disable>1</allow_auto_disable>
+  </model>
+</sdf>

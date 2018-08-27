@@ -165,6 +165,7 @@ namespace gazebo
 				for (auto link : links)
 				{
 					math::Vector3 linkPose = link->GetWorldPose().pos;
+					//Distance between a given hub and the weaselballs
 					double foo = pow(linkPose[0]-ballPose[0],2) + pow(linkPose[1]-ballPose[1],2);
 					if (pow(foo,0.5) < MOUNT_RADIUS)
 					{
@@ -177,17 +178,27 @@ namespace gazebo
 			}
 			valid = flag;	
 			if(!valid)
+			{
+				ROS_INFO("Balls not in hub!");
+				std::cout << "FLAGA" << std::endl;
 				break;
+			}
 
 			//Make sure ball is within the enclosure
 			if(ballPose[0] < ENCLOSURE_MIN_X || ballPose[0] > ENCLOSURE_MAX_X || ballPose[1] < ENCLOSURE_MIN_Y || ballPose[1] > ENCLOSURE_MAX_Y)	
+			{
+				ROS_INFO("Balls not in enclosure!");
+				std::cout << "FLAGB" << std::endl;
 				valid = 0;
 				break;
+			}	
 
 		}
 		if(!valid)
 		{
+			ROS_INFO("NOT VALID!");
 			this->world_->Reset();
+			
 		}
 		return valid;
 
@@ -273,7 +284,6 @@ namespace gazebo
 				//If it is a swarmbot or the ground ignore it
 				std::string model1Name = contacts.contact(i).collision1();
 				std::string model2Name = contacts.contact(i).collision2();
-				ROS_INFO("CONTACT");
 
 				std::map<std::string, physics::Contact> mapping = contactSensor->Contacts(model1Name);
 				physics::ModelPtr mount;
