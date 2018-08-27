@@ -69,7 +69,7 @@ static const int NUMBER_OF_STRUCTURES= $NUMBER_OF_STRUCTURES;
 static const string NAME_OF_WEASELBALLS= \"swarmbot\";
 static const string NAME_OF_MOUNTS= \"mount\";
 static const string SHELL_STRING= \"shell\";
-static const int LONGEST_WEASELBALL_SEQUENCE= $LONGEST_WEASELBALL_SEQUENCE;
+static const int LONGEST_WEASELBALL_SEQUENCE= $NUMBER_OF_WEASELBALLS;
 static const double DIAMETER_OF_WEASELBALLS= 0.108;
 static const string COLLECTION_PATH= \"$WORKSPACE_PATH/data/collections/\";" >> $FILE
                       
