@@ -14,6 +14,11 @@ VIDEO_LED_TIME_FACTOR=20.0
 UPLOAD_DATA=0
 DELETE_AFTER_UPLOAD=1
 
+#The following are the robots that are available by ID
+# 1 = 1, 2 = 2, 3 = 3_straight, 4 = 3_L, 5 = 3_backwords_L, 6 = 4_straight, 7 = 4_L, 8 = 4_backwords_L, 9 = 4_T , 10 =4_square
+
+ROBOT_TO_RUN=8
+
 RANDOMIZE_BALLS=1
 RANDOMIZE_STRUCTURES=1
 

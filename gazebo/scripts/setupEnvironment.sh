@@ -77,3 +77,8 @@ static const string COLLECTION_PATH= \"$WORKSPACE_PATH/data/collections/\";" >> 
 echo "#endif // _COMMON_H_" >> $FILE
 
 ./install_new_updates.sh
+
+
+#--------Create the run file and the corresponding models--------"
+cd robot_builder_helper
+./create_files.sh $ROBOT_TO_RUN
