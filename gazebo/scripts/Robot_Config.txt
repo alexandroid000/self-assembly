@@ -19,16 +19,16 @@ RANDOMIZE_STRUCTURES=1
 
 RUN_TRIALS=1
 #If you want this to run forever, set NUMBER_OF_TRIALS_CYCLES to -1
-NUMBER_OF_TRIALS_CYCLES=2
+NUMBER_OF_TRIALS_CYCLES=-1
 #The simulator has a hard time working when this is very low (below 5 or so)
-INDIVIDUAL_TRIAL_TIME=10
+INDIVIDUAL_TRIAL_TIME=300
 #In terms of diameter of the weaselballs list the longest sequence of weaselballs.
 #For example 2 weaselballs will have a length of 2 diameter. A 4T shape will have a length of 3 diameter.
-LONGEST_WEASELBALL_SEQUENCE=1
+LONGEST_WEASELBALL_SEQUENCE=2
 #This is enabled if we are running on AWS, this will shutdown the computer so that way we dont pay for it while its not running anything.
 RUNNING_ON_AWS=0
 
 #The following dont do anything besides screw up the math, so dont touch it unless you are changing number of weaselballs based on what test is being run. I am putting it in here for completion
 #This will likely be replaced by a data structure in the future when we consider control over multiple structures
 NUMBER_OF_STRUCTURES=1
-NUMBER_OF_WEASELBALLS=1
+NUMBER_OF_WEASELBALLS=2
