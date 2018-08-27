@@ -3,9 +3,88 @@ import sys
 #This vavlue is used in creating the "Node Matrix" which I use as a higher level representation of the robot configuration
 MAX_ROBOT_SIZE = 5
 
+def create_x_script(robotID):
+	f = open("run_" + str(robotID) + ".sh", "w+")
+	s1 = '''#!/usr/bin/env bash
 
-def create_x_launch(nodeMatrix, ID):
-	pass
+killall gzserver
+killall gzclient
+
+#Get Workspace Path
+SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+WORKSPACE_PATH="$(dirname "$SCRIPT_PATH")"
+cwd=$PWD
+source $WORKSPACE_PATH/scripts/Robot_Config.txt
+
+source $WORKSPACE_PATH/devel/setup.sh
+#Upload the test file to make sure everything is connected fine
+cd $WORKSPACE_PATH/data/collections
+chmod +x upload.sh
+sh ./upload.sh s3://vrmsl/''' + str(robotID) + '''
+
+cd $cwd
+export GAZEBO_MODEL_PATH=$WORKSPACE_PATH/src/weaselball_description/meshes:$GAZEBO_MODEL_PATH
+export GAZEBO_RESOURCE_PATH=$WORKSPACE_PATH/src/weaselball_gazebo/worlds:$GAZEBO_RESOURCE_PATH
+
+roslaunch weaselball_gazebo ''' + str(robotID) + '''.launch init_cond:=$doit
+
+if [ "$UPLOAD_DATA" -eq "1" ]; then
+	cd $WORKSPACE_PATH/data/collections
+	chmod +x upload.sh
+	sh ./upload.sh s3://vrmsl/''' + str(robotID) + '''
+	if [ "$DELETE_AFTER_UPLOAD" -eq "1" ]; then
+		rm *.csv
+	fi
+fi
+
+
+killall gzserver
+killall gzclient
+echo "''' + str(robotID) + ''' Finished"
+
+if [ "$RUNNING_ON_AWS" -eq "1" ]; then
+    sudo shutdown now
+fi
+'''
+	f.write(s1)
+
+def create_x_launch(nodeMatrix,node_positions, ID):
+	f = open(str(ID) + ".launch", 'w+')
+	s1 = '''<launch>
+ <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find weaselball_gazebo)/worlds/simulate.world"/>
+    <arg name="gui" value="true"/>
+    <arg name="paused" value="true"/>
+  </include>
+
+'''
+	#Create Weaselballs
+	s2_list = []
+	for i, position in enumerate(node_positions):
+		s_temp = '''<group ns="weasel''' + str(i) + '''">
+<include file="$(find weaselball_gazebo)/launch/include/one_robot.launch">
+<arg name="robot_name" value="swarmbot''' + str(i) + '''"/>
+<arg name="init_pose" value="-x ''' + str(position[0])+ ''' + -y ''' + str(position[1]) +''' -z 0.03 -R 1.1 -P 1.2 -Y 1.3"/>
+</include>
+</group>
+	
+''' 
+		s2_list.append(s_temp)
+	s2 = ''.join(s2_list)
+	
+	#Create the weaselball structure
+	s3 = '''<group ns="mount0">
+<include file="$(find weaselball_gazebo)/launch/include/one_''' + str(ID) + '''_mount.launch">
+<arg name="robot_name" value="mount0"/>
+<arg name="init_pose" value="-x -0.0 -y -0.0 -z 0.01"/>
+</include>
+</group>
+
+</launch>
+'''	
+	f.write(s1 + s2 + s3)
+	
+	
 
 def create_one_x_mount(nodeMatrix, ID):
 	f = open('one_'+str(ID)+'_mount.launch', 'w+')
@@ -19,8 +98,96 @@ def create_one_x_mount(nodeMatrix, ID):
 </launch>'''
 	f.write(s)
 
-def create_x_model_sdf(nodeMatrix, ID):
-	pass
+def create_x_model_sdf(nodeMatrix, node_positions, ID):
+	f = open('model.sdf', 'w+')
+	s1 = """<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='""" + str(ID) + """'>
+"""
+	s2_list = []
+	for i, position in enumerate(node_positions):
+		s_temp = """      <link name='mountlink_""" + str(i) + """'>
+        <collision name='coll'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://mount/meshes/mount_collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+	   <sensor name='contactSensor' type='contact'>
+	   <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
+	      <contact>
+		    <collision>coll""" + str(i) + """</collision>
+	      </contact>
+	   </sensor>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <inertia>
+          <ixx>0.00055873</ixx>
+          <ixy>0.0000</ixy>
+          <ixz>0.00000</ixz>
+          <iyy>0.00055873</iyy>
+          <iyz>0.00000/iyz></iyz>
+          <izz>0.0010789</izz>
+          </inertia>
+          <mass>0.028</mass>
+        </inertial>
+        <visual name='mountvisual""" + str(i) + """'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://mount/meshes/mount.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+		<pose frame=''>""" + str(position[0]) + """ """ +str(position[1]) + """ 0 0 -0 0</pose>
+      </link>
+"""
+		s2_list.append(s_temp)
+	s2 = ''.join(s2_list)
+	
+	s3_list = []
+	joint_positions = []
+	#Find all joint pairs
+	for i in range(len(node_positions)):
+		for j in range(len(node_positions)):
+			if i == j:
+				continue
+			if (i,j) in joint_positions or (j,i) in joint_positions:
+				continue
+			joint_positions.append( (i,j) )
+
+	for i, pair in enumerate(joint_positions):
+		s_temp = """    <joint name='mountlink_JOINT_""" + str(i) + """' type='fixed'>
+      <parent>mountlink_""" + str(pair[0]) +"""</parent>
+      <child>mountlink_""" + str(pair[1]) + """</child>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+"""
+		s3_list.append(s_temp)
+	s3 = ''.join(s3_list)
+	s4 = """    <static>0</static>
+    <allow_auto_disable>1</allow_auto_disable>
+  </model>
+</sdf>"""
+	f.write(s1 + s2 + s3 + s4)
+
+
+
+		
 
 def create_x_model_config(nodeMatrix, ID):
 	f = open('model.config', 'w+')
@@ -36,6 +203,16 @@ def create_x_model_config(nodeMatrix, ID):
     <description></description>
 </model>'''
 	f.write(s)
+
+def set_node_positions(nodeMatrix):
+	node_position_l = []
+	mount_diameter = 0.0504 * 2
+	for x in range(MAX_ROBOT_SIZE):
+		for y in range(MAX_ROBOT_SIZE):
+			if(nodeMatrix.Matrix[x][y] == 1):
+				node_position_l.append((x*mount_diameter, y*mount_diameter))
+	return node_position_l
+				
 
 def create_nodes(robot_ID):
 	#This will need to be done by hand for now until an algorithm can be made to do it
@@ -109,8 +286,12 @@ if __name__ == "__main__":
 	robotID = int(sys.argv[1])
 	#Get the nodes of the robot
 	nodeMatrix = create_nodes(robotID)
+	node_positions = set_node_positions(nodeMatrix)
+	if(len(node_positions) == 0):
+		exit()
 	#create files
-	create_x_launch(nodeMatrix, robotID)
+	create_x_launch(nodeMatrix, node_positions, robotID)
 	create_one_x_mount(nodeMatrix, robotID)
-	create_x_model_sdf(nodeMatrix, robotID)
+	create_x_model_sdf(nodeMatrix, node_positions, robotID)
 	create_x_model_config(nodeMatrix, robotID)
+	create_x_script(robotID)
