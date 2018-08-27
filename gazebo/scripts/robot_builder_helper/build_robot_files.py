@@ -1,10 +1,10 @@
 from nodes import Node, NodeMatrix
 import sys
 #This vavlue is used in creating the "Node Matrix" which I use as a higher level representation of the robot configuration
-MAX_ROBOT_SIZE = 5
+MAX_ROBOT_SIZE = 7
 
 def create_x_script(robotID):
-	f = open("run_" + str(robotID) + ".sh", "w+")
+	f = open("run.sh", "w+")
 	s1 = '''#!/usr/bin/env bash
 
 killall gzserver
@@ -20,6 +20,10 @@ source $WORKSPACE_PATH/devel/setup.sh
 #Upload the test file to make sure everything is connected fine
 cd $WORKSPACE_PATH/data/collections
 chmod +x upload.sh
+pwd
+if [ "$DELETE_AFTER_UPLOAD" -eq "1" ]; then
+	rm *.csv
+fi
 sh ./upload.sh s3://vrmsl/''' + str(robotID) + '''
 
 cd $cwd
@@ -64,7 +68,7 @@ def create_x_launch(nodeMatrix,node_positions, ID):
 		s_temp = '''<group ns="weasel''' + str(i) + '''">
 <include file="$(find weaselball_gazebo)/launch/include/one_robot.launch">
 <arg name="robot_name" value="swarmbot''' + str(i) + '''"/>
-<arg name="init_pose" value="-x ''' + str(position[0])+ ''' + -y ''' + str(position[1]) +''' -z 0.03 -R 1.1 -P 1.2 -Y 1.3"/>
+<arg name="init_pose" value="-x ''' + str(position[0])+ ''' -y ''' + str(position[1]) +''' -z 0.03 -R 1.1 -P 1.2 -Y 1.3"/>
 </include>
 </group>
 	
@@ -206,11 +210,11 @@ def create_x_model_config(nodeMatrix, ID):
 
 def set_node_positions(nodeMatrix):
 	node_position_l = []
-	mount_diameter = 0.0504 * 2
+	mount_diameter = 0.0554 * 2
 	for x in range(MAX_ROBOT_SIZE):
 		for y in range(MAX_ROBOT_SIZE):
 			if(nodeMatrix.Matrix[x][y] == 1):
-				node_position_l.append((x*mount_diameter, y*mount_diameter))
+				node_position_l.append(((x-int(MAX_ROBOT_SIZE/2))*mount_diameter, ((y-int(MAX_ROBOT_SIZE/2))*mount_diameter)))
 	return node_position_l
 				
 
@@ -244,10 +248,10 @@ def create_nodes(robot_ID):
 		nodeMatrix.Matrix[mid_x+1][mid_y] = 1	
 	elif(robot_ID == 6):
 		#4_straight
-		nodematrix.Matrix[mid_x][mid_y] = 1	
-		nodematrix.Matrix[mid_x][mid_y+1] = 1	
-		nodematrix.Matrix[mid_x][mid_y+2] = 1	
-		nodematrix.Matrix[mid_x][mid_y-1] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y+1] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y+2] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y-1] = 1	
 	elif(robot_ID == 7):
 		#4_L
 		nodeMatrix.Matrix[mid_x][mid_y] = 1	
@@ -283,6 +287,9 @@ def create_nodes(robot_ID):
 # 1 = 1, 2 = 2, 3 = 3_straight, 4 = 3_L, 5 = 3_backwords_L, 6 = 4_straight, 7 = 4_L, 8 = 4_backwords_L, 9 = 4_T , 10 =4_square
 if __name__ == "__main__":
 	#Parse the input for the ID of the robot 
+	if(len(sys.argv) == 1):
+		print("[ERROR] Please enter a robot to build")
+		exit()
 	robotID = int(sys.argv[1])
 	#Get the nodes of the robot
 	nodeMatrix = create_nodes(robotID)
