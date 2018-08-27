@@ -45,6 +45,8 @@ for i in range(n_agents):
 
 # In[83]:
 
+# https://stackoverflow.com/questions/9401658/how-to-animate-a-scatter-plot
+
 class AnimatedScatter(object):
     """An animated scatter plot using matplotlib.animations.FuncAnimation."""
     def __init__(self, data):
