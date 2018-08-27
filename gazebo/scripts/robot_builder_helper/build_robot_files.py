@@ -20,10 +20,10 @@ source $WORKSPACE_PATH/devel/setup.sh
 #Upload the test file to make sure everything is connected fine
 cd $WORKSPACE_PATH/data/collections
 chmod +x upload.sh
-pwd
-if [ "$DELETE_AFTER_UPLOAD" -eq "1" ]; then
-	rm *.csv
-fi
+rm *.csv
+
+touch testUpload
+echo $(date) >> testUpload 
 sh ./upload.sh s3://vrmsl/''' + str(robotID) + '''
 
 cd $cwd
