@@ -2,14 +2,15 @@
 
 
 ROBOT_ID=$1
+ENABLE_GRAPHICS=$2
+
 DIR=../../src/weaselball_description/meshes/${ROBOT_ID}
 
 re='^[0-9]+$'
 if ! [[ $ROBOT_ID =~ $re ]] ; then
    echo "error: Not a number" >&2; exit 1
 fi
-
-python build_robot_files.py $ROBOT_ID
+python build_robot_files.py $ROBOT_ID $ENABLE_GRAPHICS
 chmod +x run.sh
 
 if [ ! -d $DIR ]; then
