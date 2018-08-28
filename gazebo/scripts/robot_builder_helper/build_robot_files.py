@@ -52,12 +52,12 @@ fi
 '''
 	f.write(s1)
 
-def create_x_launch(nodeMatrix,node_positions, ID):
+def create_x_launch(nodeMatrix,node_positions, ID, GUI):
 	f = open(str(ID) + ".launch", 'w+')
 	s1 = '''<launch>
  <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find weaselball_gazebo)/worlds/simulate.world"/>
-    <arg name="gui" value="true"/>
+    <arg name="gui" value="''' + str(GUI) + '''"/>
     <arg name="paused" value="true"/>
   </include>
 
@@ -287,17 +287,21 @@ def create_nodes(robot_ID):
 # 1 = 1, 2 = 2, 3 = 3_straight, 4 = 3_L, 5 = 3_backwords_L, 6 = 4_straight, 7 = 4_L, 8 = 4_backwords_L, 9 = 4_T , 10 =4_square
 if __name__ == "__main__":
 	#Parse the input for the ID of the robot 
-	if(len(sys.argv) == 1):
+	if(len(sys.argv) == 1 or len(sys.argv) == 2):
 		print("[ERROR] Please enter a robot to build")
+		print(sys.argv)
 		exit()
 	robotID = int(sys.argv[1])
+	GUI = sys.argv[2]
 	#Get the nodes of the robot
 	nodeMatrix = create_nodes(robotID)
 	node_positions = set_node_positions(nodeMatrix)
 	if(len(node_positions) == 0):
+		print("[ERROR] Incorrect Robot ID set")
 		exit()
 	#create files
-	create_x_launch(nodeMatrix, node_positions, robotID)
+	print("[Debug] Building Files")
+	create_x_launch(nodeMatrix, node_positions, robotID, GUI)
 	create_one_x_mount(nodeMatrix, robotID)
 	create_x_model_sdf(nodeMatrix, node_positions, robotID)
 	create_x_model_config(nodeMatrix, robotID)

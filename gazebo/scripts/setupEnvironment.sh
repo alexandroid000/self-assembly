@@ -81,4 +81,4 @@ echo "#endif // _COMMON_H_" >> $FILE
 
 #--------Create the run file and the corresponding models--------"
 cd robot_builder_helper
-./create_files.sh $ROBOT_TO_RUN
+./create_files.sh $ROBOT_TO_RUN $ENABLE_GRAPHICS
