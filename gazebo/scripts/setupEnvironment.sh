@@ -69,7 +69,7 @@ static const int NUMBER_OF_STRUCTURES= $NUMBER_OF_STRUCTURES;
 static const string NAME_OF_WEASELBALLS= \"swarmbot\";
 static const string NAME_OF_MOUNTS= \"mount\";
 static const string SHELL_STRING= \"shell\";
-static const int LONGEST_WEASELBALL_SEQUENCE= $LONGEST_WEASELBALL_SEQUENCE;
+static const int LONGEST_WEASELBALL_SEQUENCE= $NUMBER_OF_WEASELBALLS;
 static const double DIAMETER_OF_WEASELBALLS= 0.108;
 static const string COLLECTION_PATH= \"$WORKSPACE_PATH/data/collections/\";" >> $FILE
                       
@@ -77,3 +77,8 @@ static const string COLLECTION_PATH= \"$WORKSPACE_PATH/data/collections/\";" >> 
 echo "#endif // _COMMON_H_" >> $FILE
 
 ./install_new_updates.sh
+
+
+#--------Create the run file and the corresponding models--------"
+cd robot_builder_helper
+./create_files.sh $ROBOT_TO_RUN $ENABLE_GRAPHICS
