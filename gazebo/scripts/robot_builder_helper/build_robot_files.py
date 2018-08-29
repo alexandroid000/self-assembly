@@ -22,9 +22,10 @@ cd $WORKSPACE_PATH/data/collections
 chmod +x upload.sh
 rm *.csv
 
+
 touch testUpload
 echo $(date) >> testUpload 
-sh ./upload.sh s3://vrmsl/''' + str(robotID) + '''
+sh ./upload.sh s3://weaselball-data/''' + str(robotID) + '''
 
 cd $cwd
 export GAZEBO_MODEL_PATH=$WORKSPACE_PATH/src/weaselball_description/meshes:$GAZEBO_MODEL_PATH
@@ -35,7 +36,7 @@ roslaunch weaselball_gazebo ''' + str(robotID) + '''.launch init_cond:=$doit
 if [ "$UPLOAD_DATA" -eq "1" ]; then
 	cd $WORKSPACE_PATH/data/collections
 	chmod +x upload.sh
-	sh ./upload.sh s3://vrmsl/''' + str(robotID) + '''
+	sh ./upload.sh s3://weaselball-data/''' + str(robotID) + '''
 	if [ "$DELETE_AFTER_UPLOAD" -eq "1" ]; then
 		rm *.csv
 	fi
