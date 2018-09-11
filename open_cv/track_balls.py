@@ -37,7 +37,6 @@ def find_background(in_vid, vid_size, write_background, save_as):
     cv2.imwrite(file_name, frame_bg)
     return frame_bg
 
-
 def track(in_vid, vid_size, background, write_video, save_as):
     cap = cv2.VideoCapture(in_vid)
     fps = cap.get(5)
