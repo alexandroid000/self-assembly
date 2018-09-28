@@ -2,8 +2,10 @@ Personal Notes:
 TODO) Update parameters about world (such as friction)
 TODO) Get EC2 To automotically run tests 
 TODO) Get 2 wall | 1 wall | 0 wall data - USE SRV!!!
-TODO) Create graphics for tracking motion in dataAnalysis
-TODO) Fix verification
+TODO) Create scnearios in the simulator where we find hitting time.
+A) Create scripts to generate run files
+B) Collect data about all of the robot configurations
+C) 
 
 
 Q) When should I do stuff in a plug in and when should I make a ros node?
