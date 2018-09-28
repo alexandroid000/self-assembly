@@ -15,12 +15,12 @@ UPLOAD_DATA=0
 DELETE_AFTER_UPLOAD=1
 
 #Needs to be True/False
-ENABLE_GRAPHICS="False"
+ENABLE_GRAPHICS="True"
 
 #The following are the robots that are available by ID
 # 1 = 1, 2 = 2, 3 = 3_straight, 4 = 3_L, 5 = 3_backwords_L, 6 = 4_straight, 7 = 4_L, 8 = 4_backwords_L, 9 = 4_T , 10 =4_square
-ROBOT_TO_RUN=2
-NUMBER_OF_WEASELBALLS=2
+ROBOT_TO_RUN=10
+NUMBER_OF_WEASELBALLS=4
 
 RANDOMIZE_BALLS=1
 RANDOMIZE_STRUCTURES=1
