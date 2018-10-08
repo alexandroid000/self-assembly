@@ -38,16 +38,17 @@ static const double VIDEO_LED_TIME_FACTOR= 20.0;
 
 //Definitions used in state recorder
 static const bool RANDOMIZE_STRUCTURES= 1;
-static const bool RUN_TRIALS= 1;
+static const bool RUN_TRIALS= 0;
 static const int NUMBER_OF_TRIALS_CYCLES= -1;
 static const int INDIVIDUAL_TRIAL_TIME= 300;
 static const bool RANDOMIZE_BALLS= 1;
-static const int NUMBER_OF_WEASELBALLS= 4;
+static const int NUMBER_OF_WEASELBALLS= 1;
 static const int NUMBER_OF_STRUCTURES= 1;
 static const string NAME_OF_WEASELBALLS= "swarmbot";
 static const string NAME_OF_MOUNTS= "mount";
 static const string SHELL_STRING= "shell";
-static const int LONGEST_WEASELBALL_SEQUENCE= 4;
+static const int LONGEST_WEASELBALL_SEQUENCE= 1;
 static const double DIAMETER_OF_WEASELBALLS= 0.108;
+static const int RECORDING_TYPE= 0;
 static const string COLLECTION_PATH= "/home/justin/Documents/bouncy/self-assembly/gazebo/data/collections/";
 #endif // _COMMON_H_
