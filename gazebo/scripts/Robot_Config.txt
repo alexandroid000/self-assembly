@@ -17,15 +17,18 @@ DELETE_AFTER_UPLOAD=1
 #Needs to be True/False
 ENABLE_GRAPHICS="True"
 
+#0 For lots of data, #1 for minimal data
+DATA_RECORDING_TYPE=0
+
 #The following are the robots that are available by ID
 # 1 = 1, 2 = 2, 3 = 3_straight, 4 = 3_L, 5 = 3_backwords_L, 6 = 4_straight, 7 = 4_L, 8 = 4_backwords_L, 9 = 4_T , 10 =4_square
-ROBOT_TO_RUN=10
-NUMBER_OF_WEASELBALLS=4
+ROBOT_TO_RUN=1
+NUMBER_OF_WEASELBALLS=1
 
 RANDOMIZE_BALLS=1
 RANDOMIZE_STRUCTURES=1
 
-RUN_TRIALS=1
+RUN_TRIALS=0
 #If you want this to run forever, set NUMBER_OF_TRIALS_CYCLES to -1
 NUMBER_OF_TRIALS_CYCLES=-1
 #The simulator has a hard time working when this is very low (below 5 or so)
