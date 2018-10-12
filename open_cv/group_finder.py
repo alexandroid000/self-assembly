@@ -5,6 +5,9 @@
 # take in an array of time-series location data and output time-series
 # of lexicographic labels
 
+#TODO fix import call
+from ../PentominoGeneration/PolyominoGenerator.py import Polyomino
+
 # Global Constants
 SPACE_DIM_X
 SPACE_DIM_Y
@@ -22,12 +25,15 @@ openCVConfigFinder:
 opencvConfigFinder(time, locationList):
     retList = []
     # Calls other subroutines
+    groupLists = groupFinder(locationList)
+    for group in groupLists:
+        
     return retList
 
 '''
 groupFinder:
 # Input: [[x0, y0], [x1, y1], [x2, y2], ..., [xn, yn]]
-# Output: [[x0, y0, g0], [x1, y1, g1], [x2, y2, g2], ..., [xn, yn, gn]]
+# Output: [[[x0, y0], [x1, y1], ..., [xn, yn]], [[xn+1, yn+1],...,[xm, ym]], [...]]
 '''
 groupFinder(locationList):
 # Build groups of bots based on parameters for straight and diagonal distance
@@ -42,12 +48,18 @@ groupFinder(locationList):
 '''
 centerpointFinder:
 # Input: [[x0, y0], [x1, y1], [x2, y2], ..., [xn, yn]]
-# Output: [x, y]
+# Output: (x, y)
 '''
 centerpointFinder(locationList):
 # Find center location of a group
-    center = (0, 0)
-    return center
+centerX, centerY = (0, 0)
+unitNum = len(locationList)
+for unit in locationList:
+    centerX += unit[0]
+    centerY += unit[1]
+centerX /= unitNum
+centerY /= unitNum
+    return (centerX, centerY)
 
 
 '''
@@ -72,8 +84,8 @@ lexLabelOrdering:
 
 '''
 groupFixer:
-# Input [t, List of lex labels]
-# Output [t, List of updated lex labels]
+# Input [{t0, t1, t2, ..., tn}, {List of {List of lex labels}}]
+# Output [{t0, t1, t2, ..., tn}, {List of {List of lex labels}}]
 '''
 groupFixer():
-# Take output and use time-reversed analysis to confirm time of actual linking
+# External function to take output and use time-reversed analysis to confirm time of actual linking
