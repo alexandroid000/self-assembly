@@ -20,3 +20,11 @@ basic-haskell/.stack-work/dist/x86_64-osx/Cabal-1.24.2.0/build/autogen/cabal_mac
 dataAnalysis/data
 dataAnalysis/develop/.ipynb_checkpoints/*
 dataAnalysis/deliver/.ipynb_checkpoints/*
+
+gazebo/src/weaselball_description/meshes/*
+gazebo/src/weaselball_gazebo/launch/*
+gazebo/scripts/Robot_Config.txt
+gazebo/data/*
+gazebo/scripts/run.sh
+gazebo/.catkin_tools/
+gazebo/.catkin_workspace/

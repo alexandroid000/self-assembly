@@ -67,7 +67,6 @@ namespace gazebo
 	std::vector<physics::ModelPtr> structures;
 	bool getModelsFlag = 1;
 	//recordingType is set to 0 to collect a lot of data about the weaselballs and is set to 1 to collect R2 x S1 of the mount configuration.
-	int recordingType_ = 1;
 	std::ofstream collectionFile;
 	int resetCounter = 0;
 	
@@ -102,7 +101,7 @@ namespace gazebo
 
 	void writeDataToCSV(weaselballData data,int id)
 	{
-		if(this->recordingType_ == 0)
+		if(RECORDING_TYPE == 0)
 		{
 			this->collectionFile << data.timeStamp << ",";
 			this->collectionFile << id << ",";
@@ -128,7 +127,7 @@ namespace gazebo
 			this->collectionFile << data.numberOfWalls << ",";
 			this->collectionFile << "\n";
 		}
-		else if(this->recordingType_ == 1)
+		else if(RECORDING_TYPE == 1)
 		{
 			this->collectionFile << data.timeStamp << ",";
 			this->collectionFile << id << ",";
@@ -247,22 +246,22 @@ namespace gazebo
 	  std::string str(buffer);
 
 	  std::stringstream ss;
-	  if(recordingType_ == 0)
+	  if(RECORDING_TYPE == 0)
 	  {
           ss << COLLECTION_PATH << str << "_long.csv";
 
       }
-	  else if(recordingType_ == 1)
+	  else if(RECORDING_TYPE == 1)
       {
           ss << COLLECTION_PATH << str << ".csv";
       }
 
 	  this->collectionFile.open (ss.str(),std::ofstream::out);
-	  if(this->recordingType_ == 0)
+	  if(RECORDING_TYPE == 0)
 	  {
 	  this->collectionFile << "Time,ID,Mount_X,Mount_Y,Mount_Yaw,Pos_x,Pos_y,Pos_z,Yaw,Pitch,Roll,Linear_Velocity_X_World,Linear_Velocity_Y_World,Linear_Velocity_Z_World,Linear_Acceleration_X_World,Linear_Acceleration_Y_World,Linear_Acceleration_Z_World,Rotational_Velocity_X_World,Rotational_Velocity_Y_World,Rotational_Velocity_Z_World,Rotational_Acceleration_X_World,Rotational_Acceleration_Y_World,Rotational_Acceleration_Z_World,Linear_Velocity_X_Relative,Linear_Velocity_Y_Relative,Linear_Velocity_Z_Relative,Linear_Acceleration_X_Relative,Linear_Acceleration_Y_Relative,Linear_Acceleration_Z_Relative_Relative,Rotational_Velocity_X_Relative,Rotational_Velocity_Y_Relative,Rotational_Velocity_Z_Relative,Rotational_Acceleration_X_Relative,Rotational_Acceleration_Y_Relative,Rotational_Acceleration_Z_Relative,ResetID,checkCorrectness\n"; 
 	  }
-		else if(recordingType_ == 1)
+		else if(RECORDING_TYPE == 1)
 		{
 			this->collectionFile << "Time,ID,X,Y,Yaw,ResetID,checkCorrectness,NumberOfWalls\n";
 
@@ -359,7 +358,7 @@ namespace gazebo
 		}
 		//Collect the data for this update if everything is spawned
 		std::vector<weaselballData> collection;
-	    if(recordingType_ == 0)
+	    if(RECORDING_TYPE == 0)
 		{
 			weaselballData data;
 			for (auto mount : this->structures)
@@ -393,7 +392,7 @@ namespace gazebo
 				collection.push_back(data);	
 			}
 		}
-		else if(this->recordingType_ == 1 )
+		else if(RECORDING_TYPE == 1 )
 		{
 			for (auto mount : this->structures)
 			{

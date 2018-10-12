@@ -71,6 +71,7 @@ static const string NAME_OF_MOUNTS= \"mount\";
 static const string SHELL_STRING= \"shell\";
 static const int LONGEST_WEASELBALL_SEQUENCE= $NUMBER_OF_WEASELBALLS;
 static const double DIAMETER_OF_WEASELBALLS= 0.108;
+static const int RECORDING_TYPE= $DATA_RECORDING_TYPE;
 static const string COLLECTION_PATH= \"$WORKSPACE_PATH/data/collections/\";" >> $FILE
                       
 
