@@ -5,6 +5,9 @@
 # take in an array of time-series location data and output time-series
 # of lexicographic labels
 
+# Graph-based approach investigation? 
+# Image matching approach (registration problem)
+
 # Import modules
 import sys
 import numpy as np
