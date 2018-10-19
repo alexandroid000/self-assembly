@@ -21,7 +21,7 @@ A repository related to self-asssembly robot systems.
 This projects is meant to explore various aspects of self-assembly robot systems to gain an intuition on how these systems could be controlled. In this self-assembly exploration, robots are independent and have pseudo-random motion. Each robot has different connection rules that allow the system to autonomously and  create complex structures of robots. The aim is to determine what kinds of complex systems can be created from independent robots when their connection rules are controlled.
 
 ### Examples
-![Assemblies](assemblies.png)
-![Connections](connections.png)
+![Assemblies](assemblies.jpg)
+![Connections](connections.jpg)
 ![Open CV Short Duration](open_cv_short.png)
 ![Open CV Long Duration](open_cv_long.png)
