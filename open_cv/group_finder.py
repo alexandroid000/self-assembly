@@ -8,6 +8,10 @@
 # Graph-based approach investigation? 
 # Image matching approach (registration problem)
 
+# TODO
+# Time-series filtering for groups vs. single units
+# Investigate python libraries for matrix transformations
+
 # Import modules
 import sys
 import numpy as np
@@ -287,6 +291,7 @@ if __name__ == '__main__':
                 print("Cart transform on: ", groupLists[idx])
                 groupLists[idx] = cartTransform(groupLists[idx])
                 print("Post-transform: ", groupLists[idx])
+
             
     # # Find labels
     # print(groupLists)
