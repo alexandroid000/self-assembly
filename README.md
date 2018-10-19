@@ -12,6 +12,7 @@ A repository related to self-asssembly robot systems.
 - **CAD**: This module is a folder that contains the CAD models of weazel-ball locomoted robots that are used for physical self-assembly runs.
 - **dataAnalysis**: This module contains data analysis tools for analyzing data collected through physical self-assembly runs as well as simulated runs.
 - **gazebo**: This module contains tools necessary for running a 3D simulation of the self-assembly robots.
+- **images**: Folder holding images for read-mes.
 - **open_cv**: This module contains tools for analyzing video data collected from physical runs of the self-assembly robots.
 - **PentominoGeneration**: This module contains code that generates all possible configurations of a poly-amino (a square-tiled shaped) with some integer number of tiles.
 - **PythonSimulation**: This module contains various code snippets from a historic 2D simulation of self-assembly robots.
@@ -21,7 +22,7 @@ A repository related to self-asssembly robot systems.
 This projects is meant to explore various aspects of self-assembly robot systems to gain an intuition on how these systems could be controlled. In this self-assembly exploration, robots are independent and have pseudo-random motion. Each robot has different connection rules that allow the system to autonomously and  create complex structures of robots. The aim is to determine what kinds of complex systems can be created from independent robots when their connection rules are controlled.
 
 ### Examples
-*Self-Assemblies* ![Assemblies](assemblies.jpg)
-*Connections* ![Connections](connections.jpg)
-*Open CV Short Duration* ![Open CV Short Duration](open_cv_short.png)
-*Open CV Long Duration* ![Open CV Long Duration](open_cv_long.png)
+![Assemblies](images/assemblies.jpg) *Self-Assemblies*
+![Connections](images/connections.jpg) *Connections*
+![Open CV Short Duration](images/open_cv_short.png) *Open CV Short Duration*
+![Open CV Long Duration](images/open_cv_long.png) *Open CV Long Duration*
