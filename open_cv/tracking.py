@@ -43,7 +43,7 @@ def track(in_vid):
 
 
     #save the output video
-    write = Falsea
+    write = False
     if write:
         fourcc = cv2.VideoWriter_fourcc(*'avc1')
         vout = cv2.VideoWriter()
