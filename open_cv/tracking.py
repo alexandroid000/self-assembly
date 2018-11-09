@@ -34,7 +34,7 @@ def find_background(in_vid):
     return frame_bg
 
 
-def track(in_vid):
+def track(in_vid, save_location):
     #determine size and frame rate of input video
     cap = cv2.VideoCapture(in_vid)
     fps = cap.get(cv2.CAP_PROP_FPS)
@@ -51,7 +51,7 @@ def track(in_vid):
         success = vout.open(filename,fourcc,fps,capSize,True)
 
     #open output file
-    f = open("trajectory_data.txt", 'w')
+    f = open(save_location, 'w+')
 
 
     #find background image
