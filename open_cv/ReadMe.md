@@ -42,7 +42,7 @@ To run tracking.py...
 tracking.py...
 ```
 
-## Authors
+## Contributors
 
 * **Christopher Horn** - initial video processing, ball tracking
 * **Austin Born** - configuration finding, feature extraction
