@@ -9,38 +9,15 @@
 import sys
 import numpy as np
 import math
+from os.path import join
+import re
 
 
 # Global Constants
-UNIT_DIM           = 10  # Dimension of unit hub in pixels
-SPACE_DIM_X        = 200 # Dimension of space width in pixels
-SPACE_DIM_Y        = 200 # Dimension of space height in pixels
-DIST_DEVIATION     = 2   # Tolerance for unit distance to be considered "connected"
-
-
-'''
-openCVConfigFinder:
-# Input: [t, [x0, y0], [x1, y1], [x2, y2], ..., [xn, yn]]
-# OUtput Set of lexicographic labels for groups and center location of each group
-'''
-def opencvConfigFinder(time, locationList):
-    retLabels = []
-
-    # Find groups
-    groupLists = groupFinder(locationList)
-
-    # Find centerpoints
-    for group in groupLists:
-        print("Group centerpoint: ", centerpointFinder(group))
-
-    # Perform transformation to 
-    for group in groupLists:
-        group = cartTransform(group)
-
-    # Find labels
-    retLabels = lexLabelOrdering(groupLists)
-        
-    return retLabels
+UNIT_DIM           = 15  # Dimension of unit hub in pixels
+SPACE_DIM_X        = 600 # Dimension of space width in pixels
+SPACE_DIM_Y        = 470 # Dimension of space height in pixels
+DIST_DEVIATION     = 5   # Tolerance for unit distance to be considered "connected"
 
 
 '''
@@ -55,6 +32,8 @@ def groupFinder(locationList):
 
     # For each unit in location list
     for unit in locationList:
+
+        unit_added = False
 
         # For each group
         for group in groupList:
@@ -282,20 +261,32 @@ def groupFixer():
 # Main functions testing
 if __name__ == '__main__':
 
-    print("Testing 3-unit linear configuration")
-    locationList = [[0, 0], [10, 0], [20, 0]]
+    print("Testing trajectory data")
 
-    retLabels = []
+    # Parse position data
+    f = open(sys.argv[1])
+    for line in f:
+        numbers = re.findall('\d+', line)
+        positions = []
+        for xandy in range(math.floor(len(numbers)/2)):
+            positions.append([int(numbers[xandy]), int(numbers[xandy+1])])
+        # print("Positions: ", positions)
 
-    # Find groups
-    groupLists = groupFinder(locationList)
-    print(groupLists)
-
-    for idx in range(len(groupLists)):
-        groupLists[idx] = cartTransform(groupLists[idx])
-
-    # Find labels
-    print(groupLists)
-    retLabels = lexLabelOrdering(groupLists)
+        # Find groups
+        groupLists = groupFinder(positions)
+        # print("Groups: ", groupLists)
         
-    print(retLabels)
+        # Perform matrix transformation to align with cartesian coordinates
+        for idx in range(len(groupLists)):
+            center = centerpointFinder(groupLists[idx])
+            print("Center: ", center)
+            if(len(groupLists[idx]) > 1):
+                print("Cart transform on: ", groupLists[idx])
+                groupLists[idx] = cartTransform(groupLists[idx])
+                print("Post-transform: ", groupLists[idx])
+            
+    # # Find labels
+    # print(groupLists)
+    # retLabels = lexLabelOrdering(groupLists)
+        
+    # print(retLabels)
