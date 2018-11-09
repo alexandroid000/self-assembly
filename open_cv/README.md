@@ -3,7 +3,7 @@ The purpose of the code in this directory is to extract trajectory data from wea
 Trajectory data is output in the form
 
 ```
-Ball1X Ball1Y Ball2X Ball2Y ... BallnX Ball nY
+Ball1X Ball1Y Ball2X Ball2Y ... BallnX BallnY
 ```
 
 #### Dependencies
@@ -31,7 +31,7 @@ You can also receiving more information by using
 python weasel_balls.py -h
 ```
 
---cores flag is currently available, but will soon enable or disable mutliprocessing. It will be enabled by default when support is completed. 
+--cores flag is currently unavailable, but will soon be used to enable or disable mutliprocessing. It will be enabled by default when support is completed. 
 
 An example video file, `4Ball-TRIM.mp4`, is included in the Videos file. 
  
