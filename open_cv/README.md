@@ -9,7 +9,7 @@ Ball1X Ball1Y Ball2X Ball2Y Ball3X Ball3Y
 #### Dependencies
 
 - Python3 
-- openCV-python 
+- opencv-python module
 
 ### Getting Started
 

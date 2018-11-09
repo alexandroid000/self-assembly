@@ -25,9 +25,15 @@ openCVConfigFinder:
 '''
 def opencvConfigFinder(time, locationList):
     retLabels = []
+
     # Find groups
     groupLists = groupFinder(locationList)
 
+    # Find centerpoints
+    for group in groupLists:
+        print("Group centerpoint: ", centerpointFinder(group))
+
+    # Perform transformation to 
     for group in groupLists:
         group = cartTransform(group)
 
