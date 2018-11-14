@@ -9,7 +9,11 @@ Ball1X Ball1Y Ball2X Ball2Y ... BallnX BallnY
 #### Dependencies
 
 - Python3 
-- opencv-python module
+
+Python libraries:
+
+- opencv, version 3 or greater
+- python3-magic
 
 ### Getting Started
 

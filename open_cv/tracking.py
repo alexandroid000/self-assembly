@@ -40,13 +40,13 @@ def track(in_vid, save_location):
     fps = cap.get(cv2.CAP_PROP_FPS)
     capSize = (int(cap.get(3)), int(cap.get(4)))
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    vout = cv2.VideoWriter()
 
 
     #save the output video
     write = False
     if write:
         fourcc = cv2.VideoWriter_fourcc(*'avc1')
-        vout = cv2.VideoWriter()
         filename = 'tracking.mp4'
         success = vout.open(filename,fourcc,fps,capSize,True)
 
