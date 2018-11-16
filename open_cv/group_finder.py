@@ -75,7 +75,7 @@ distance:
 # Output: distance as nearest int
 '''
 def distance(point1, point2):
-    return round(math.sqrt((point1[0]-point2[0])**2 + (point1[1]-point2[1])**2))
+    return math.sqrt((point1[0]-point2[0])**2 + (point1[1]-point2[1])**2)
 
 
 '''
@@ -85,7 +85,7 @@ centerpointFinder:
 '''
 def centerpointFinder(locationList):
     # Find center location of a group
-    centerX, centerY = (0, 0)
+    centerX, centerY = (0.0, 0.0)
     unitNum = len(locationList)
     for unit in locationList:
         centerX += unit[0]
@@ -114,10 +114,10 @@ def cartTransform(locationList):
             break
     if unit_two is not None:
         # Compute angle in radians
-        angle = math.sin(float(unit_two[0] - unit_one[0])/distance(unit_one, unit_two))
+        angle = -math.acos(float(unit_two[0] - unit_one[0])/distance(unit_one, unit_two))
         rotMatrix = [[math.cos(angle), -math.sin(angle)], [math.sin(angle), math.cos(angle)]]
-        locationList = np.matmul(locationList, rotMatrix)
-        locationList = np.round(locationList)
+        locationList = np.matmul(rotMatrix, np.transpose(locationList))
+        locationList = np.transpose(locationList)
     (xd, yd) = (0, 0)
     for unit in locationList:
         if unit[0] < xd:
@@ -127,8 +127,8 @@ def cartTransform(locationList):
     transMatrix = [[1-xd, 1-yd] for i in range(len(locationList))]
     locationList += transMatrix
 
-    np.divide(locationList, UNIT_DIM)
-    np.round(locationList)
+    locationList = np.divide(locationList, UNIT_DIM)
+    locationList = np.floor(locationList)
 
     return locationList.astype(int)
 
