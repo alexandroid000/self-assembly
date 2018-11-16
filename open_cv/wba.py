@@ -35,7 +35,7 @@ def main():
     parser.add_argument('-o', '--output_location',
     help='Output directory (default: ./)',
     action='store', 
-    default= "/",
+    default= "./",
     dest='destination')
 
     parser.add_argument('-s', '--suffix',
