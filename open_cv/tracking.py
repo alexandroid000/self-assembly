@@ -46,6 +46,9 @@ def track(parameters):
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     vout = cv2.VideoWriter()
 
+    #current forced off due to codec limitations
+    #may be optional at the later date, or can be used if opencv 
+    #is compiled from source, and all necessary codecs are installed
 
     #save the output video
     write = False
