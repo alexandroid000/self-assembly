@@ -17,27 +17,27 @@ Python libraries:
 
 ### Getting Started
 
-To extract data from `inputVideo.mp4`, use `weasel_balls.py`:
+The folder SampleVideos contains a collection of short practice videos. wba.py, which stands for Weasel Ball Analysis, is used to extract the trajectories from the input video files.
+
+To extract data from `inputVideo.mp4`, use `wba.py`:
 
 ```
-python weasel_balls.py inputVideo.mp4
+python wba.py inputVideo.mp4
 ```
 
 To extract data from all the video files in a folder, use the batch -b flag:
 
 ```
-python weasel_balls.py -b /path/to/folder
+python wba.py -b /path/to/folder
 ```
 
-You can also receiving more information by using
+By default, multithreading is enabled. However, it is only used for jobs with more than one input file. It can be disabled with the flag ```--cores 0```
+
+Additional flags can be used for settings file suffixes for batch naming, as well as output folders and core count selection. You can also receiving more information by using
 
 ```
-python weasel_balls.py -h
+python wba.py -h
 ```
-
---cores flag is currently unavailable, but will soon be used to enable or disable mutliprocessing. It will be enabled by default when support is completed. 
-
-An example video file, `4Ball-TRIM.mp4`, is included in the Videos file. 
  
 ### Contributors
 
