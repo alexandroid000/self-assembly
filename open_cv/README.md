@@ -31,7 +31,7 @@ To extract data from all the video files in a folder, use the batch -b flag:
 python wba.py -b /path/to/folder
 ```
 
-By default, multithreading is enabled. However, it is only used for jobs with more than one input file. It can be disabled with the flag ```--cores 0```
+By default, multithreading is enabled. However, it is only used for jobs with more than one input file. It can be disabled with the flag ```--cores 1```
 
 Additional flags can be used for settings file suffixes for batch naming, as well as output folders and core count selection. You can also receiving more information by using
 

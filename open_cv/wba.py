@@ -28,13 +28,14 @@ def main():
     parser.add_argument('--cores', 
     help='Number of cores (only applicable when more than one video files are provided) (default: CPU cores - 1)',
     action='store', 
+    type=int,
     default= mp.cpu_count()-1,
     dest='cores')
 
     parser.add_argument('-o', '--output_location',
     help='Output directory (default: ./)',
     action='store', 
-    default= "",
+    default= "/",
     dest='destination')
 
     parser.add_argument('-s', '--suffix',
@@ -91,6 +92,9 @@ def main():
         parameters.append((vid, save_destination  + name, args.batch_mode))
     
     #create worker pool and distribute jobs
+    if(args.cores < 0 or args.cores > mp.cpu_count()):
+        print('Invalid core, defaulting to 1 core')
+        args.cores = 1
     pool = mp.Pool(processes = args.cores)
 
 
