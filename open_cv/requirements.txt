@@ -1,0 +1,7 @@
+cffi==1.11.5
+filemagic==1.6
+numpy==1.15.4
+opencv-python==3.4.3.18
+pycparser==2.19
+python-magic==0.4.15
+tqdm==4.28.1
