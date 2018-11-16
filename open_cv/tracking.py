@@ -34,7 +34,11 @@ def find_background(in_vid):
     return frame_bg
 
 
-def track(in_vid, save_location):
+def track(parameters):
+
+    in_vid = parameters[0]
+    save_location = parameters[1]
+
     #determine size and frame rate of input video
     cap = cv2.VideoCapture(in_vid)
     fps = cap.get(cv2.CAP_PROP_FPS)
@@ -112,7 +116,8 @@ def track(in_vid, save_location):
                 traj.append((x,y))
         if write:
             vout.write(frame)
-        update_progress(frame_count/total_frames)
+        if not parameters[2]:
+            update_progress(frame_count/total_frames)
 
 
     #write data to text file
@@ -176,6 +181,14 @@ def get_circles(frame, background):
     circles = cv2.HoughCircles(ff, cv2.HOUGH_GRADIENT, 2, 17,param1=80,param2=25, minRadius = min_ball_size, maxRadius = max_ball_size)
     circles = np.round(circles[0,:]).astype("int")
     return circles
+
+def totalFrames(vq):
+    frame_count = 0
+    for vid in tqdm.tqdm(vq):
+        cap = cv2.VideoCapture(vid)
+        frame_count += int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    return frame_count
+
 
     
 

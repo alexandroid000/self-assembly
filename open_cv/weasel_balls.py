@@ -8,7 +8,9 @@ import os
 import argparse
 import threading
 import magic
-from multiprocessing import pool
+import multiprocessing as mp
+import tqdm
+
 def main():
     #handling arguements
     parser = argparse.ArgumentParser(prog='Ball trajectory detecter', description='Process some weaselball video data')
@@ -29,8 +31,17 @@ def main():
     default= mp.cpu_count()-1,
     dest='cores')
 
+    parser.add_argument('-o', '--output_location',
+    action='store', 
+    default= "",
+    dest='destination')
+
+
     args = parser.parse_args()
 
+
+
+    #generate work list
     video_queue = []
 
     if(args.batch_mode == True):
@@ -46,14 +57,30 @@ def main():
         for file in args.locs:
             video_queue.append(file)
 
+
+    # CURRENTLY UNDER DEVELOPMENT
+    # #generate total number of frames (for progress bar)
+    # total_frames = tb.totalFrames(video_queue)
+
+    #generate and wrap parameters for worker pool
     parameters = []
-    while(len(video_queue is not 0)):
+    while(len(video_queue) is not 0):
         vid = video_queue.pop()
-        folder = os.path.dirname(vid)
-        parameters.append(vid, vid + "_trajectory.txt")
+        save_destination = os.getcwd() + '/' + args.destination
+        (directory, name) = os.path.split(vid)
+        name = os.path.splitext(name)[0]
+        parameters.append((vid, save_destination + ''  + name + "_trajectory.txt", args.batch_mode))
     
+    #create worker pool and distribute jobs
     pool = mp.Pool(processes = args.cores)
-    pool.map(tb.tracking, parameters)
+
+
+    for _ in tqdm.tqdm(pool.imap_unordered(tb.track, parameters), total=len(parameters)):
+        pass
+
+    
+    pool.close()
+    pool.join()
 
     
 
