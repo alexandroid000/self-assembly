@@ -12,17 +12,19 @@ Ball1X Ball1Y Ball2X Ball2Y ... BallnX BallnY
 
 Python libraries:
 
-- opencv, version 3 or greater
-- python3-magic
+The necessary libraries are included in requirements.txt. To automatically install all the packages, run 
 
+```
+pip install -r requirements.txt
+```
 ### Getting Started
 
 The folder SampleVideos contains a collection of short practice videos. wba.py, which stands for Weasel Ball Analysis, is used to extract the trajectories from the input video files.
 
-To extract data from `inputVideo.mp4`, use `wba.py`:
+To extract data from `4Ball-short1.mp4`, use `wba.py`:
 
 ```
-python wba.py inputVideo.mp4
+python wba.py 4Ball-short1.mp4
 ```
 
 To extract data from all the video files in a folder, use the batch -b flag:
