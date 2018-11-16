@@ -38,6 +38,8 @@ def track(parameters):
 
     in_vid = parameters[0]
     save_location = parameters[1]
+    status_bar = parameters[2]
+    print(status_bar)
 
     #determine size and frame rate of input video
     cap = cv2.VideoCapture(in_vid)
@@ -116,7 +118,7 @@ def track(parameters):
                 traj.append((x,y))
         if write:
             vout.write(frame)
-        if not parameters[2]:
+        if(parameters[2] == False):
             update_progress(frame_count/total_frames)
 
 
@@ -182,7 +184,7 @@ def get_circles(frame, background):
     circles = np.round(circles[0,:]).astype("int")
     return circles
 
-def totalFrames(vq):
+def countFrames(vq):
     frame_count = 0
     for vid in tqdm.tqdm(vq):
         cap = cv2.VideoCapture(vid)
