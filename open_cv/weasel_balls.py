@@ -7,10 +7,8 @@ import queue
 import os
 import argparse
 import threading
-import multiprocessing as mp
 import magic
-
-
+from multiprocessing import pool
 def main():
     #handling arguements
     parser = argparse.ArgumentParser(prog='Ball trajectory detecter', description='Process some weaselball video data')
@@ -29,11 +27,11 @@ def main():
     parser.add_argument('--cores', 
     action='store', 
     default= mp.cpu_count()-1,
-    dest='core_count')
+    dest='cores')
 
     args = parser.parse_args()
 
-    video_queue = queue.Queue()
+    video_queue = []
 
     if(args.batch_mode == True):
         for folder in args.locs:
@@ -42,17 +40,23 @@ def main():
                     name = str('./'+ folder + '/' + file)
                     file_type = (m.id_filename(name))
                     if(file_type[0:5] == "video"):
-                        video_queue.put(name)
+                        video_queue.append(name)
 
     else:
         for file in args.locs:
-            video_queue.put(file)
-    print(video_queue.qsize())
-    while(not video_queue.empty()):
-        vid = video_queue.get()
+            video_queue.append(file)
+
+    parameters = []
+    while(len(video_queue is not 0)):
+        vid = video_queue.pop()
         folder = os.path.dirname(vid)
-        print("Processing: " + vid)
-        tb.track(vid, vid + "_trajectory.txt")
+        parameters.append(vid, vid + "_trajectory.txt")
+    
+    pool = mp.Pool(processes = args.cores)
+    pool.map(tb.tracking, parameters)
+
+    
+
             
 
 
