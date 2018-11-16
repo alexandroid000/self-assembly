@@ -1,6 +1,5 @@
 cffi==1.11.5
 numpy==1.15.4
 opencv-python==3.4.3.18
-pkg-resources==0.0.0
 pycparser==2.19
 python-magic==0.4.15
