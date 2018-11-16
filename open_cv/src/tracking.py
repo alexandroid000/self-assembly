@@ -39,7 +39,6 @@ def track(parameters):
     in_vid = parameters[0]
     save_location = parameters[1]
     status_bar = parameters[2]
-    print(status_bar)
 
     #determine size and frame rate of input video
     cap = cv2.VideoCapture(in_vid)
