@@ -58,7 +58,7 @@ def main():
         for folder in args.locs:
             for file in os.listdir(folder):
                 with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:
-                    name = str('./'+ folder + '/' + file)
+                    name = str(folder + '/' + file)
                     file_type = (m.id_filename(name))
                     if(file_type[0:5] == "video"):
                         video_queue.append(name)
@@ -76,11 +76,13 @@ def main():
 
     #ensure the target location is a directory (add leading or trailing slashes)
     if(args.destination[-1] != '/'):
+        if(args.verbose):
+            print("Warning: destination directory path did not terminate with a '/'. One has been appended")
         args.destination += '/'
-    if(args.destination[0] != '/'):
-        args.destination = '/' + args.destination
+    #if(args.destination[0] != '/'):
+    #    args.destination = '/' + args.destination
 
-    save_destination = os.getcwd() + args.destination
+    save_destination = args.destination
 
 
     #wrap parameters for worker pool
