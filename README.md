@@ -26,3 +26,9 @@ This projects is meant to explore various aspects of self-assembly robot systems
 ![Connections](images/connections.jpg) *Connections*
 ![Open CV Short Duration](images/open_cv_short.png) *Open CV Short Duration*
 ![Open CV Long Duration](images/open_cv_long.png) *Open CV Long Duration*
+
+### More Information and Future Work
+
+We have a document which contains an overview of our current modelling and
+prediction and control efforts [here](Overview_and_Future_Work.md). It also
+contains some to-dos and future work ideas.
