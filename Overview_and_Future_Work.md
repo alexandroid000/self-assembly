@@ -23,7 +23,7 @@ Transitions dependent on environment:
 To-Dos
 ------
 
-### Data Collection / Analysis
+### Data Collection
 
 - do specific model identification / registration / find distinguishing features 
   by collecting data in specific scenarios or segmenting our current datasets into these 
@@ -34,13 +34,25 @@ To-Dos
     - moving in free space
     - corner interactions: reflex and non-reflex corners
 
+### Trajectory Analysis
+
+- extract environment polygon from video (save at top of text file, in same
+  frame as trajectory points)
+- Right now we can extract (t,x,y) trajectory points. We would like to also have:
+    - orientation
+    - assembly type
+    - velocity (linear and angular, from Kalman filter)
+    - distance from nearest wall
+    - distance from nearest other assembly
+    - time since last collision with wall
+    - time since last collision with other assembly
+
 ### Hardware
 
 - source and acquire electro-permanent magnets
 - attach IMU to assembly and reliably detect collisions with environment; OR
-- attach proximity detectors to assembly and use these to detect collisions
-
-
+  - attach proximity detectors to assembly and use these to detect collisions
+ 
 Deliverables
 ------------
 
