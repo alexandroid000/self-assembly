@@ -38,9 +38,9 @@ Data from the simulation will be stored in self-assembly/gazebo/data/collections
 
 -   `UPLOAD_DATA`: Allows for AWS data file to be uploaded after simulation finishes.
 -   `DELETE_AFTER_UPLOAD`: Deletes the local datalog file after running the simulation.
--   `ENABLE_GRAPHICS : Selects whether the graphic mode of gazebo is ran. If "False", gazebo will be run without any graphics.
--   `DATA_RECORDING_TYPE`: Selects whether the verbose or mininal data is collected. See the data collection section for more information
--   `ROBOT_TO_RUN : Selects which robot configuration to run.
+-   `ENABLE_GRAPHICS`: Selects whether the graphic mode of gazebo is ran. If "False", gazebo will be run without any graphics.
+-   `DATA_RECORDING_TYPE`: Selects whether the verbose or mininal data is collected. See the data collection section for more information.
+-   `ROBOT_TO_RUN`: Selects which robot configuration to run.
 -   `NUMBER_OF_WEASELBALLS`: Tells the simulator how many weaselballs will be in the simulation (This will soon be phased out since it can be implied from "ROBOT_TO_RUN").
 -   `RANDOMIZE_BALLS`: Randomly rotates the weaselballs
 -   `RANDOMIZE_STRUCTURES`: Randomizes the placement and orientation of the weaselball structures.
