@@ -7,12 +7,12 @@ using std::string;
 
 // Note: assumes build path is a subdirectory of the source directory and the
 // data directory is in the same parent directory as the source directory
-static const string DATA_ROOT_PATH= "/home/justin/Documents/bouncy/self-assembly/gazebo/data";
+static const string DATA_ROOT_PATH= "/home/justin/Documents/self-assembly/gazebo/data";
 
 static const double PI= 3.14159265359;
 
 // path to the motion capture data files on this system
-static const string MOCAP_DATA_PATH= "/home/justin/Documents/bouncy/self-assembly/gazebo/data/raw_experiment/vicon/";
+static const string MOCAP_DATA_PATH= "/home/justin/Documents/self-assembly/gazebo/data/raw_experiment/vicon/";
 
 // path to the motion capture data files on this system
 static const string VIDEO_DATA_PATH= "DATA_ROOT_PATHinterpreted/signals/";
@@ -42,13 +42,13 @@ static const bool RUN_TRIALS= 0;
 static const int NUMBER_OF_TRIALS_CYCLES= -1;
 static const int INDIVIDUAL_TRIAL_TIME= 300;
 static const bool RANDOMIZE_BALLS= 1;
-static const int NUMBER_OF_WEASELBALLS= 1;
-static const int NUMBER_OF_STRUCTURES= 1;
 static const string NAME_OF_WEASELBALLS= "swarmbot";
 static const string NAME_OF_MOUNTS= "mount";
 static const string SHELL_STRING= "shell";
+static const int ROBOT_TO_RUN= 1;
 static const int LONGEST_WEASELBALL_SEQUENCE= 1;
 static const double DIAMETER_OF_WEASELBALLS= 0.108;
-static const int RECORDING_TYPE= 0;
-static const string COLLECTION_PATH= "/home/justin/Documents/bouncy/self-assembly/gazebo/data/collections/";
+static const int NUMBER_OF_STRUCTURES= 1; //I am keeping this as constant for now since we only want one robot running at a time.
+static const int RECORDING_TYPE= 1;
+static const string COLLECTION_PATH= "/home/justin/Documents/self-assembly/gazebo/data/collections/";
 #endif // _COMMON_H_

@@ -23,7 +23,8 @@
 #include <math.h>
 
 #include <tuple>
-#include "../include/common.h"
+#include "../include/common.h" //Used for static const global variables
+#include "../include/helper.h" //is_in
 
 //This data structures is used to store information about the weaselballs/mount. 
 namespace gazebo
@@ -205,7 +206,20 @@ namespace gazebo
 	
 	bool checkAllModelsInit(std::vector<physics::ModelPtr> weaselballs, std::vector<physics::ModelPtr> structure)
 	{
-		return ((weaselballs.size() == NUMBER_OF_WEASELBALLS and structure.size() == NUMBER_OF_STRUCTURES) ? 1 : 0);
+
+        int number_of_weaselballs = 0; //We will infer the number of weaselballs from the inputted structure instead of asking the user to ask for it.
+        if(is_in(ROBOT_TO_RUN,{1}))
+            number_of_weaselballs = 1;
+        else if (is_in(ROBOT_TO_RUN,{2}))
+            number_of_weaselballs = 2;
+        else if (is_in(ROBOT_TO_RUN,{3,4,5}))
+            number_of_weaselballs = 3;
+        else if (is_in(ROBOT_TO_RUN,{6,7,8,9,10}))
+            number_of_weaselballs = 4;
+        else
+            ROS_ERROR("[stateRecorder.cpp/checkAllModels] Robot to run should be in the range of 1 to 10");
+        ROS_INFO("Number of weaselballs is %d", number_of_weaselballs);
+		return ((weaselballs.size() == number_of_weaselballs and structure.size() == NUMBER_OF_STRUCTURES) ? 1 : 0);
 	}
 
 	void worldReset()
@@ -274,6 +288,7 @@ namespace gazebo
 	void onCollision()
 	{
 //	std::vector<std::string> railStrings;
+        ROS_DEBUG("Found Collision");
 		msgs::Contacts contacts;
 		for(auto contactSensor : this->bumpSensor)
 		{
@@ -353,6 +368,9 @@ namespace gazebo
 			}
 			else
 			{
+                ROS_WARN("Waiting for all models and Sensors to spawn");
+                ROS_WARN("Models init = %d", checkAllModelsInit(weaselballs, structures));
+                ROS_WARN("Bump Sensor init = %d", bumpSensor.size());
 				return;
 			}
 		}

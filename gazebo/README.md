@@ -41,14 +41,12 @@ Data from the simulation will be stored in self-assembly/gazebo/data/collections
 -   `ENABLE_GRAPHICS`: Selects whether the graphic mode of gazebo is ran. If "False", gazebo will be run without any graphics.
 -   `DATA_RECORDING_TYPE`: Selects whether the verbose or mininal data is collected. See the data collection section for more information.
 -   `ROBOT_TO_RUN`: Selects which robot configuration to run.
--   `NUMBER_OF_WEASELBALLS`: Tells the simulator how many weaselballs will be in the simulation (This will soon be phased out since it can be implied from "ROBOT_TO_RUN").
 -   `RANDOMIZE_BALLS`: Randomly rotates the weaselballs
 -   `RANDOMIZE_STRUCTURES`: Randomizes the placement and orientation of the weaselball structures.
 -   `RUN_TRAILS`: Trials are a testing period where the simulator is reset. This allows for a more diverse data collection where the tested can have the weaselballs start off in random orientations and positions.
 -   `NUMBER_OF_TRIALS_CYCLES`: Determines the amount of trials to be performed before turning off the simulator.
 -   `INDIVIDUAL_TRIAL_TIME`: How long (in simulator secconds) we want each trial to run for. The simulator may run faster or slower than real life, so using simulator seconds is more consistant.
 -   `RUNNING_ON_AWS`: Shuts down the computer after finishing.
--   `NUMBER_OF_STRUCTURES`: How many structures the simulator has to keep track of. Currently this shouldn't be changed as multi-weaselball structures are not fully tested in the simulator.
 
 ## Data Collection
 This simulator offers 2 data collections, verbose and minimal. 
