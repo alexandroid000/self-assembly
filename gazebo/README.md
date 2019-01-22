@@ -50,6 +50,20 @@ Data from the simulation will be stored in self-assembly/gazebo/data/collections
 -   `RUNNING_ON_AWS`: Shuts down the computer after finishing.
 -   `NUMBER_OF_STRUCTURES`: How many structures the simulator has to keep track of. Currently this shouldn't be changed as multi-weaselball structures are not fully tested in the simulator.
 
+## Setting up connection with AWS
+I am assuming that you already have an AWS account set up, and now just need to configure everything so that the data gets uploaded to the S3 buckets.
+The only thing that needs to be done is set up `aws configure`. This will look like as follows
+
+aws configure<br/>
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE<br/>
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY<br/>
+Default region name [None]: us-east-2<br/>
+Default output format [None]:<br/>
+
+If you need the Access Key ID or Secret Accesss Key here is a good tutorial on obtaining them - https://www.youtube.com/watch?v=H_YNNcM47Wk
+
+The default region is wherever you chose to have your s3 data stored.
+
 ## Data Collection
 This simulator offers 2 data collections, verbose and minimal. 
 
