@@ -9,7 +9,7 @@
 #include <gazebo-7/gazebo/sensors/SensorManager.hh>
 
 #include "../include/gazebo_log.h"
-
+#include <typeinfo>
 #include <ros/ros.h>
 #include <ros/console.h>
 #include <ctime>
@@ -236,6 +236,7 @@ namespace gazebo
 		{
 			ret.push_back(std::dynamic_pointer_cast<sensors::ContactSensor>(it));
 		}
+        ROS_INFO("Found %d bump sensors", ret.size());
 		return ret;
 	}
 
@@ -288,11 +289,11 @@ namespace gazebo
 	void onCollision()
 	{
 //	std::vector<std::string> railStrings;
-        ROS_DEBUG("Found Collision");
 		msgs::Contacts contacts;
 		for(auto contactSensor : this->bumpSensor)
 		{
-			contacts = contactSensor->Contacts();
+			contacts = contactSensor->GetContacts();
+            ROS_INFO("Contact size = %d, contact sensor size = %d", contacts.contact_size(), bumpSensor.size());
 			for (unsigned int i = 0; i < contacts.contact_size(); ++i)
 			{
 				//If it is a swarmbot or the ground ignore it
@@ -302,13 +303,15 @@ namespace gazebo
 				std::map<std::string, physics::Contact> mapping = contactSensor->Contacts(model1Name);
 				physics::ModelPtr mount;
 				std::string linkNumber;
+                ROS_INFO("Model1 = %s, Model2 = %s", model1Name, model2Name);
 				
 				if(model1Name.find("mount") != std::string::npos and model2Name.find("rail") != std::string::npos)
 				{
+					ROS_INFO("FOO");
+
 					//Check that rail# isn't already counted
 					if (std::find(this->railStrings.begin(), this->railStrings.end(), model2Name) == this->railStrings.end())
 					{
-						ROS_DEBUG("FOO");
 						
 					  // Element not in vector.
 						this->wallCounter += 1;
@@ -321,10 +324,10 @@ namespace gazebo
 				}
 				else if(model1Name.find("rail") != std::string::npos and model2Name.find("mount") != std::string::npos)
 				{
+					ROS_INFO("BAR");
 					//Check that rail# isn't already counted
 					if (std::find(this->railStrings.begin(), this->railStrings.end(), model1Name) == this->railStrings.end())
 					{
-						ROS_DEBUG("BAR");
 					  // Element not in vector.
 						this->wallCounter += 1;
 						this->railStrings.push_back(model1Name);
