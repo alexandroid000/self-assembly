@@ -88,9 +88,9 @@ Deliverables
 
 ### Predictive
 
-- show evolution of location distribution from specific initial conditions
+- show evolution of location distribution from specific initial conditions (forward simulation)
 - given environment and agent type, return long-term distribution of:
-    - times between collisions
+    - expected times between collisions
 
 ### Estimation
 
@@ -100,12 +100,20 @@ Deliverables
 
 ### Control
 
-- feedback controller based on collision frequency
+- feedback controller based on (global?) collision frequency
     - attach until collision frequency drops below threshold
     - control equilibrium # (and type?) of agents
+- local attachment rules based on color (graph grammars)
 
 Misc
 ----
+
+### Experiments
+
+- asymmetric gear (made of cardboard?) in active single-agent bath
+- two parallel cardboard plates in an active single-agent bath
+- wedge in single-agent bath (see if clustering occurs in corner of wedge, what
+  is dependence on angle?)
 
 ### Other possible modelling / control variables:
 
