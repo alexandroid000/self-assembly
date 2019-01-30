@@ -47,13 +47,14 @@ echo
 read -n1 -p "Do you need to install the additional dependencies for this repo? Enter (y) or (n)" doit
 echo
 if [[ $doit == "Y" || $doit == "y" ]]; then
-       
-	echo "deb http://ppa.launchpad.net/gwu-positronics/ravelin/ubuntu trusty main" | sudo tee -a /etc/apt/sources.list
+
+        echo "deb http://ppa.launchpad.net/gwu-positronics/ravelin/ubuntu trusty main" | sudo tee -a /etc/apt/sources.list
         echo "deb-src http://ppa.launchpad.net/gwu-positronics/ravelin/ubuntu trusty main" | sudo tee -a /etc/apt/sources.list
-	sudo apt-get update
-	sudo apt-get install ravelin
-	pip install awscli
-	echo "\nexport PYTHONPATH=$PYTHONPATH:/home/justin/Documents/bouncy/self-assembly/dataAnalysis/src\n" >> ~/.bashrc 
+        sudo apt-get update
+        sudo apt-get install ravelin
+        sudo apt-get install python-setuptools
+        sudo apt install python-pip
+        pip install awscli
 fi
-source ~/.bashrc
-echo "Done!"
+echo "Done! Please 'source ~/.bashrc' in your terminal"
+
