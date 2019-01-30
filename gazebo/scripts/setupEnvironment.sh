@@ -10,6 +10,13 @@ source Robot_Config.txt
 
 FILE=$WORKSPACE_PATH/src/weaselball_gazebo/include/common.h
 
+#Get longest weaselball structure (Or in this case number of weaselballs)
+case $ROBOT_TO_RUN in
+    1) NUMBER_OF_WEASELBALLS=1 ;;
+    2) NUMBER_OF_WEASELBALLS=2 ;;
+    3|4|5) NUMBER_OF_WEASELBALLS=3 ;;
+    6|7|8|9|10) NUMBER_OF_WEASELBALLS=4 ;;
+esac
 
 #____________ECHO_TO_COMMON_H________
 
@@ -64,13 +71,13 @@ static const bool RUN_TRIALS= $RUN_TRIALS;
 static const int NUMBER_OF_TRIALS_CYCLES= $NUMBER_OF_TRIALS_CYCLES;
 static const int INDIVIDUAL_TRIAL_TIME= $INDIVIDUAL_TRIAL_TIME;
 static const bool RANDOMIZE_BALLS= $RANDOMIZE_BALLS;
-static const int NUMBER_OF_WEASELBALLS= $NUMBER_OF_WEASELBALLS;
-static const int NUMBER_OF_STRUCTURES= $NUMBER_OF_STRUCTURES;
 static const string NAME_OF_WEASELBALLS= \"swarmbot\";
 static const string NAME_OF_MOUNTS= \"mount\";
 static const string SHELL_STRING= \"shell\";
+static const int ROBOT_TO_RUN= $ROBOT_TO_RUN;
 static const int LONGEST_WEASELBALL_SEQUENCE= $NUMBER_OF_WEASELBALLS;
 static const double DIAMETER_OF_WEASELBALLS= 0.108;
+static const int NUMBER_OF_STRUCTURES= 1; //I am keeping this as constant for now since we only want one robot running at a time.
 static const int RECORDING_TYPE= $DATA_RECORDING_TYPE;
 static const string COLLECTION_PATH= \"$WORKSPACE_PATH/data/collections/\";" >> $FILE
                       

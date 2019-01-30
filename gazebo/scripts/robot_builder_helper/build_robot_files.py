@@ -24,7 +24,7 @@ rm *.csv
 
 
 touch testUpload
-echo $(date) >> testUpload 
+echo $(date) >> testUpload
 sh ./upload.sh s3://weaselball-data/''' + str(robotID) + '''
 
 cd $cwd
@@ -72,11 +72,11 @@ def create_x_launch(nodeMatrix,node_positions, ID, GUI):
 <arg name="init_pose" value="-x ''' + str(position[0])+ ''' -y ''' + str(position[1]) +''' -z 0.03 -R 1.1 -P 1.2 -Y 1.3"/>
 </include>
 </group>
-	
-''' 
+
+'''
 		s2_list.append(s_temp)
 	s2 = ''.join(s2_list)
-	
+
 	#Create the weaselball structure
 	s3 = '''<group ns="mount0">
 <include file="$(find weaselball_gazebo)/launch/include/one_''' + str(ID) + '''_mount.launch">
@@ -86,10 +86,10 @@ def create_x_launch(nodeMatrix,node_positions, ID, GUI):
 </group>
 
 </launch>
-'''	
+'''
 	f.write(s1 + s2 + s3)
-	
-	
+
+
 
 def create_one_x_mount(nodeMatrix, ID):
 	f = open('one_'+str(ID)+'_mount.launch', 'w+')
@@ -112,7 +112,7 @@ def create_x_model_sdf(nodeMatrix, node_positions, ID):
 	s2_list = []
 	for i, position in enumerate(node_positions):
 		s_temp = """      <link name='mountlink_""" + str(i) + """'>
-        <collision name='coll'>
+        <collision name='coll""" + str(i) + """'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
@@ -120,12 +120,6 @@ def create_x_model_sdf(nodeMatrix, node_positions, ID):
             </mesh>
           </geometry>
         </collision>
-	   <sensor name='contactSensor' type='contact'>
-	   <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
-	      <contact>
-		    <collision>coll""" + str(i) + """</collision>
-	      </contact>
-	   </sensor>
         <inertial>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <inertia>
@@ -146,12 +140,18 @@ def create_x_model_sdf(nodeMatrix, node_positions, ID):
             </mesh>
           </geometry>
         </visual>
+		   <sensor name='contactSensor' type='contact'>
+		   <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
+		      <contact>
+			    <collision>coll""" + str(i) + """</collision>
+		      </contact>
+		   </sensor>
 		<pose frame=''>""" + str(position[0]) + """ """ +str(position[1]) + """ 0 0 -0 0</pose>
       </link>
 """
 		s2_list.append(s_temp)
 	s2 = ''.join(s2_list)
-	
+
 	s3_list = []
 	joint_positions = []
 	#Find all joint pairs
@@ -192,7 +192,7 @@ def create_x_model_sdf(nodeMatrix, node_positions, ID):
 
 
 
-		
+
 
 def create_x_model_config(nodeMatrix, ID):
 	f = open('model.config', 'w+')
@@ -217,7 +217,7 @@ def set_node_positions(nodeMatrix):
 			if(nodeMatrix.Matrix[x][y] == 1):
 				node_position_l.append(((x-int(MAX_ROBOT_SIZE/2))*mount_diameter, ((y-int(MAX_ROBOT_SIZE/2))*mount_diameter)))
 	return node_position_l
-				
+
 
 def create_nodes(robot_ID):
 	#This will need to be done by hand for now until an algorithm can be made to do it
@@ -227,67 +227,67 @@ def create_nodes(robot_ID):
 	mid_y = int(MAX_ROBOT_SIZE / 2)
 	if(robot_ID == 1):
 		#1
-		nodeMatrix.Matrix[mid_x][mid_y] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y] = 1
 	elif(robot_ID == 2):
 		#2
-		nodeMatrix.Matrix[mid_x][mid_y] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+1] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+1] = 1
 	elif(robot_ID == 3):
 		#3_straight
-		nodeMatrix.Matrix[mid_x][mid_y] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+1] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+2] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+1] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+2] = 1
 	elif(robot_ID == 4):
 		#3_L
-		nodeMatrix.Matrix[mid_x][mid_y] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+1] = 1	
-		nodeMatrix.Matrix[mid_x-1][mid_y] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+1] = 1
+		nodeMatrix.Matrix[mid_x-1][mid_y] = 1
 	elif(robot_ID == 5):
 		#3_backwords_L
-		nodeMatrix.Matrix[mid_x][mid_y] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+1] = 1	
-		nodeMatrix.Matrix[mid_x+1][mid_y] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+1] = 1
+		nodeMatrix.Matrix[mid_x+1][mid_y] = 1
 	elif(robot_ID == 6):
 		#4_straight
-		nodeMatrix.Matrix[mid_x][mid_y] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+1] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+2] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y-1] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+1] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+2] = 1
+		nodeMatrix.Matrix[mid_x][mid_y-1] = 1
 	elif(robot_ID == 7):
 		#4_L
-		nodeMatrix.Matrix[mid_x][mid_y] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+1] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+2] = 1	
-		nodeMatrix.Matrix[mid_x+1][mid_y] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+1] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+2] = 1
+		nodeMatrix.Matrix[mid_x+1][mid_y] = 1
 	elif(robot_ID == 8):
 		#4_backwords_L
-		nodeMatrix.Matrix[mid_x][mid_y] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+1] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+2] = 1	
-		nodeMatrix.Matrix[mid_x-1][mid_y] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+1] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+2] = 1
+		nodeMatrix.Matrix[mid_x-1][mid_y] = 1
 	elif(robot_ID == 9):
 		#4_T
-		nodeMatrix.Matrix[mid_x][mid_y] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+1] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+2] = 1	
-		nodeMatrix.Matrix[mid_x+1][mid_y+1] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+1] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+2] = 1
+		nodeMatrix.Matrix[mid_x+1][mid_y+1] = 1
 	elif(robot_ID == 10):
 		#4_square
-		nodeMatrix.Matrix[mid_x][mid_y] = 1	
-		nodeMatrix.Matrix[mid_x][mid_y+1] = 1	
-		nodeMatrix.Matrix[mid_x+1][mid_y+1] = 1	
-		nodeMatrix.Matrix[mid_x+1][mid_y] = 1	
+		nodeMatrix.Matrix[mid_x][mid_y] = 1
+		nodeMatrix.Matrix[mid_x][mid_y+1] = 1
+		nodeMatrix.Matrix[mid_x+1][mid_y+1] = 1
+		nodeMatrix.Matrix[mid_x+1][mid_y] = 1
 	else:
 		print("[Error] Can not create the robot of this ID right now!")
 	return nodeMatrix
 
-	
-		
+
+
 
 #For the sake of parsing here are the ID to Robot conversions
 # 1 = 1, 2 = 2, 3 = 3_straight, 4 = 3_L, 5 = 3_backwords_L, 6 = 4_straight, 7 = 4_L, 8 = 4_backwords_L, 9 = 4_T , 10 =4_square
 if __name__ == "__main__":
-	#Parse the input for the ID of the robot 
+	#Parse the input for the ID of the robot
 	if(len(sys.argv) == 1 or len(sys.argv) == 2):
 		print("[ERROR] Please enter a robot to build")
 		print(sys.argv)

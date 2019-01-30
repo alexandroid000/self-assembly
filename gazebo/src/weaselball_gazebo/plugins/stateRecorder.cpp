@@ -9,7 +9,7 @@
 #include <gazebo-7/gazebo/sensors/SensorManager.hh>
 
 #include "../include/gazebo_log.h"
-
+#include <typeinfo>
 #include <ros/ros.h>
 #include <ros/console.h>
 #include <ctime>
@@ -23,7 +23,8 @@
 #include <math.h>
 
 #include <tuple>
-#include "../include/common.h"
+#include "../include/common.h" //Used for static const global variables
+#include "../include/helper.h" //is_in
 
 //This data structures is used to store information about the weaselballs/mount. 
 namespace gazebo
@@ -205,7 +206,20 @@ namespace gazebo
 	
 	bool checkAllModelsInit(std::vector<physics::ModelPtr> weaselballs, std::vector<physics::ModelPtr> structure)
 	{
-		return ((weaselballs.size() == NUMBER_OF_WEASELBALLS and structure.size() == NUMBER_OF_STRUCTURES) ? 1 : 0);
+
+        int number_of_weaselballs = 0; //We will infer the number of weaselballs from the inputted structure instead of asking the user to ask for it.
+        if(is_in(ROBOT_TO_RUN,{1}))
+            number_of_weaselballs = 1;
+        else if (is_in(ROBOT_TO_RUN,{2}))
+            number_of_weaselballs = 2;
+        else if (is_in(ROBOT_TO_RUN,{3,4,5}))
+            number_of_weaselballs = 3;
+        else if (is_in(ROBOT_TO_RUN,{6,7,8,9,10}))
+            number_of_weaselballs = 4;
+        else
+            ROS_ERROR("[stateRecorder.cpp/checkAllModels] Robot to run should be in the range of 1 to 10");
+        ROS_INFO("Number of weaselballs is %d", number_of_weaselballs);
+		return ((weaselballs.size() == number_of_weaselballs and structure.size() == NUMBER_OF_STRUCTURES) ? 1 : 0);
 	}
 
 	void worldReset()
@@ -222,6 +236,7 @@ namespace gazebo
 		{
 			ret.push_back(std::dynamic_pointer_cast<sensors::ContactSensor>(it));
 		}
+        ROS_INFO("Found %d bump sensors", ret.size());
 		return ret;
 	}
 
@@ -277,7 +292,8 @@ namespace gazebo
 		msgs::Contacts contacts;
 		for(auto contactSensor : this->bumpSensor)
 		{
-			contacts = contactSensor->Contacts();
+			contacts = contactSensor->GetContacts();
+            ROS_INFO("Contact size = %d, contact sensor size = %d", contacts.contact_size(), bumpSensor.size());
 			for (unsigned int i = 0; i < contacts.contact_size(); ++i)
 			{
 				//If it is a swarmbot or the ground ignore it
@@ -287,13 +303,15 @@ namespace gazebo
 				std::map<std::string, physics::Contact> mapping = contactSensor->Contacts(model1Name);
 				physics::ModelPtr mount;
 				std::string linkNumber;
+                ROS_INFO("Model1 = %s, Model2 = %s", model1Name, model2Name);
 				
 				if(model1Name.find("mount") != std::string::npos and model2Name.find("rail") != std::string::npos)
 				{
+					ROS_INFO("FOO");
+
 					//Check that rail# isn't already counted
 					if (std::find(this->railStrings.begin(), this->railStrings.end(), model2Name) == this->railStrings.end())
 					{
-						ROS_DEBUG("FOO");
 						
 					  // Element not in vector.
 						this->wallCounter += 1;
@@ -306,10 +324,10 @@ namespace gazebo
 				}
 				else if(model1Name.find("rail") != std::string::npos and model2Name.find("mount") != std::string::npos)
 				{
+					ROS_INFO("BAR");
 					//Check that rail# isn't already counted
 					if (std::find(this->railStrings.begin(), this->railStrings.end(), model1Name) == this->railStrings.end())
 					{
-						ROS_DEBUG("BAR");
 					  // Element not in vector.
 						this->wallCounter += 1;
 						this->railStrings.push_back(model1Name);
@@ -353,6 +371,9 @@ namespace gazebo
 			}
 			else
 			{
+                ROS_WARN("Waiting for all models and Sensors to spawn");
+                ROS_WARN("Models init = %d", checkAllModelsInit(weaselballs, structures));
+                ROS_WARN("Bump Sensor init = %d", bumpSensor.size());
 				return;
 			}
 		}
