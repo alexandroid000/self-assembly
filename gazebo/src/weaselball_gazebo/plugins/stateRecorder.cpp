@@ -19,7 +19,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <string>
 #include <math.h>
 
 #include <tuple>
@@ -48,6 +47,7 @@ namespace gazebo
 		common::Time timeStamp;
 
 		int numberOfWalls;
+        std::vector<std::string> wallIDs;
 
 
 	};
@@ -138,6 +138,23 @@ namespace gazebo
 			this->collectionFile << this->resetCounter << ",";
 			this->collectionFile << checkCorrectness() << ",";
 			this->collectionFile << data.numberOfWalls << ",";
+            for (auto i = data.wallIDs.begin(); i != data.wallIDs.end(); ++i)
+            {
+                std::string tempstring = (*i);
+                std::string railNumber = tempstring.substr(tempstring.find("rail") + 4, 2); //Get the id of the rail        
+                int railNumberInt = std::stoi(railNumber);
+                this->collectionFile << railNumberInt;
+                //If it isn't the last element in the vecotr, add an &
+                if (std::next(i) != data.wallIDs.end())
+                {
+                    this->collectionFile << "&";
+                }
+                //Otherwise put a comma to signify the wallIds have ended
+                else
+                {
+                    this->collectionFile << ",";
+                }
+            }
 			this->collectionFile << "\n";
 		}
 	}
@@ -180,7 +197,6 @@ namespace gazebo
 			if(!valid)
 			{
 				ROS_INFO("Balls not in hub!");
-				std::cout << "FLAGA" << std::endl;
 				break;
 			}
 
@@ -188,7 +204,6 @@ namespace gazebo
 			if(ballPose[0] < ENCLOSURE_MIN_X || ballPose[0] > ENCLOSURE_MAX_X || ballPose[1] < ENCLOSURE_MIN_Y || ballPose[1] > ENCLOSURE_MAX_Y)	
 			{
 				ROS_INFO("Balls not in enclosure!");
-				std::cout << "FLAGB" << std::endl;
 				valid = 0;
 				break;
 			}	
@@ -278,7 +293,7 @@ namespace gazebo
 	  }
 		else if(RECORDING_TYPE == 1)
 		{
-			this->collectionFile << "Time,ID,X,Y,Yaw,ResetID,checkCorrectness,NumberOfWalls\n";
+			this->collectionFile << "Time,ID,X,Y,Yaw,ResetID,checkCorrectness,NumberOfWalls,WallId(s)\n";
 
 		}
 
@@ -288,26 +303,22 @@ namespace gazebo
     }
 	void onCollision()
 	{
-//	std::vector<std::string> railStrings;
 		msgs::Contacts contacts;
 		for(auto contactSensor : this->bumpSensor)
 		{
 			contacts = contactSensor->GetContacts();
-            ROS_INFO("Contact size = %d, contact sensor size = %d", contacts.contact_size(), bumpSensor.size());
 			for (unsigned int i = 0; i < contacts.contact_size(); ++i)
 			{
-				//If it is a swarmbot or the ground ignore it
+				//If it is a weaselball or the ground ignore it
 				std::string model1Name = contacts.contact(i).collision1();
 				std::string model2Name = contacts.contact(i).collision2();
 
 				std::map<std::string, physics::Contact> mapping = contactSensor->Contacts(model1Name);
 				physics::ModelPtr mount;
 				std::string linkNumber;
-                ROS_INFO("Model1 = %s, Model2 = %s", model1Name, model2Name);
 				
 				if(model1Name.find("mount") != std::string::npos and model2Name.find("rail") != std::string::npos)
 				{
-					ROS_INFO("FOO");
 
 					//Check that rail# isn't already counted
 					if (std::find(this->railStrings.begin(), this->railStrings.end(), model2Name) == this->railStrings.end())
@@ -319,7 +330,6 @@ namespace gazebo
 					}
 					else
 					{
-//						std::cout << "Already counted " << model2Name << std::endl;
 					}
 				}
 				else if(model1Name.find("rail") != std::string::npos and model2Name.find("mount") != std::string::npos)
@@ -334,7 +344,6 @@ namespace gazebo
 					}
 					else
 					{
-//						std::cout << "Already counted " << model1Name << std::endl;
 
 					}
 				}
@@ -389,6 +398,7 @@ namespace gazebo
 				getMountRotation(mount, &data);
 			    getSimTime(&data);
 				getNumberOfWalls(&data);
+                getRailStrings(&data);
 
 			}
 			for (auto weaselball : this->weaselballs)
@@ -423,6 +433,7 @@ namespace gazebo
 				getMountRotation(mount, &data);
 			    getSimTime(&data);
 				getNumberOfWalls(&data);
+                getRailStrings(&data);
 
 				writeDataToCSV(data,0); //I will worry about creating IDs for substructures later...
 				collection.push_back(data);	 
@@ -516,8 +527,15 @@ namespace gazebo
 	{
 		data->numberOfWalls = this->wallCounter;
 		this->wallCounter = 0;
-		this->railStrings.clear();
 	}
+
+    void getRailStrings(weaselballData* data)
+    {
+        //Do a deep copy.
+        data->wallIDs = this->railStrings;       
+		this->railStrings.clear();
+    }
+
   };
 
   GZ_REGISTER_WORLD_PLUGIN( StateCollector )
