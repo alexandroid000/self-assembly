@@ -149,11 +149,6 @@ namespace gazebo
                 {
                     this->collectionFile << "&";
                 }
-                //Otherwise put a comma to signify the wallIds have ended
-                else
-                {
-                    this->collectionFile << ",";
-                }
             }
 			this->collectionFile << "\n";
 		}
