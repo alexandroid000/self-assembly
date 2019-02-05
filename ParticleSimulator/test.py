@@ -14,6 +14,7 @@ import matplotlib.animation as animation
 L = 2.0
 N = 1000
 T = 100
+simname = "box_L"+str(L)+"_N"+str(N)+"_T"+str(T)
 
 system = System()
 # Define square cell
@@ -41,10 +42,10 @@ class WBallBackend(object):
 
 # to log data while simulation is running, we create a callback function which
 # copies state to a dictionary
-pos_db = {}
+pos_db = [[]]*T
 def cbk(sim, db):
     xys = [copy(p.position) for p in sim.system.particle]
-    db[sim.current_step] = xys
+    pos_db[sim.current_step] = xys
 
 # initialize simulation
 backend = WBallBackend(system)
@@ -53,20 +54,17 @@ simulation = Simulation(backend)
 simulation.add(cbk, 1, db=pos_db)
 
 # run simulation for T steps
-simulation.run(T)
-
-time = sorted(pos_db.keys())
-pos = [(t, pos_db[t]) for t in time]
+simulation.run(T-1)
 
 # write data to file
-with open('test.xyz','w') as th:
+with open(simname+'.xyz','w') as th:
     for i in range(T):
-        xys = pos[i][1]
+        xys = pos_db[i]
         for [x,y] in xys:
             th.write(str(x)+" "+str(y)+" ")
         th.write("\n")
 
-
+# 
 class Data:
 
     def __init__(self, db, start=0):
@@ -77,15 +75,14 @@ class Data:
         return self
 
     def clean_system(self, xys):
-        pos = np.array(xys)
-        return np.transpose(pos)
+        return np.transpose(np.array(xys))
 
     def __next__(self):
-        xys = self.db[self.num][1]
+        xys = self.db[self.num]
         self.num += 1
         return self.clean_system(xys)
 
-d = Data(pos)
+d = Data(pos_db)
 
 fig = plt.figure()
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
@@ -133,4 +130,4 @@ ani = animation.FuncAnimation(fig, animate, frames=T,
 # the video can be embedded in html5.  You may need to adjust this for
 # your system: for more information, see
 # http://matplotlib.sourceforge.net/api/animation_api.html
-ani.save('particle_box.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
+ani.save(simname+'.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
