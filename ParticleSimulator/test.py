@@ -12,25 +12,19 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 L = 2.0
-N = 10
+N = 1000
+T = 100
 
 system = System()
-
 # Define square cell
 cell = Cell(side=[L,L])
 
+# create N particles at random locations in the box
 for i in range(N):
     x,y = L*random(), L*random()
-    system.particle.append(Particle(position=[x,y]))
+    system.particle.append(Particle(position=[x,y], radius = None, species= 'A'))
 
-particle = Particle(position=[1.0, 0.0, 0.0], velocity=[1.0, 0.0, 0.0])
-print(particle)
-particle.species = 'Na'
-particle.position += np.array([0.0, 1.0, 1.0])
-particle.velocity *= 2
-particle.radius = None  # point particles have no radius
-print(particle)
-
+# weaselball simulation backend
 class WBallBackend(object):
 
     def __init__(self, system, delta=1.0):
@@ -39,31 +33,32 @@ class WBallBackend(object):
 
     def run(self, steps):
         for i in range(steps):
-            print(self.system.particle[0].position)
             for p in self.system.particle:
                 dr = np.array([random()-0.5, random()-0.5])
                 dr *= self.delta
                 p.position += dr
 
 
-# We store the result in a dictionary passed to the callback
+# to log data while simulation is running, we create a callback function which
+# copies state to a dictionary
 pos_db = {}
 def cbk(sim, db):
     xys = [copy(p.position) for p in sim.system.particle]
     db[sim.current_step] = xys
 
+# initialize simulation
 backend = WBallBackend(system)
 simulation = Simulation(backend)
-
 # We will execute the callback every step
 simulation.add(cbk, 1, db=pos_db)
 
-T = 50
+# run simulation for T steps
 simulation.run(T)
 
 time = sorted(pos_db.keys())
 pos = [(t, pos_db[t]) for t in time]
 
+# write data to file
 with open('test.xyz','w') as th:
     for i in range(T):
         xys = pos[i][1]
@@ -129,7 +124,7 @@ def animate(i):
     particles.set_markersize(ms)
     return particles, rect
 
-ani = animation.FuncAnimation(fig, animate, frames=50,
+ani = animation.FuncAnimation(fig, animate, frames=T,
                               interval=10, blit=True, init_func=init)
 
 
