@@ -3,7 +3,6 @@ Call with 'python flannMatcher.py objectImage.png sceneImage.png'
 Where objectImage.png and sceneImage.png are in the SamplePictures folder
 
 Current to-dos:
-- With ball location, calculate distance to other balls
 - Use general minimum/maximum distance from 4B-ML-1 to establish guidelines for connected shapes. I.e. if it hits close to min, they are definitely connected.
 - For connected shapes, create fully-connected graph with distinct vertices and thick lines.
 - Use homography transform on all templates with that number of connected shapes. Calculate back-projection error for each shape and compare.

@@ -4,7 +4,7 @@ import tracking as tb
 #import winding_numbers as wn
 import os
 import argparse
-import magic
+# import magic
 import multiprocessing as mp
 import tqdm
 
@@ -54,18 +54,19 @@ def main():
     #generate work list
     video_queue = []
 
-    if(args.batch_mode == True):
-        for folder in args.locs:
-            for file in os.listdir(folder):
-                with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:
-                    name = str('./'+ folder + '/' + file)
-                    file_type = (m.id_filename(name))
-                    if(file_type[0:5] == "video"):
-                        video_queue.append(name)
-                        if(args.verbose):
-                            print('Adding file ' + name)
+    # if(args.batch_mode == True):
+    #     for folder in args.locs:
+    #         for file in os.listdir(folder):
+    #             with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:
+    #                 name = str('./'+ folder + '/' + file)
+    #                 file_type = (m.id_filename(name))
+    #                 if(file_type[0:5] == "video"):
+    #                     video_queue.append(name)
+    #                     if(args.verbose):
+    #                         print('Adding file ' + name)
 
-    else:
+    # else:
+    if(True):
         for file in args.locs:
             video_queue.append(file)
 

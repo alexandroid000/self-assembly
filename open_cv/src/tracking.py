@@ -44,7 +44,8 @@ def track(parameters):
     cap = cv2.VideoCapture(in_vid)
     fps = cap.get(cv2.CAP_PROP_FPS)
     capSize = (int(cap.get(3)), int(cap.get(4)))
-    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    #total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    total_frames = 100
     vout = cv2.VideoWriter()
 
     #current forced off due to codec limitations
@@ -94,8 +95,8 @@ def track(parameters):
     frame_count = 0
     while(cap.isOpened() and frame_count < total_frames):
         frame_count = frame_count+1
-
         success, frame = cap.read()
+
         if success: #have a frame
             circles = get_circles(frame, background)
 

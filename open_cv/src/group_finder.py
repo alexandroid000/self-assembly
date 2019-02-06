@@ -18,13 +18,13 @@ import numpy as np
 import math
 from os.path import join
 import re
+import matplotlib.pyplot as plt
 
 
 # Global Constants
-UNIT_DIM           = 15  # Dimension of unit hub in pixels
+UNIT_CONNECT_DIST  = 15  # Dimension of unit hub in pixels
 SPACE_DIM_X        = 600 # Dimension of space width in pixels
 SPACE_DIM_Y        = 470 # Dimension of space height in pixels
-DIST_DEVIATION     = 5   # Tolerance for unit distance to be considered "connected"
 
 
 '''
@@ -55,7 +55,7 @@ def groupFinder(locationList):
 
                 # If unit is within distance of group member, append
                 dist = distance(unit, unit_other)
-                if (dist < UNIT_DIM + DIST_DEVIATION) and (dist > UNIT_DIM - DIST_DEVIATION):
+                if (dist < UNIT_CONNECT_DIST):
                     group.append(unit)
                     unit_added = True
                     break
@@ -272,25 +272,90 @@ if __name__ == '__main__':
 
     # Parse position data
     f = open(sys.argv[1])
+    timer = -1
     for line in f:
+        timer += 1
+        if timer == 140:
+                break
         numbers = re.findall('\d+', line)
         positions = []
         for xandy in range(math.floor(len(numbers)/2)):
-            positions.append([int(numbers[xandy]), int(numbers[xandy+1])])
-        # print("Positions: ", positions)
+            positions.append([int(numbers[2*xandy]), int(numbers[2*xandy+1])])
+        print("Positions: ", positions)
+
+        # set up the figure for all
+        if (timer%2 == 0) and (timer < 80): #29 fps
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+            ax.set_xlim(0,640)
+            ax.set_ylim(0,480)
+
+            # draw lines
+            xmin = 0
+            xmax = 640
+            ymin = 0
+            ymax = 480
+            plt.hlines((ymin,ymax), xmin, xmax)
+            plt.vlines((xmin,xmax), ymin, ymax)
+
+            # draw units
+            for unit in positions:
+                plt.plot(unit[0], ymax-unit[1], 'ko', ms = 10, mfc = 'k')
+
+
+            plt.axis('off')
+            figname = 'group'+str(timer)+'.png'
+            plt.savefig(figname)
+
+        # Calculate distances
+        for i in range(len(positions)):
+            for j in range(i+1, len(positions)):
+                print(distance(positions[i], positions[j]))
 
         # Find groups
         groupLists = groupFinder(positions)
         # print("Groups: ", groupLists)
         
-        # Perform matrix transformation to align with cartesian coordinates
+        # Place all on different pics
         for idx in range(len(groupLists)):
-            center = centerpointFinder(groupLists[idx])
-            print("Center: ", center)
-            if(len(groupLists[idx]) > 1):
-                print("Cart transform on: ", groupLists[idx])
-                groupLists[idx] = cartTransform(groupLists[idx])
-                print("Post-transform: ", groupLists[idx])
+
+            if timer == 141:
+
+                # set up the figure
+                fig = plt.figure()
+                ax = fig.add_subplot(111)
+                ax.set_xlim(0,640)
+                ax.set_ylim(0,480)
+
+                # draw lines
+                xmin = 0
+                xmax = 640
+                ymin = 0
+                ymax = 480
+                plt.hlines((ymin,ymax), xmin, xmax)
+                plt.vlines((xmin,xmax), ymin, ymax)
+
+                # draw units
+                for unit in groupLists[idx]:
+                    plt.plot(unit[0], unit[1], 'ko', ms = 10, mfc = 'k')
+
+
+                plt.axis('off')
+                figname = 'group'+str(idx+1)+".png"
+                plt.savefig(figname)
+
+
+
+
+
+
+
+            # center = centerpointFinder(groupLists[idx])
+            # # print("Center: ", center)
+            # if(len(groupLists[idx]) > 1):
+            #     # print("Cart transform on: ", groupLists[idx])
+            #     groupLists[idx] = cartTransform(groupLists[idx])
+            #     # print("Post-transform: ", groupLists[idx])
 
             
     # # Find labels
