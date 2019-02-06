@@ -68,10 +68,12 @@ def track(parameters):
 
     #find background image (if not supplied)
     if (parameters[4] is not ""):
-        if(verbose):
+        if(verbose is True):
             print("Loading background")
         try:
-            background = cv2.imread(parameters[4])
+            background = cv2.imread(parameters[4], cv2.IMREAD_COLOR)
+            if(verbose is True):
+                print("Loaded")
         except:
             print("Error loading background")
             print(e)
@@ -82,7 +84,8 @@ def track(parameters):
     #initial ball sizes
     min_ball_size = 10
     max_ball_size = 20
-
+    if (verbose is True):
+        print("Finding number of balls")
     num_ball, avg_r = find_ball_count(cap, background)
     if(verbose is True):
         print("Found number of balls: "+ str(num_ball))
@@ -177,11 +180,11 @@ def find_ball_count(cap, background):
             ff = np.uint8((cv2.GaussianBlur(abs(frame-background), (3,3), 2))) #remove background and remove high frequency noise
             
             ff = cv2.cvtColor(ff, cv2.COLOR_BGR2GRAY) #HoughCircles requires greyscale image
+            
             #detect all circles in frame
             circles = cv2.HoughCircles(ff, cv2.HOUGH_GRADIENT, 2, 17,param1=80,param2=25, minRadius = min_ball_size, maxRadius = max_ball_size)
             if circles is not None:
                 circles = np.round(circles[0,:]).astype("int")
-
                 if len(circles) == num_ball:
                     bd = bd+1
                 else:
