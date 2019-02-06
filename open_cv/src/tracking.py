@@ -145,7 +145,7 @@ def track(parameters):
         if(parameters[2] == False):
             update_progress(frame_count/total_frames)
 
-    
+    traj.reverse()
     #write data to text file
     while len(ball_data[0]):
         text = ""
@@ -178,7 +178,7 @@ def find_ball_count(cap, background):
         if success: #have a frame
             #Frame preprocessing
             ff = np.uint8((cv2.GaussianBlur(abs(frame-background), (3,3), 2))) #remove background and remove high frequency noise
-            
+
             ff = cv2.cvtColor(ff, cv2.COLOR_BGR2GRAY) #HoughCircles requires greyscale image
             
             #detect all circles in frame
