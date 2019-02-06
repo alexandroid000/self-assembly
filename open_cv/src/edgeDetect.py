@@ -13,41 +13,62 @@ def main():
             
     
     origname = "../SamplePictures/" + str(sys.argv[1])
-    brightimage = "../SamplePictures/Bright_" + str(sys.argv[1])
-    bimage = "../SamplePictures/Blur_" + str(sys.argv[1])
-    iname = "../SamplePictures/Edges_" + str(sys.argv[1])
-    binaryimage = "../SamplePictures/Binary_" + str(sys.argv[1])
+    brightname = "../SamplePictures/Bright_" + str(sys.argv[1])
+    blurname = "../SamplePictures/Blur_" + str(sys.argv[1])
+    edgename = "../SamplePictures/Edges_" + str(sys.argv[1])
     
-    rawImage = cv.imread(origname)
+    binaryname = "../SamplePictures/Binary_" + str(sys.argv[1])
+    binaryadaptivename = "../SamplePictures/BinaryAdaptive_" + str(sys.argv[1])
+    
+    origImage = cv.imread(origname)
+    grayImage = cv.cvtColor(origImage,cv.COLOR_BGR2GRAY)
+    
 
-    alpha = 1
-    gamma = 0
-    rawImage = cv.addWeighted(rawImage, alpha, rawImage, 0, gamma)
+    alpha = 0.8 # Higher = more contrast
+    gamma = 0 # Higher = brighter (little-to-no impact)
+    blurNeighbors = 7 # Higher = larger neighborhood
+    sigmaColor = 75 # Higher = color influence range (little-to-no impact)
+    sigmaSpace = 75 # Higher = distance influence range
+    binarythresh = 120 # Higher = darker binary scene
 
-    bilateral_filtered_image = cv.bilateralFilter(rawImage, 7, 200, 20)#(d, sc, ss)
+    brightImage = cv.addWeighted(grayImage, alpha, grayImage, 0, gamma)
+    cv.imwrite(brightname, brightImage)
+
+    blurImage = cv.bilateralFilter(brightImage, blurNeighbors, sigmaColor, sigmaSpace)#(d, sc, ss)
+    cv.imwrite(blurname, blurImage)
     # d = diameter of pixel neighborhood, default = 9
     # sc = Sigma color, larger means more distant colors in neighborhood are mixed, default = 75
     # ss = Sigma space, larger means farther pixels with close colors will influence each other, default = 75
-    cv.imwrite(bimage, bilateral_filtered_image)
-    edge_detected_image = cv.Canny(bilateral_filtered_image, 0, 80)#(l,u)
+    
+    edgeImage = cv.Canny(blurImage, 0, 80)#(l,u)
+    # cv.imwrite(edgename, edgeImage)
     # u = upper threshold, pixel accepted as edge
     # l = lower threshold, pixel rejected as edge (between is accepted if next to accepted pixel)
     
-    cv.imwrite(iname,edge_detected_image)
+    retval, binaryImage = cv.threshold(blurImage, binarythresh, 255, cv.THRESH_BINARY)
+    cv.imwrite(binaryname, binaryImage)
+    
 
-    binimage = cv.threshold(origimage)
-ret,thresh1 = cv.threshold(img,127,255,cv.THRESH_BINARY)
-ret,thresh2 = cv.threshold(img,127,255,cv.THRESH_BINARY_INV)
-ret,thresh3 = cv.threshold(img,127,255,cv.THRESH_TRUNC)
-ret,thresh4 = cv.threshold(img,127,255,cv.THRESH_TOZERO)
-ret,thresh5 = cv.threshold(img,127,255,cv.THRESH_TOZERO_INV)
-titles = ['Original Image','BINARY','BINARY_INV','TRUNC','TOZERO','TOZERO_INV']
-images = [img, thresh1, thresh2, thresh3, thresh4, thresh5]
-for i in xrange(6):
-    plt.subplot(2,3,i+1),plt.imshow(images[i],'gray')
-    plt.title(titles[i])
-    plt.xticks([]),plt.yticks([])
-plt.show()
+   
+    alpha = 0.8 # Higher = more contrast
+    gamma = 0 # Higher = brighter (little-to-no impact)
+    blurNeighbors = 7 # Higher = larger neighborhood
+    sigmaColor = 75 # Higher = color influence range (little-to-no impact)
+    sigmaSpace = 75 # Higher = distance influence range
+    binarythresh = 120 # Higher = darker binary scene
+
+    brightgrayImage = cv.addWeighted(grayImage, alpha, grayImage, 0, gamma)
+    blurgrayImage = cv.bilateralFilter(brightgrayImage, 7, 200, 10)
+    edgegrayImage = cv.Canny(blurgrayImage, 0, 80)
+    cv.imwrite(edgename, edgegrayImage)
+
+    pixelneighborhood = 51
+    
+    adaptivebinaryImage = cv.adaptiveThreshold(blurgrayImage,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv.THRESH_BINARY,pixelneighborhood,4)
+    cv.imwrite(binaryadaptivename, adaptivebinaryImage)
+
+
 
 #     img = cv2.imread('shapes.png')
 #     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -76,8 +97,6 @@ plt.show()
 #         cv2.drawContours(img,[cnt],0,(0,255,255),-1)
 
 # cv2.imshow('img',img)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     main()
