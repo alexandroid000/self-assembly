@@ -44,7 +44,6 @@ def track(parameters):
     save_location = parameters[1]
     status_bar = parameters[2]
     verbose = parameters[3]
-    print(verbose)
 
     #determine size and frame rate of input video
     cap = cv2.VideoCapture(in_vid)
@@ -66,30 +65,26 @@ def track(parameters):
 
     #open output file
     f = open(save_location, 'w+')
-    print("Here1")
 
     #find background image (if not supplied)
     if (parameters[4] is not ""):
-        print("Loading background")
+        if(verbose):
+            print("Loading background")
         try:
             background = cv2.imread(parameters[4])
         except:
             print("Error loading background")
             print(e)
     else:
-        print("Finding background")
         background = find_background(in_vid)
 
 
-    print("Here1.1")
     #initial ball sizes
     min_ball_size = 10
     max_ball_size = 20
 
-    print("Here1.2")
     num_ball, avg_r = find_ball_count(cap, background)
-    if(verbose):
-
+    if(verbose is True):
         print("Found number of balls: "+ str(num_ball))
         print("Ball size: " + str(avg_r))
 
@@ -104,22 +99,18 @@ def track(parameters):
     ball_data = []
 
     #pull single frame and get initial locations for the balls
-    print("Here1.3")
     success, frame = cap.read()
     circles = get_circles(frame, background)
-    print("Here1.4")
 
     for (x,y,r) in circles:
         traj = deque()
         traj.append((x,y))
         ball_data.append(traj)
-    print("Here1.5")
     
-    if(verbose):
+    if(verbose is  True):
         print("Extracting trajectory for " + str(in_vid))
     #loop through video
     frame_count = 0
-    print("Here2")
     while(cap.isOpened() and frame_count < total_frames):
         frame_count = frame_count+1
 
@@ -148,8 +139,8 @@ def track(parameters):
                 traj.append((x,y))
         if write:
             vout.write(frame)
-        #if(parameters[2] == False):
-        update_progress(frame_count/total_frames)
+        if(parameters[2] == False):
+            update_progress(frame_count/total_frames)
 
     
     #write data to text file
@@ -180,13 +171,8 @@ def find_ball_count(cap, background):
 
     while bd < 15:
         success, frame = cap.read()
-        print("Here")
-        height, width, channels = background.shape[:3]
-        print(height, width, channels)
 
         if success: #have a frame
-            height, width, channels = frame.shape[:3]
-            print(height, width, channels)
             #Frame preprocessing
             ff = np.uint8((cv2.GaussianBlur(abs(frame-background), (3,3), 2))) #remove background and remove high frequency noise
             
