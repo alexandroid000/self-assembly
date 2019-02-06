@@ -5,14 +5,11 @@ import cv2
 import argparse
 from collections import deque
 import sys
-import tqdm
 
 min_ball_size = 10
 max_ball_size = 20
-pbar
 
-def initialize_tracking_environment(progressBar):
-    pbar = progressBar
+
 
 def find_background(in_vid):
     cap = cv2.VideoCapture(in_vid)
@@ -39,12 +36,10 @@ def find_background(in_vid):
 
 def track(parameters):
 
-    #TODO move this to kwargs format for better 
-    #support and readability
     in_vid = parameters[0]
     save_location = parameters[1]
     status_bar = parameters[2]
-    # pbar = parameters[3]
+    verbose = parameters[3]
 
     #determine size and frame rate of input video
     cap = cv2.VideoCapture(in_vid)
@@ -98,7 +93,6 @@ def track(parameters):
     
     #loop through video
     frame_count = 0
-    since_last_update = 0
     while(cap.isOpened() and frame_count < total_frames):
         frame_count = frame_count+1
 
@@ -127,20 +121,10 @@ def track(parameters):
                 traj.append((x,y))
         if write:
             vout.write(frame)
+        if(parameters[2] == False):
+            update_progress(frame_count/total_frames)
 
-        #deprecated; to be replaced by pbar
-        # if(parameters[2] == False):
-        #     update_progress(frame_count/total_frames)
 
-        if(since_last_update == 10):
-            pbar.update(since_last_update)
-            since_last_update = 0
-        else:
-            since_last_update += 1
-
-    #finish cleaning up progres bar
-    pbar.update(since_last_update)
-    
     #write data to text file
     while len(ball_data[0]):
         text = ""
