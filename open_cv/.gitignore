@@ -3,3 +3,4 @@
 *.mp4
 *.wmv
 .DS_Store 
+SampleData/*
