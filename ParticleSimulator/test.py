@@ -1,22 +1,25 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from copy import copy
+from random import random
+
 from atooms.system.particle import Particle
 from atooms.system.cell import Cell
 from atooms.system import System
 from atooms.simulation import Simulation
 from atooms.trajectory import TrajectoryXYZ
 
-from copy import copy
+# using bounce-viz as a submodule for geometric utilities
+import sys
+sys.path.insert(0, "./bounce-viz/src/")
+from helper.shoot_ray_helper import IsInPoly
 
-import numpy as np
-from random import random
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-
+# system configuration
 L = 2.0
 N = 1000
 T = 100
 simname = "box_L"+str(L)+"_N"+str(N)+"_T"+str(T)
-
-system = System()
 # Define square cell
 cell = Cell(side=[L,L])
 
@@ -48,6 +51,7 @@ def cbk(sim, db):
     pos_db[sim.current_step] = xys
 
 # initialize simulation
+system = System()
 backend = WBallBackend(system)
 simulation = Simulation(backend)
 # We will execute the callback every step
