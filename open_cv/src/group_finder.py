@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 
 
 # Global Constants
-UNIT_CONNECT_DIST  = 15  # Dimension of unit hub in pixels
+UNIT_CONNECT_DIST  = 80  # Dimension of unit hub in pixels
 SPACE_DIM_X        = 600 # Dimension of space width in pixels
 SPACE_DIM_Y        = 470 # Dimension of space height in pixels
 
@@ -275,13 +275,13 @@ if __name__ == '__main__':
     timer = -1
     for line in f:
         timer += 1
-        if timer == 140:
+        if timer == 810:
                 break
         numbers = re.findall('\d+', line)
         positions = []
         for xandy in range(math.floor(len(numbers)/2)):
             positions.append([int(numbers[2*xandy]), int(numbers[2*xandy+1])])
-        print("Positions: ", positions)
+        #print("Positions: ", positions)
 
         # set up the figure for all
         if (timer%2 == 0) and (timer < 80): #29 fps
@@ -291,20 +291,24 @@ if __name__ == '__main__':
             ax.set_ylim(0,480)
 
             # draw lines
-            xmin = 0
-            xmax = 640
+            xmin = 40
+            xmax = 630
             ymin = 0
             ymax = 480
             plt.hlines((ymin,ymax), xmin, xmax)
             plt.vlines((xmin,xmax), ymin, ymax)
 
-            # draw units
-            for unit in positions:
-                plt.plot(unit[0], ymax-unit[1], 'ko', ms = 10, mfc = 'k')
+
+            # Draw units
+            for i in range(len(positions)):
+                plt.plot(positions[i][0], ymax-positions[i][1], 'ko', ms = 15, mfc = 'k')
+                for j in range(i+1, len(positions)):
+                    if(distance(positions[i], positions[j]) < UNIT_CONNECT_DIST):
+                        plt.plot((positions[i][0],positions[j][0]), (ymax-positions[i][1], ymax-positions[j][1]), color='k', linestyle='-', linewidth=15)
 
 
             plt.axis('off')
-            figname = 'group'+str(timer)+'.png'
+            figname = '../SamplePictures/group'+str(timer)+'.png'
             plt.savefig(figname)
 
         # Calculate distances
@@ -337,11 +341,11 @@ if __name__ == '__main__':
 
                 # draw units
                 for unit in groupLists[idx]:
-                    plt.plot(unit[0], unit[1], 'ko', ms = 10, mfc = 'k')
+                    plt.plot(unit[0], unit[1], 'ko', ms = 12, mfc = 'k')
 
 
                 plt.axis('off')
-                figname = 'group'+str(idx+1)+".png"
+                figname = '../SamplePictures/group'+str(idx+1)+".png"
                 plt.savefig(figname)
 
 
