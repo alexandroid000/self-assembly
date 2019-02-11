@@ -25,7 +25,7 @@
 #include "../include/common.h" //Used for static const global variables
 #include "../include/helper.h" //is_in
 
-//This data structures is used to store information about the weaselballs/mount. 
+//This data structures is used to store information about the weaselballs/mount.
 namespace gazebo
 {
     struct weaselballData
@@ -40,10 +40,10 @@ namespace gazebo
 		math::Vector3 linearAccelerationRelative;
 		math::Vector3 rotationalVelocityRelative;
 		math::Vector3 rotationalAccelerationRelative;
-		
+
 		math::Vector3 mountPosition;
 		math::Vector3 mountRotation;
-		
+
 		common::Time timeStamp;
 
 		int numberOfWalls;
@@ -53,7 +53,7 @@ namespace gazebo
 	};
 }
 
-namespace gazebo 
+namespace gazebo
 {
   class StateCollector : public WorldPlugin
   {
@@ -69,8 +69,9 @@ namespace gazebo
 	bool getModelsFlag = 1;
 	//recordingType is set to 0 to collect a lot of data about the weaselballs and is set to 1 to collect R2 x S1 of the mount configuration.
 	std::ofstream collectionFile;
+    std::ofstream boundaryDescriptionFile;
 	int resetCounter = 0;
-	
+
 	int wallCounter = 0;
 	std::vector<std::string> railStrings;
   public:
@@ -80,6 +81,7 @@ namespace gazebo
 
       event::Events::DisconnectWorldUpdateBegin( _updateConnection );
 	  this->collectionFile.close();
+	  this->boundaryDescriptionFile.close();
     }
 
 	std::vector<physics::ModelPtr> getModels(std::string modelName)
@@ -90,10 +92,9 @@ namespace gazebo
 		{
 			std::string name = it->GetName();
 			if(name.find(modelName) != std::string::npos)
-			{
 				ret.push_back(it);
-			}
-		} 
+			
+		}
 		return ret;
 
 	}
@@ -111,18 +112,18 @@ namespace gazebo
 			//Gazebo does rotation as rpy
 			this->collectionFile << data.mountRotation[2] << ",";
 		//Create the header of the csv and init
-			this->collectionFile << data.position[0] << "," << data.position[1] << "," << data.position[2] << ",";	
-			this->collectionFile << data.rotationalDisplacement[1] << "," << data.rotationalDisplacement[1] << "," << data.rotationalDisplacement[2] << ",";	
+			this->collectionFile << data.position[0] << "," << data.position[1] << "," << data.position[2] << ",";
+			this->collectionFile << data.rotationalDisplacement[1] << "," << data.rotationalDisplacement[1] << "," << data.rotationalDisplacement[2] << ",";
 
-			this->collectionFile << data.linearVelocityWorld[0] << "," << data.linearVelocityWorld[1] << "," << data.linearVelocityWorld[2] << ",";	
-			this->collectionFile << data.linearAccelerationWorld[0] << "," << data.linearAccelerationWorld[1] << "," << data.linearAccelerationWorld[2] << ",";	
-			this->collectionFile << data.rotationalVelocityWorld[0] << "," << data.rotationalVelocityWorld[1] << "," << data.rotationalVelocityWorld[2] << ",";	
-			this->collectionFile << data.rotationalAccelerationWorld[0] << "," << data.rotationalAccelerationWorld[1] << "," << data.rotationalAccelerationWorld[2] << ",";	
+			this->collectionFile << data.linearVelocityWorld[0] << "," << data.linearVelocityWorld[1] << "," << data.linearVelocityWorld[2] << ",";
+			this->collectionFile << data.linearAccelerationWorld[0] << "," << data.linearAccelerationWorld[1] << "," << data.linearAccelerationWorld[2] << ",";
+			this->collectionFile << data.rotationalVelocityWorld[0] << "," << data.rotationalVelocityWorld[1] << "," << data.rotationalVelocityWorld[2] << ",";
+			this->collectionFile << data.rotationalAccelerationWorld[0] << "," << data.rotationalAccelerationWorld[1] << "," << data.rotationalAccelerationWorld[2] << ",";
 
-			this->collectionFile << data.linearVelocityRelative[0] << "," << data.linearVelocityRelative[1] << "," << data.linearVelocityRelative[2] << ",";	
-			this->collectionFile << data.linearAccelerationRelative[0] << "," << data.linearAccelerationRelative[1] << "," << data.linearAccelerationRelative[2] << ",";	
-			this->collectionFile << data.rotationalVelocityRelative[0] << "," << data.rotationalVelocityRelative[1] << "," << data.rotationalVelocityRelative[2] << ",";	
-			this->collectionFile << data.rotationalAccelerationRelative[0] << "," << data.rotationalAccelerationRelative[1] << "," << data.rotationalAccelerationRelative[2] << ",";	
+			this->collectionFile << data.linearVelocityRelative[0] << "," << data.linearVelocityRelative[1] << "," << data.linearVelocityRelative[2] << ",";
+			this->collectionFile << data.linearAccelerationRelative[0] << "," << data.linearAccelerationRelative[1] << "," << data.linearAccelerationRelative[2] << ",";
+			this->collectionFile << data.rotationalVelocityRelative[0] << "," << data.rotationalVelocityRelative[1] << "," << data.rotationalVelocityRelative[2] << ",";
+			this->collectionFile << data.rotationalAccelerationRelative[0] << "," << data.rotationalAccelerationRelative[1] << "," << data.rotationalAccelerationRelative[2] << ",";
 			this->collectionFile << this->resetCounter << ",";
 			this->collectionFile << checkCorrectness() << ",";
 			this->collectionFile << data.numberOfWalls << ",";
@@ -141,7 +142,7 @@ namespace gazebo
             for (auto i = data.wallIDs.begin(); i != data.wallIDs.end(); ++i)
             {
                 std::string tempstring = (*i);
-                std::string railNumber = tempstring.substr(tempstring.find("rail") + 4, 2); //Get the id of the rail        
+                std::string railNumber = tempstring.substr(tempstring.find("rail") + 4, 2); //Get the id of the rail
                 int railNumberInt = std::stoi(railNumber);
                 this->collectionFile << railNumberInt;
                 //If it isn't the last element in the vecotr, add an &
@@ -149,17 +150,12 @@ namespace gazebo
                 {
                     this->collectionFile << "&";
                 }
-                //Otherwise put a comma to signify the wallIds have ended
-                else
-                {
-                    this->collectionFile << ",";
-                }
             }
 			this->collectionFile << "\n";
 		}
 	}
 
-	//The purpose of the function is to check that everything at a high level looks like it is working well in the simulator	
+	//The purpose of the function is to check that everything at a high level looks like it is working well in the simulator
 	bool checkCorrectness()
 	{
 		//The system is correct if all of the balls are in a hub and are within the enclosure
@@ -189,11 +185,11 @@ namespace gazebo
 						flag = 1;
 						break;
 					}
-				}	
+				}
 				if(flag)
 					break;
 			}
-			valid = flag;	
+			valid = flag;
 			if(!valid)
 			{
 				ROS_INFO("Balls not in hub!");
@@ -201,24 +197,24 @@ namespace gazebo
 			}
 
 			//Make sure ball is within the enclosure
-			if(ballPose[0] < ENCLOSURE_MIN_X || ballPose[0] > ENCLOSURE_MAX_X || ballPose[1] < ENCLOSURE_MIN_Y || ballPose[1] > ENCLOSURE_MAX_Y)	
+			if(ballPose[0] < ENCLOSURE_MIN_X || ballPose[0] > ENCLOSURE_MAX_X || ballPose[1] < ENCLOSURE_MIN_Y || ballPose[1] > ENCLOSURE_MAX_Y)
 			{
 				ROS_INFO("Balls not in enclosure!");
 				valid = 0;
 				break;
-			}	
+			}
 
 		}
 		if(!valid)
 		{
 			ROS_INFO("NOT VALID!");
 			this->world_->Reset();
-			
+
 		}
 		return valid;
 
 	}
-	
+
 	bool checkAllModelsInit(std::vector<physics::ModelPtr> weaselballs, std::vector<physics::ModelPtr> structure)
 	{
 
@@ -241,7 +237,7 @@ namespace gazebo
 	{
 	    this->resetCounter++;
 	}
-	
+
 	std::vector<sensors::ContactSensorPtr> getContactSensor()
 	{
 		gazebo::sensors::SensorManager* mgr = sensors::SensorManager::Instance();
@@ -272,6 +268,12 @@ namespace gazebo
 	  time (&rawtime);
 	  timeinfo = localtime(&rawtime);
 
+      std::string description_str("boundaryDescription");
+      std::stringstream desc_ss;
+      desc_ss << COLLECTION_PATH << description_str << ".txt";
+      this->boundaryDescriptionFile.open (desc_ss.str(), std::ofstream::out);
+
+
 	  strftime(buffer,sizeof(buffer),"%m-%d-%Y_%H-%M-%S",timeinfo);
 	  std::string str(buffer);
 
@@ -289,7 +291,7 @@ namespace gazebo
 	  this->collectionFile.open (ss.str(),std::ofstream::out);
 	  if(RECORDING_TYPE == 0)
 	  {
-	  this->collectionFile << "Time,ID,Mount_X,Mount_Y,Mount_Yaw,Pos_x,Pos_y,Pos_z,Yaw,Pitch,Roll,Linear_Velocity_X_World,Linear_Velocity_Y_World,Linear_Velocity_Z_World,Linear_Acceleration_X_World,Linear_Acceleration_Y_World,Linear_Acceleration_Z_World,Rotational_Velocity_X_World,Rotational_Velocity_Y_World,Rotational_Velocity_Z_World,Rotational_Acceleration_X_World,Rotational_Acceleration_Y_World,Rotational_Acceleration_Z_World,Linear_Velocity_X_Relative,Linear_Velocity_Y_Relative,Linear_Velocity_Z_Relative,Linear_Acceleration_X_Relative,Linear_Acceleration_Y_Relative,Linear_Acceleration_Z_Relative_Relative,Rotational_Velocity_X_Relative,Rotational_Velocity_Y_Relative,Rotational_Velocity_Z_Relative,Rotational_Acceleration_X_Relative,Rotational_Acceleration_Y_Relative,Rotational_Acceleration_Z_Relative,ResetID,checkCorrectness\n"; 
+	  this->collectionFile << "Time,ID,Mount_X,Mount_Y,Mount_Yaw,Pos_x,Pos_y,Pos_z,Yaw,Pitch,Roll,Linear_Velocity_X_World,Linear_Velocity_Y_World,Linear_Velocity_Z_World,Linear_Acceleration_X_World,Linear_Acceleration_Y_World,Linear_Acceleration_Z_World,Rotational_Velocity_X_World,Rotational_Velocity_Y_World,Rotational_Velocity_Z_World,Rotational_Acceleration_X_World,Rotational_Acceleration_Y_World,Rotational_Acceleration_Z_World,Linear_Velocity_X_Relative,Linear_Velocity_Y_Relative,Linear_Velocity_Z_Relative,Linear_Acceleration_X_Relative,Linear_Acceleration_Y_Relative,Linear_Acceleration_Z_Relative_Relative,Rotational_Velocity_X_Relative,Rotational_Velocity_Y_Relative,Rotational_Velocity_Z_Relative,Rotational_Acceleration_X_Relative,Rotational_Acceleration_Y_Relative,Rotational_Acceleration_Z_Relative,ResetID,checkCorrectness\n";
 	  }
 		else if(RECORDING_TYPE == 1)
 		{
@@ -298,7 +300,7 @@ namespace gazebo
 		}
 
 	//Get structure object and store it
-	
+
 	  ROS_INFO("State Collector has loaded!");
     }
 	void onCollision()
@@ -316,14 +318,14 @@ namespace gazebo
 				std::map<std::string, physics::Contact> mapping = contactSensor->Contacts(model1Name);
 				physics::ModelPtr mount;
 				std::string linkNumber;
-				
+
 				if(model1Name.find("mount") != std::string::npos and model2Name.find("rail") != std::string::npos)
 				{
 
 					//Check that rail# isn't already counted
 					if (std::find(this->railStrings.begin(), this->railStrings.end(), model2Name) == this->railStrings.end())
 					{
-						
+
 					  // Element not in vector.
 						this->wallCounter += 1;
 						this->railStrings.push_back(model2Name);
@@ -357,11 +359,12 @@ namespace gazebo
     virtual void Update( ) {
 		//Wait for all models to spawn
 		if(this->getModelsFlag)
-		{
+        {
 			std::vector<physics::ModelPtr> weaselballs = getModels(NAME_OF_WEASELBALLS);
 			std::vector<physics::ModelPtr> structures = getModels(NAME_OF_MOUNTS);
+		    std::vector<physics::ModelPtr> enclosure = getModels(NAME_OF_ENCLOSURE);
 			std::vector<sensors::ContactSensorPtr> bumpSensor = getContactSensor();
-			if( checkAllModelsInit(weaselballs, structures) and bumpSensor.size() != 0)
+			if( checkAllModelsInit(weaselballs, structures) and bumpSensor.size() != 0 and enclosure.size() != 0)
 			{
 				ROS_INFO("Found all the models and Sensors!");
 				this->getModelsFlag = 0;
@@ -377,6 +380,47 @@ namespace gazebo
 					ROS_INFO("Sensor status = %d", it->IsActive());
 
 				}
+                //Write info about environment to boundary Description file
+                for (auto it : enclosure )
+                {
+                    auto links = it->GetLinks();
+                    if (links.size() == 0)
+                    {
+                        ROS_ERROR("No links of enclosure found, can't write enclosure txt file!");
+                    }
+                    else
+                    {
+                        ROS_INFO("Found %d links in enclosure", links.size());
+                    }
+                    this->boundaryDescriptionFile << "name,X,Y,Z,Roll,Pitch,Yaw,sizeX,sizeY,sizeZ";
+                    this->boundaryDescriptionFile << "\n";
+                    for(auto link : links)
+                    {
+                        //Here I will write the name, pose, and size of the box to the file for each link
+                        this->boundaryDescriptionFile << link->GetName().c_str() << ",";
+                        math::Pose pose = link->GetRelativePose();
+                        //Get XYZ
+                        math::Vector3 pos(0,0,0);
+                        pos = pose.pos;
+                        this->boundaryDescriptionFile << pos[0] << ",";
+                        this->boundaryDescriptionFile << pos[1] << ",";
+                        this->boundaryDescriptionFile << pos[2] << ",";
+                        //Get Rotation
+                        math::Vector3 rotation(0,0,0);
+                        rotation = pose.rot.GetAsEuler();
+                        this->boundaryDescriptionFile << rotation[0] << ",";
+                        this->boundaryDescriptionFile << rotation[1] << ",";
+                        this->boundaryDescriptionFile << rotation[2] << ",";
+                        //Get shape from collision then cast it as a BoxShape
+                        auto shape = link->GetCollisions()[0]->GetShape();
+                        gazebo::physics::BoxShape *box = static_cast<gazebo::physics::BoxShape*>(shape.get());
+                        auto size = box->GetSize ();
+                        this->boundaryDescriptionFile << size[0] << ",";
+                        this->boundaryDescriptionFile << size[1] << ",";
+                        this->boundaryDescriptionFile << size[2];
+                        this->boundaryDescriptionFile << "\n";
+                    }
+                }
 			}
 			else
 			{
@@ -407,7 +451,7 @@ namespace gazebo
 
 				getXYZCoordinatesWorld(weaselball, &data);
 				getRotationalDisplacementWorld(weaselball, &data);
-				
+
 				getLinearVelocityWorld(weaselball, &data);
 				getAngularVelocityWorld(weaselball, &data);
 				getAngularAccelerationWorld(weaselball,  &data);
@@ -420,7 +464,7 @@ namespace gazebo
 			    getSimTime(&data);
 
 				writeDataToCSV(data, name.back());
-				collection.push_back(data);	
+				collection.push_back(data);
 			}
 		}
 		else if(RECORDING_TYPE == 1 )
@@ -436,13 +480,13 @@ namespace gazebo
                 getRailStrings(&data);
 
 				writeDataToCSV(data,0); //I will worry about creating IDs for substructures later...
-				collection.push_back(data);	 
+				collection.push_back(data);
 			}
 
 		}
-		
+
     }
-	
+
 	void getSimTime(weaselballData* data)
 	{
 		data->timeStamp = this->world_->GetSimTime();
@@ -461,7 +505,7 @@ namespace gazebo
 		math::Pose worldPose = mount->GetWorldPose();
 		math::Vector3 rotation(0,0,0);
 		rotation = worldPose.rot.GetAsEuler();
-		data->mountRotation = rotation; 
+		data->mountRotation = rotation;
 	}
 
 	void getXYZCoordinatesWorld(physics::ModelPtr weaselball, weaselballData* data)
@@ -486,7 +530,7 @@ namespace gazebo
 	{
 		data->linearVelocityWorld = weaselball->GetWorldLinearVel();
 	}
-	
+
 	void getAngularAccelerationWorld(physics::ModelPtr weaselball, weaselballData* data)
 	{
 		data->rotationalAccelerationWorld = weaselball->GetWorldAngularAccel();
@@ -506,7 +550,7 @@ namespace gazebo
 	{
 		data->linearVelocityRelative = weaselball->GetRelativeLinearVel();
 	}
-	
+
 	void getAngularAccelerationRelative(physics::ModelPtr weaselball, weaselballData* data)
 	{
 		data->rotationalAccelerationRelative = weaselball->GetRelativeAngularAccel();
@@ -532,7 +576,7 @@ namespace gazebo
     void getRailStrings(weaselballData* data)
     {
         //Do a deep copy.
-        data->wallIDs = this->railStrings;       
+        data->wallIDs = this->railStrings;
 		this->railStrings.clear();
     }
 
@@ -543,4 +587,3 @@ namespace gazebo
 } // namespace gazebo
 
 //-----------------------------------------------------------------------------
-

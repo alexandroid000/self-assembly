@@ -21,6 +21,7 @@ source $WORKSPACE_PATH/devel/setup.sh
 cd $WORKSPACE_PATH/data/collections
 chmod +x upload.sh
 rm *.csv
+rm *.txt
 
 
 touch testUpload

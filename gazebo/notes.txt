@@ -7,11 +7,8 @@ A) Create scripts to generate run files
 B) Collect data about all of the robot configurations
 C) 
 ROUND 2:
-TODO) Make sure Gazebo works, and update the new data we want is collected. (easy)
-TODO) Add duration time robot is against wall (Easy)
 TODO) Angle of departure (Hard) 
-TODO) Add pip to dependencies
-TODO) Hard coded dependency in install file
+TODO) Create python file to autogenerate environment given points
 
 
 

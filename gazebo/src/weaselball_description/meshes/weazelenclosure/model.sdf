@@ -39,12 +39,12 @@
       </collision>
     </link>
     <link name="rail02">
-      <pose>0 0.56356 0.03175 0 0 0</pose>
+      <pose>0 0.56356 0.03175 0 0 1.57</pose>
       <self_collide>false</self_collide>
       <visual name="rail02_geom_visual">
         <geometry>
           <box>
-            <size>1.1525 0.01905 0.0889</size>
+            <size> 0.01905 1.1525 0.0889</size>
           </box>
         </geometry>
         <material>
@@ -58,7 +58,7 @@
       <collision name="rail02_geom_collision">
         <geometry>
           <box>
-            <size>1.1525 0.01905 0.0889</size>
+            <size> 0.01905 1.1525 0.0889</size>
           </box>
         </geometry>
         <surface>
@@ -75,7 +75,7 @@
       </collision>
     </link>
     <link name="rail03">
-      <pose>-0.56355 0 0.03175 0 0 0</pose>
+      <pose>-0.56355 0 0.03175 0 0 3.14</pose>
       <self_collide>false</self_collide>
       <visual name="rail03_geom_visual">
         <geometry>
@@ -111,12 +111,12 @@
       </collision>
     </link>
     <link name="rail04">
-      <pose>0 -0.56356 0.03175 0 0 0</pose>
+      <pose>0 -0.56356 0.03175 0 0 4.71</pose>
       <self_collide>false</self_collide>
       <visual name="rail04_geom_visual">
         <geometry>
           <box>
-            <size>1.1525 0.01905 0.0889</size>
+            <size> 0.01905 1.1525 0.0889</size>
           </box>
         </geometry>
         <material>
@@ -130,7 +130,7 @@
       <collision name="rail04_geom_collision">
         <geometry>
           <box>
-            <size>1.1525 0.01905 0.0889</size>
+            <size> 0.01905 1.1525 0.0889</size>
           </box>
         </geometry>
         <surface>

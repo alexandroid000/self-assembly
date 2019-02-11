@@ -44,6 +44,7 @@ static const int INDIVIDUAL_TRIAL_TIME= 300;
 static const bool RANDOMIZE_BALLS= 1;
 static const string NAME_OF_WEASELBALLS= "swarmbot";
 static const string NAME_OF_MOUNTS= "mount";
+static const string NAME_OF_ENCLOSURE= "weazelenclosure";
 static const string SHELL_STRING= "shell";
 static const int ROBOT_TO_RUN= 1;
 static const int LONGEST_WEASELBALL_SEQUENCE= 1;
