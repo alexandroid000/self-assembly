@@ -13,34 +13,98 @@ from atooms.trajectory import TrajectoryXYZ
 # using bounce-viz as a submodule for geometric utilities
 import sys
 sys.path.insert(0, "./bounce-viz/src/")
-from helper.shoot_ray_helper import IsInPoly
+from helper.shoot_ray_helper import IsInPoly, ClosestPtAlongRay
+from simple_polygon import Simple_Polygon
 
 # system configuration
 L = 2.0
-N = 1000
+N = 10
 T = 100
 simname = "box_L"+str(L)+"_N"+str(N)+"_T"+str(T)
 # Define square cell
-cell = Cell(side=[L,L])
+#cell = Cell(side=[L,L])
+cell = Simple_Polygon("square",np.array([[0.0,0.0], [L, 0.0],[L,L],[0.0,L]]))
 
-# create N particles at random locations in the box
-for i in range(N):
-    x,y = L*random(), L*random()
-    system.particle.append(Particle(position=[x,y], radius = None, species= 'A'))
+A_properties = {'vel':0.5, 'wall_prob': 0.05, 'beta': 0.1}
+B_properties = {'vel':0.1, 'wall_prob': 0.2, 'beta': 0.5}
+properties = { 'A-free':A_properties
+             ,'B-free':B_properties
+             ,'A-wall':A_properties
+             ,'B-wall':B_properties
+             }
+
+# http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
+def closest_edge(pt, poly):
+    [x0,y0] = pt
+    vs = poly.complete_vertex_list
+    n = len(vs)
+    min_d = 100000000000
+    closest_edge = -1
+    for j in range(n):
+        [x1, y1], [x2,y2] = vs[j], vs[(j+1) % n]
+        d = abs((x2-x1)*(y1-y0) - (x1-x0)*(y2-y1)) / np.sqrt((x2-x1)**2 + (y2-y1)**2)
+        if d < min_d:
+            min_d = d
+            closest_edge = j
+    return min_d, closest_edge
+
+def normalize(vector):
+    norm = np.linalg.norm(vector)
+    return vector/norm
 
 # weaselball simulation backend
 class WBallBackend(object):
 
-    def __init__(self, system, delta=1.0):
+    def __init__(self, system, delta=0.1, env = cell):
         self.system = system
         self.delta = delta
+        self.env = env
+        self.vs = self.env.complete_vertex_list
+        self.n = len(self.vs)
+
+    def take_step_boundary(self, particle):
+        d, j = closest_edge(particle.position, self.env)
+        p1, p2 = self.vs[j], self.vs[(j+1) % self.n]
+        # wall following
+        dir = normalize(p2-p1)
+        particle.position += self.delta*d*dir
+
+        if random() > properties[particle.species]['wall_prob']:
+            particle.species = particle.species[0]+'-free'
+            [vx, vy] = particle.velocity
+            # rotate particle's velocity 45 degrees from wall
+            particle.velocity = normalize([0.7*vx - 0.7*vy, 0.7*vx + 0.7*vy])
+
+    def take_step(self, particle):
+        # stochastic update to heading theta
+        # right now, uniform - TODO: change to Gaussian
+        xi_x = np.random.normal() # mean zero, standard deviation 1
+        xi_y = np.random.normal()
+        theta = np.arctan2(particle.velocity[1], particle.velocity[0])
+        xi_theta = np.random.normal(loc=theta)
+        # velocity
+        v = properties[particle.species]['vel']
+        xdot = v*particle.velocity[0] + xi_x
+        ydot = v*particle.velocity[1] + xi_y
+
+        beta = properties[particle.species]['beta']
+        particle.velocity[0] += beta*np.cos(xi_theta)
+        particle.velocity[1] += beta*np.sin(xi_theta)
+
+        particle.velocity = normalize(particle.velocity)
+        dr = self.delta*np.array([xdot, ydot])
+        if IsInPoly(particle.position + dr, cell):
+            particle.position += dr
+        else:
+            particle.species = particle.species[0]+'-wall'
 
     def run(self, steps):
         for i in range(steps):
             for p in self.system.particle:
-                dr = np.array([random()-0.5, random()-0.5])
-                dr *= self.delta
-                p.position += dr
+                if p.species[2:] == "wall":
+                    self.take_step_boundary(p)
+                else:
+                    self.take_step(p)
 
 
 # to log data while simulation is running, we create a callback function which
@@ -57,8 +121,19 @@ simulation = Simulation(backend)
 # We will execute the callback every step
 simulation.add(cbk, 1, db=pos_db)
 
+# create N particles at random locations in the box
+for i in range(N):
+    x,y = L*random(), L*random()
+    vel = np.array([random()-0.5, random()-0.5])
+    norm = np.linalg.norm(vel)
+    vel /= norm
+    system.particle.append(Particle(position=[x,y], velocity=list(vel), radius = None, species= 'A-free'))
+
+
 # run simulation for T steps
 simulation.run(T-1)
+
+print("ran sim for ",T,"steps")
 
 # write data to file
 with open(simname+'.xyz','w') as th:
@@ -68,7 +143,9 @@ with open(simname+'.xyz','w') as th:
             th.write(str(x)+" "+str(y)+" ")
         th.write("\n")
 
-# 
+print("wrote data to",simname+".xyz")
+print("writing video to",simname+".mp4")
+
 class Data:
 
     def __init__(self, db, start=0):
@@ -88,18 +165,19 @@ class Data:
 
 d = Data(pos_db)
 
+
 fig = plt.figure()
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 ax = fig.add_subplot(111, aspect='equal', autoscale_on=False,
-                     xlim=(-3.2, 3.2), ylim=(-2.4, 2.4))
+                     xlim=(-0.2, L+0.2), ylim=(-0.2, L+0.2))
 
 # particles holds the locations of the particles
 particles, = ax.plot([], [], 'bo', ms=6)
 
 # rect is the box edge
-rect = plt.Rectangle([-2,-2],
-                     4,
-                     4,
+rect = plt.Rectangle([0,0],
+                     L,
+                     L,
                      ec='none', lw=2, fc='none')
 ax.add_patch(rect)
 
@@ -116,7 +194,7 @@ def animate(i):
     global d, rect, dt, ax, fig
     xys = next(d)
 
-    ms = int(fig.dpi * 2 * 0.04 * fig.get_figwidth()
+    ms = int(fig.dpi * 0.02 * fig.get_figwidth()
              / np.diff(ax.get_xbound())[0])
     
     # update pieces of the animation
@@ -134,4 +212,4 @@ ani = animation.FuncAnimation(fig, animate, frames=T,
 # the video can be embedded in html5.  You may need to adjust this for
 # your system: for more information, see
 # http://matplotlib.sourceforge.net/api/animation_api.html
-ani.save(simname+'.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
+ani.save(simname+'.mp4', fps=15, extra_args=['-vcodec', 'libx264'])
