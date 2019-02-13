@@ -1,7 +1,7 @@
 from nodes import Node, NodeMatrix
 import sys
 #This vavlue is used in creating the "Node Matrix" which I use as a higher level representation of the robot configuration
-MAX_ROBOT_SIZE = 7
+MAX_ROBOT_SIZE = 11
 
 def create_x_script(robotID):
 	f = open("run.sh", "w+")
@@ -219,6 +219,82 @@ def set_node_positions(nodeMatrix):
 				node_position_l.append(((x-int(MAX_ROBOT_SIZE/2))*mount_diameter, ((y-int(MAX_ROBOT_SIZE/2))*mount_diameter)))
 	return node_position_l
 
+#RRT Build robot Structure
+#Given a number of robots we want to build at least, create a robot structure using RRT like algorithm
+#I wonder what the distribution of number of robots is...
+def build_RRTBot(minimum_robots):
+    if (MAX_ROBOT_SIZE * MAX_ROBOT_SIZE < minimum_robots):
+        print("[build_RRTBot] Can't build robot, not enough cells. Increa MAX_ROBOT_SIZE")
+    nodeMatrix = NodeMatrix(MAX_ROBOT_SIZE)
+    cells = range(MAX_ROBOT_SIZE)
+    total_robots = 0
+    #Start robot tree in the middle
+    nodeMatrix.Matrix[MAX_ROBOT_SIZE/2][MAX_ROBOT_SIZE/2] = 1
+    while(total_robots < minimum_robots):
+        #Choose a random point in the discrete space to build the robot
+        chooseFlag = 1
+        while(chooseFlag == 1):
+            x,y = random.choice(cells), random.choice(cells)
+            if(nodeMatrix.Matrix[x][y] != 1):
+                chooseFlag = 0
+        nodeMatrix.Matrix[x][y] = 1
+        x_end, y_end = closestBot((x,y), nodeMatrix)
+        path = getPath((x,y),(x_end, y_end))
+        for points in path:
+            nodeMatrix.Matrix[point[0], point[1]] = 1
+
+#Helper function for build_RRTBot
+#Gets the closest robot (Manhattan distance) to given robot
+def getClosestBot(start, design):
+    distances = {}
+    for i in range(MAX_ROBOT_SIZE):
+        for j in range(MAX_ROBOT_SIZE):
+            if design.Matrix[i][j] == 1:
+                distances[(i,j)] = (i-start[0]) + (j-start[1])
+    ret = min(distances, key=distances.get)
+    if len(ret) == 0:
+        print("[Robot Builder] Something went wrong, no other robots found!")
+        return
+    elif len(ret) == 1:
+        return ret
+    else:
+        return ret[0]
+
+
+
+#Helper function for build_RRTBot
+#Given a start discrete (x,y) and finish (x,y), find a path between the 2 points.
+def getPath(start, finish):
+    if start == finish:
+        return start
+    explored = []
+    queue = [start]
+
+    while queue:
+        path = queue.pop(0)
+        node = path[-1]
+        if node not in explored:
+            neighbours = [] 
+            if (node[0] + 1 < MAX_ROBOT_SIZE):
+                neighbours.append(node[0]+1,node[1])
+            if (node[0] - 1 >= 0):
+                neighbours.append(node[0]-1, node[1])
+            if (node[1] + 1 < MAX_ROBOT_SIZE):
+                neighbours.append(node[0], node[1] + 1)
+            if (node[1] - 1 >= 0):
+                neighbours.append(node[0], node[1] - 1)
+            for neighbour in neighbours:
+                new_path = list(path)
+                new_path.append(neighbour)
+                queue.append(new_path)
+                if neighbour == goal:
+                    return new_path
+
+            explored.append(node)
+    print("[getPath] No Path found!")
+
+
+    
 
 def create_nodes(robot_ID):
 	#This will need to be done by hand for now until an algorithm can be made to do it
@@ -284,27 +360,29 @@ def create_nodes(robot_ID):
 
 
 
+if __name__ == "__main__":
+    nodeMatrix = build_RRTBot(55):  
 
 #For the sake of parsing here are the ID to Robot conversions
 # 1 = 1, 2 = 2, 3 = 3_straight, 4 = 3_L, 5 = 3_backwords_L, 6 = 4_straight, 7 = 4_L, 8 = 4_backwords_L, 9 = 4_T , 10 =4_square
-if __name__ == "__main__":
-	#Parse the input for the ID of the robot
-	if(len(sys.argv) == 1 or len(sys.argv) == 2):
-		print("[ERROR] Please enter a robot to build")
-		print(sys.argv)
-		exit()
-	robotID = int(sys.argv[1])
-	GUI = sys.argv[2]
-	#Get the nodes of the robot
-	nodeMatrix = create_nodes(robotID)
-	node_positions = set_node_positions(nodeMatrix)
-	if(len(node_positions) == 0):
-		print("[ERROR] Incorrect Robot ID set")
-		exit()
-	#create files
-	print("[Debug] Building Files")
-	create_x_launch(nodeMatrix, node_positions, robotID, GUI)
-	create_one_x_mount(nodeMatrix, robotID)
-	create_x_model_sdf(nodeMatrix, node_positions, robotID)
-	create_x_model_config(nodeMatrix, robotID)
-	create_x_script(robotID)
+#if __name__ == "__main__":
+#	#Parse the input for the ID of the robot
+#	if(len(sys.argv) == 1 or len(sys.argv) == 2):
+#		print("[ERROR] Please enter a robot to build")
+#		print(sys.argv)
+#		exit()
+#	robotID = int(sys.argv[1])
+#	GUI = sys.argv[2]
+#	#Get the nodes of the robot
+#	nodeMatrix = create_nodes(robotID)
+#	node_positions = set_node_positions(nodeMatrix)
+#	if(len(node_positions) == 0):
+#		print("[ERROR] Incorrect Robot ID set")
+#		exit()
+#	#create files
+#	print("[Debug] Building Files")
+#	create_x_launch(nodeMatrix, node_positions, robotID, GUI)
+#	create_one_x_mount(nodeMatrix, robotID)
+#	create_x_model_sdf(nodeMatrix, node_positions, robotID)
+#	create_x_model_config(nodeMatrix, robotID)
+#	create_x_script(robotID)
