@@ -9,7 +9,7 @@ import tqdm
 
 min_ball_size = 10
 max_ball_size = 20
-pbar
+
 
 def initialize_tracking_environment(progressBar):
     pbar = progressBar
@@ -129,8 +129,8 @@ def track(parameters):
             vout.write(frame)
 
         #deprecated; to be replaced by pbar
-        # if(parameters[2] == False):
-        #     update_progress(frame_count/total_frames)
+        if(parameters[2] == False):
+            update_progress(frame_count/total_frames)
 
         if(since_last_update == 10):
             pbar.update(since_last_update)

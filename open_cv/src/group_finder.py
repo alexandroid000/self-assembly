@@ -275,8 +275,8 @@ if __name__ == '__main__':
     timer = -1
     for line in f:
         timer += 1
-        if timer == 810:
-                break
+        if timer == 400:
+            break
         numbers = re.findall('\d+', line)
         positions = []
         for xandy in range(math.floor(len(numbers)/2)):
@@ -284,7 +284,7 @@ if __name__ == '__main__':
         #print("Positions: ", positions)
 
         # set up the figure for all
-        if (timer%2 == 0) and (timer < 80): #29 fps
+        if (timer <400) and (timer > 320): #29 fps
             fig = plt.figure()
             ax = fig.add_subplot(111)
             ax.set_xlim(0,640)
@@ -323,7 +323,7 @@ if __name__ == '__main__':
         # Place all on different pics
         for idx in range(len(groupLists)):
 
-            if timer == 141:
+            if timer == -1:
 
                 # set up the figure
                 fig = plt.figure()

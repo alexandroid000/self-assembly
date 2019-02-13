@@ -71,12 +71,13 @@ def main():
         img3 = cv.drawMatchesKnn(img1,kp1,img2,kp2,matches,None,**draw_params)
 
         # Part 2: Homography
-        MIN_MATCH_COUNT = 10       
+        MIN_MATCH_COUNT = 10      
        
         # store all the good matches as per Lowe's ratio test.
         good = []
+        ratio_val = 0.95 # Lower = more selective
         for m,n in matches:
-                if m.distance < 0.9*n.distance:
+                if m.distance < ratio_val*n.distance:
                         good.append(m)
         if len(good)>MIN_MATCH_COUNT:
                 src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
