@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 
 
 # Global Constants
-UNIT_CONNECT_DIST  = 80  # Dimension of unit hub in pixels
+UNIT_CONNECT_DIST  = 120  # Dimension of unit hub in pixels
 SPACE_DIM_X        = 600 # Dimension of space width in pixels
 SPACE_DIM_Y        = 470 # Dimension of space height in pixels
 
@@ -275,7 +275,7 @@ if __name__ == '__main__':
     timer = -1
     for line in f:
         timer += 1
-        if timer == 400:
+        if timer == 50:
             break
         numbers = re.findall('\d+', line)
         positions = []
@@ -284,14 +284,14 @@ if __name__ == '__main__':
         #print("Positions: ", positions)
 
         # set up the figure for all
-        if (timer <400) and (timer > 320): #29 fps
+        if (timer <50) and (timer > -1): #29 fps
             fig = plt.figure()
             ax = fig.add_subplot(111)
             ax.set_xlim(0,640)
             ax.set_ylim(0,480)
 
             # draw lines
-            xmin = 40
+            xmin = 0
             xmax = 630
             ymin = 0
             ymax = 480
@@ -320,40 +320,6 @@ if __name__ == '__main__':
         groupLists = groupFinder(positions)
         # print("Groups: ", groupLists)
         
-        # Place all on different pics
-        for idx in range(len(groupLists)):
-
-            if timer == -1:
-
-                # set up the figure
-                fig = plt.figure()
-                ax = fig.add_subplot(111)
-                ax.set_xlim(0,640)
-                ax.set_ylim(0,480)
-
-                # draw lines
-                xmin = 0
-                xmax = 640
-                ymin = 0
-                ymax = 480
-                plt.hlines((ymin,ymax), xmin, xmax)
-                plt.vlines((xmin,xmax), ymin, ymax)
-
-                # draw units
-                for unit in groupLists[idx]:
-                    plt.plot(unit[0], unit[1], 'ko', ms = 12, mfc = 'k')
-
-
-                plt.axis('off')
-                figname = '../SamplePictures/group'+str(idx+1)+".png"
-                plt.savefig(figname)
-
-
-
-
-
-
-
             # center = centerpointFinder(groupLists[idx])
             # # print("Center: ", center)
             # if(len(groupLists[idx]) > 1):

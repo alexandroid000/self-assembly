@@ -11,8 +11,6 @@ min_ball_size = 10
 max_ball_size = 20
 
 
-def initialize_tracking_environment(progressBar):
-    pbar = progressBar
 
 def find_background(in_vid):
     cap = cv2.VideoCapture(in_vid)
@@ -34,17 +32,18 @@ def find_background(in_vid):
             break
     cap.release()
     frame_bg = np.median(video_frames,3)
+    # print("Saving")
+    # cv2.imwrite("./background.jpg", frame_bg)
+    # print("Done saving")
     return frame_bg
 
 
 def track(parameters):
 
-    #TODO move this to kwargs format for better 
-    #support and readability
     in_vid = parameters[0]
     save_location = parameters[1]
     status_bar = parameters[2]
-    # pbar = parameters[3]
+    verbose = parameters[3]
 
     #determine size and frame rate of input video
     cap = cv2.VideoCapture(in_vid)
@@ -67,16 +66,30 @@ def track(parameters):
     #open output file
     f = open(save_location, 'w+')
 
+    #find background image (if not supplied)
+    if (parameters[4] is not ""):
+        if(verbose is True):
+            print("Loading background")
+        try:
+            background = cv2.imread(parameters[4], cv2.IMREAD_COLOR)
+            if(verbose is True):
+                print("Loaded")
+        except:
+            print("Error loading background")
+            print(e)
+    else:
+        background = find_background(in_vid)
 
-    #find background image
-    background = find_background(in_vid)
 
     #initial ball sizes
     min_ball_size = 10
     max_ball_size = 20
-
-
+    if (verbose is True):
+        print("Finding number of balls")
     num_ball, avg_r = find_ball_count(cap, background)
+    if(verbose is True):
+        print("Found number of balls: "+ str(num_ball))
+        print("Ball size: " + str(avg_r))
 
     min_ball_size = int(avg_r) - 3
     max_ball_size = int(avg_r) + 3
@@ -91,14 +104,16 @@ def track(parameters):
     #pull single frame and get initial locations for the balls
     success, frame = cap.read()
     circles = get_circles(frame, background)
+
     for (x,y,r) in circles:
         traj = deque()
         traj.append((x,y))
         ball_data.append(traj)
     
+    if(verbose is  True):
+        print("Extracting trajectory for " + str(in_vid))
     #loop through video
     frame_count = 0
-    since_last_update = 0
     while(cap.isOpened() and frame_count < total_frames):
         frame_count = frame_count+1
 
@@ -127,19 +142,9 @@ def track(parameters):
                 traj.append((x,y))
         if write:
             vout.write(frame)
-
-        #deprecated; to be replaced by pbar
         if(parameters[2] == False):
             update_progress(frame_count/total_frames)
 
-        if(since_last_update == 10):
-            pbar.update(since_last_update)
-            since_last_update = 0
-        else:
-            since_last_update += 1
-
-    #finish cleaning up progres bar
-    pbar.update(since_last_update)
     
     #write data to text file
     while len(ball_data[0]):
@@ -167,21 +172,19 @@ def find_ball_count(cap, background):
     bd = 0 #balls detected in given frame (used to find number of balls)
     num_ball = 0
 
-
     while bd < 15:
         success, frame = cap.read()
 
         if success: #have a frame
-
             #Frame preprocessing
             ff = np.uint8((cv2.GaussianBlur(abs(frame-background), (3,3), 2))) #remove background and remove high frequency noise
+            
             ff = cv2.cvtColor(ff, cv2.COLOR_BGR2GRAY) #HoughCircles requires greyscale image
-
+            
             #detect all circles in frame
             circles = cv2.HoughCircles(ff, cv2.HOUGH_GRADIENT, 2, 17,param1=80,param2=25, minRadius = min_ball_size, maxRadius = max_ball_size)
             if circles is not None:
                 circles = np.round(circles[0,:]).astype("int")
-
                 if len(circles) == num_ball:
                     bd = bd+1
                 else:
