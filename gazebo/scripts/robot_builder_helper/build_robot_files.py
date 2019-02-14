@@ -1,5 +1,6 @@
 from nodes import Node, NodeMatrix
 import sys
+import random
 #This vavlue is used in creating the "Node Matrix" which I use as a higher level representation of the robot configuration
 MAX_ROBOT_SIZE = 11
 
@@ -238,10 +239,20 @@ def build_RRTBot(minimum_robots):
             if(nodeMatrix.Matrix[x][y] != 1):
                 chooseFlag = 0
         nodeMatrix.Matrix[x][y] = 1
-        x_end, y_end = closestBot((x,y), nodeMatrix)
+        (x_end, y_end) = getClosestBot((x,y), nodeMatrix)
         path = getPath((x,y),(x_end, y_end))
-        for points in path:
-            nodeMatrix.Matrix[point[0], point[1]] = 1
+        for point in path:
+            print(point)
+            try:
+                nodeMatrix.Matrix[point[0]][point[1]]
+            except Exception as e:
+                print(path, (x,y), (x_end,y_end))
+                return
+            if nodeMatrix.Matrix[point[0]][point[1]] == 0:
+                total_robots += 1
+            nodeMatrix.Matrix[point[0]][point[1]] = 1
+
+    return nodeMatrix
 
 #Helper function for build_RRTBot
 #Gets the closest robot (Manhattan distance) to given robot
@@ -255,43 +266,34 @@ def getClosestBot(start, design):
     if len(ret) == 0:
         print("[Robot Builder] Something went wrong, no other robots found!")
         return
-    elif len(ret) == 1:
+    else: #even if 2 things have same distance, it will only return 1 tuple
         return ret
-    else:
-        return ret[0]
 
 
 
 #Helper function for build_RRTBot
 #Given a start discrete (x,y) and finish (x,y), find a path between the 2 points.
+#Uses dijkstra algorithm
 def getPath(start, finish):
-    if start == finish:
-        return start
-    explored = []
-    queue = [start]
+    #Just use manhattan distance to figure out how to get through path.
+    #There are no obstacles, so it should never do more than enough
+    path = [start]
+    node = start
+    distance = (finish[0] - start[0], finish[1] - start[1])
+    for i in range(abs(distance[0])):
+        if distance[0] > 0:
+            node = (node[0] + 1, node[1])
+        else:
+            node = (node[0] - 1, node[1])
+        path.append(node)
+    for i in range(abs(distance[1])):
+        if distance[1] > 0:
+            node = (node[0], node[1]+1)
+        else:
+            node = (node[0], node[1]-1)
+        path.append(node)
+    return path
 
-    while queue:
-        path = queue.pop(0)
-        node = path[-1]
-        if node not in explored:
-            neighbours = [] 
-            if (node[0] + 1 < MAX_ROBOT_SIZE):
-                neighbours.append(node[0]+1,node[1])
-            if (node[0] - 1 >= 0):
-                neighbours.append(node[0]-1, node[1])
-            if (node[1] + 1 < MAX_ROBOT_SIZE):
-                neighbours.append(node[0], node[1] + 1)
-            if (node[1] - 1 >= 0):
-                neighbours.append(node[0], node[1] - 1)
-            for neighbour in neighbours:
-                new_path = list(path)
-                new_path.append(neighbour)
-                queue.append(new_path)
-                if neighbour == goal:
-                    return new_path
-
-            explored.append(node)
-    print("[getPath] No Path found!")
 
 
     
@@ -361,7 +363,9 @@ def create_nodes(robot_ID):
 
 
 if __name__ == "__main__":
-    nodeMatrix = build_RRTBot(55):  
+    nodeMatrix = build_RRTBot(55)
+    print("FOO")
+
 
 #For the sake of parsing here are the ID to Robot conversions
 # 1 = 1, 2 = 2, 3 = 3_straight, 4 = 3_L, 5 = 3_backwords_L, 6 = 4_straight, 7 = 4_L, 8 = 4_backwords_L, 9 = 4_T , 10 =4_square
