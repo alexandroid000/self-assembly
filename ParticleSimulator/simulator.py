@@ -121,10 +121,10 @@ class WBallBackend(object):
     def take_step(self, particle):
         # stochastic update to heading theta
         # right now, uniform - TODO: change to Gaussian
-        xi_x = np.random.normal() # mean zero, standard deviation 1
-        xi_y = np.random.normal()
+        xi_x = np.random.normal(scale = L/10.) # mean zero, standard deviation L/10
+        xi_y = np.random.normal(scale = L/10.)
         theta = np.arctan2(particle.velocity[1], particle.velocity[0])
-        xi_theta = np.random.normal(loc=theta)
+        xi_theta = np.random.normal(loc=theta) # mean at current heading, sd 1
         # velocity
         v = properties[particle.species]['vel']
         xdot = v*particle.velocity[0] + xi_x
