@@ -14,24 +14,35 @@ from atooms.trajectory import TrajectoryXYZ
 import sys
 sys.path.insert(0, "./bounce-viz/src/")
 from helper.shoot_ray_helper import IsInPoly, ClosestPtAlongRay
+from helper.geometry_helper import AngleBetween 
 from simple_polygon import Simple_Polygon
 
-# system configuration
+# System Configuration
+# --------------------
+
+# define simulation parameters here
+# todo: abstract out into config file
+
 L = 2.0
 N = 10
 T = 100
+R = 0.01
 simname = "box_L"+str(L)+"_N"+str(N)+"_T"+str(T)
 # Define square cell
 #cell = Cell(side=[L,L])
 cell = Simple_Polygon("square",np.array([[0.0,0.0], [L, 0.0],[L,L],[0.0,L]]))
+border_region = R # TODO: should be tied to radius of agents, not env size
 
-A_properties = {'vel':0.5, 'wall_prob': 0.05, 'beta': 0.1}
-B_properties = {'vel':0.1, 'wall_prob': 0.2, 'beta': 0.5}
+A_properties = {'vel':0.5, 'wall_prob': 0.05, 'beta': 1.0}
+B_properties = {'vel':0.05, 'wall_prob': 0.2, 'beta': 0.5}
 properties = { 'A-free':A_properties
              ,'B-free':B_properties
              ,'A-wall':A_properties
              ,'B-wall':B_properties
              }
+
+# Utility Functions
+# -----------------
 
 # http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
 def closest_edge(pt, poly):
@@ -52,15 +63,47 @@ def normalize(vector):
     norm = np.linalg.norm(vector)
     return vector/norm
 
-# weaselball simulation backend
+# Simulation Backend
+# ------------------
+
 class WBallBackend(object):
 
-    def __init__(self, system, delta=0.1, env = cell):
+    def __init__(self, system, delta=0.1, env = cell, br = border_region):
         self.system = system
         self.delta = delta
         self.env = env
         self.vs = self.env.complete_vertex_list
         self.n = len(self.vs)
+        self.br = br
+
+    def neighbors(self, particle):
+        [x,y] = particle.position
+        neighbors = []
+        bounding_box = Simple_Polygon("bb",np.array([[x-R,y-R]
+                                                   , [x+R,y-R]
+                                                   , [x+R,y+R]
+                                                   , [x-R,y+R]]))
+        for p in self.system.particle:
+            if IsInPoly(p.position, bounding_box) and (p is not particle):
+                neighbors.append(p)
+        return neighbors
+
+    def checkAttach(self, particle):
+        ns = self.neighbors(particle)
+        if ns == []:
+            return False, []
+        else:
+            return True, ns
+
+
+    # TODO: replace this with polygon offset calculator to make more robust for
+    # nonconvex polygons
+    # look into pyclipper library
+    def project_to_border_region(self, pt, dr):
+        d, j = closest_edge(pt, self.env)
+        [ex,ey] = self.vs[(j + 1) % self.n] - self.vs[j]
+        normal_dir = normalize(np.array([-ey, ex])) # pointing into polygon
+        return pt + (self.br - d) * normal_dir
 
     def take_step_boundary(self, particle):
         d, j = closest_edge(particle.position, self.env)
@@ -93,19 +136,29 @@ class WBallBackend(object):
 
         particle.velocity = normalize(particle.velocity)
         dr = self.delta*np.array([xdot, ydot])
-        if IsInPoly(particle.position + dr, cell):
+        if IsInPoly(particle.position + dr, self.env):
             particle.position += dr
         else:
+            particle.position = self.project_to_border_region(particle.position, dr)
             particle.species = particle.species[0]+'-wall'
 
     def run(self, steps):
         for i in range(steps):
             for p in self.system.particle:
+                val, ns = self.checkAttach(p)
+                if val:
+                    print("detected collision between",p.position,"and",[n.position for n in ns])
+                    p.radius = R*len(ns)
+                    mode = p.species[2:]
+                    p.species = 'B-'+mode
+                    for n in ns:
+                        self.system.particle.remove(n)
+                    print("there are now",len(self.system.particle),"particles")
+
                 if p.species[2:] == "wall":
                     self.take_step_boundary(p)
                 else:
                     self.take_step(p)
-
 
 # to log data while simulation is running, we create a callback function which
 # copies state to a dictionary
@@ -128,7 +181,6 @@ for i in range(N):
     norm = np.linalg.norm(vel)
     vel /= norm
     system.particle.append(Particle(position=[x,y], velocity=list(vel), radius = None, species= 'A-free'))
-
 
 # run simulation for T steps
 simulation.run(T-1)
