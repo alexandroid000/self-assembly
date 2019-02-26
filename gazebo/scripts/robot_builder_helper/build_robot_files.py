@@ -3,7 +3,7 @@ from create_World import createWorld
 import sys
 import random
 #This vavlue is used in creating the "Node Matrix" which I use as a higher level representation of the robot configuration
-MAX_ROBOT_SIZE = 6
+MAX_ROBOT_SIZE = 7
 
 def create_x_script(robotID):
     f = open("run.sh", "w+")
@@ -368,9 +368,6 @@ def print_nice(M):
         print(l)
         print("\n")
     pass
-#if __name__ == "__main__":
-#    nodeMatrix = build_RRTBot(55)
-#    print("FOO")
 
 
 #For the sake of parsing here are the ID to Robot conversions

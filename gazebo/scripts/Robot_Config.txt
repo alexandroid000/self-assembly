@@ -24,7 +24,7 @@ DATA_RECORDING_TYPE=1
 ENABLE_ENCLOSURE=0
 
 #Large robot generator is the aggregate structure that forms nondeterministically from 
-#a RRT like or random walk like algorithm.
+#a RRT like algorithm.
 LARGE_ROBOT_GENERATOR=1
 #If LARGE_ROBOT_GENERATOR is enabled, how many weaselbots should there be at minimum
 K_LARGE=3

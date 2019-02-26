@@ -57,6 +57,7 @@ namespace gazebo
 			this->resetStructure_ = RANDOMIZE_STRUCTURES;
 			this->resetFlag_ = 1;
 			srand (static_cast <unsigned> (time(0)));	
+			//Randomize the models that need to be randomized
 			this->world_->SetPaused(0);	
 			
 			std::cout << "Finished loading in initial state of balls" << std::endl;
@@ -64,7 +65,6 @@ namespace gazebo
 
 		void worldReset()
 		{
-
 			this->resetFlag_ = 1;
 		}
 
@@ -77,6 +77,7 @@ namespace gazebo
 				{
 					this->doneInitFlag = 1;
 					this->_updateWorldReset = event::Events::ConnectWorldReset(boost::bind( &InitCondition::worldReset, this));
+                    this->resetFlag_ = 1; //Reset world at start to randomize if needed
 				}
 			}
 			//Check that trials dont need a reset
