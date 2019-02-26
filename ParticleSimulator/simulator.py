@@ -164,7 +164,7 @@ class WBallBackend(object):
 # copies state to a dictionary
 pos_db = [[]]*T
 def cbk(sim, db):
-    xys = [copy(p.position) for p in sim.system.particle]
+    xys = [(copy(p.species), copy(p.position)) for p in sim.system.particle]
     pos_db[sim.current_step] = xys
 
 # initialize simulation
@@ -191,7 +191,7 @@ print("ran sim for ",T,"steps")
 with open(simname+'.xyz','w') as th:
     for i in range(T):
         xys = pos_db[i]
-        for [x,y] in xys:
+        for (_, [x,y]) in xys:
             th.write(str(x)+" "+str(y)+" ")
         th.write("\n")
 
@@ -207,24 +207,49 @@ class Data:
     def __iter__(self):
         return self
 
-    def clean_system(self, xys):
-        return np.transpose(np.array(xys))
+    def clean_system(self, dat):
+        types = [t for (t,xy) in dat]
+        xys = [xy for (t,xy) in dat]
+        return types, np.array(xys)
 
     def __next__(self):
-        xys = self.db[self.num]
+        dat = self.db[self.num]
         self.num += 1
-        return self.clean_system(xys)
+        return self.clean_system(dat)
 
 d = Data(pos_db)
 
+color_map = { 'A-wall': (0, 0, 1)
+            , 'A-free': (0, 0, 1)
+            , 'B-wall': (0, 1, 0)
+            , 'B-free': (0, 1, 0)
+            }
+size_map =  { 'A-wall': 10
+            , 'A-free': 10
+            , 'B-wall': 50
+            , 'B-free': 50
+            }
+
+particles = np.zeros(N, dtype=[('position', float, 2),
+                               ('size',     float, 1),
+                               ('color',    float, 3)])
+
+init = copy(next(d))
+
+particles['position'] = init[1]
+particles['color'] = [color_map[t] for t in init[0]]
+particles['size'] = [size_map[t] for t in init[0]]
 
 fig = plt.figure()
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 ax = fig.add_subplot(111, aspect='equal', autoscale_on=False,
                      xlim=(-0.2, L+0.2), ylim=(-0.2, L+0.2))
 
-# particles holds the locations of the particles
-particles, = ax.plot([], [], 'bo', ms=6)
+scat = ax.scatter(particles['position'][:,0]
+                , particles['position'][:,1]
+                , facecolors=particles['color']
+                , s=particles['size']
+                )
 
 # rect is the box edge
 rect = plt.Rectangle([0,0],
@@ -236,26 +261,23 @@ ax.add_patch(rect)
 def init():
     """initialize animation"""
     global rect
-    particles.set_data([], [])
+    global scat
     rect.set_edgecolor('none')
-    return particles, rect
-
+    return scat, rect
 
 def animate(i):
     """perform animation step"""
-    global d, rect, dt, ax, fig
-    xys = next(d)
+    global d, rect, dt, ax, fig, particles
+    dat = next(d)
 
-    ms = int(fig.dpi * 0.02 * fig.get_figwidth()
-             / np.diff(ax.get_xbound())[0])
-    
     # update pieces of the animation
     rect.set_edgecolor('k')
-    particles.set_data(xys[0], xys[1])
-    particles.set_markersize(ms)
-    return particles, rect
+    scat.set_facecolors([color_map[t] for t in dat[0]])
+    scat.set_sizes([size_map[t] for t in dat[0]])
+    scat.set_offsets(dat[1])
+    return scat, rect
 
-ani = animation.FuncAnimation(fig, animate, frames=T,
+ani = animation.FuncAnimation(fig, animate, frames=T-1,
                               interval=10, blit=True, init_func=init)
 
 
