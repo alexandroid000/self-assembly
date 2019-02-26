@@ -86,6 +86,8 @@ Deliverables
     - analogue to mean free path
     - pressure? Alli is working on a thermodynamic interpretation
 
+- asymptotic analysis of large assemblies
+
 ### Predictive
 
 - show evolution of location distribution from specific initial conditions (forward simulation)
@@ -116,6 +118,7 @@ Evaluation
     - free variable: angle of wedge (4-5 different angles)
 - casimir effect: two parallel cardboard plates in an active single-agent bath
 - asymmetric gear (made of cardboard?) in active single-agent bath
+- lots of movable obstacles (cardboard cubes or cylinders) in arena with several agents
 
 ### Other possible modelling / control variables:
 
