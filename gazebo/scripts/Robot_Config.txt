@@ -25,12 +25,12 @@ ENABLE_ENCLOSURE=0
 
 #Large robot generator is the aggregate structure that forms nondeterministically from 
 #a RRT like or random walk like algorithm.
-LARGE_ROBOT_GENERATOR=0
+LARGE_ROBOT_GENERATOR=1
 #If LARGE_ROBOT_GENERATOR is enabled, how many weaselbots should there be at minimum
-K_LARGE=20
+K_LARGE=3
 #If LARGE_ROBOT_GENERATOR is enabled, what is the maximum NxN grid that the robots can form
 #For example if N = 12, the robot generates in a 12x12 grid
-N_LARGE=12
+N_LARGE=8
 
 #The following are the robots that are available by ID
 # 1 = 1, 2 = 2, 3 = 3_straight, 4 = 3_L, 5 = 3_backwords_L, 6 = 4_straight, 7 = 4_L, 8 = 4_backwords_L, 9 = 4_T , 10 =4_square

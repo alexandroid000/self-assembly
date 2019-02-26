@@ -18,6 +18,11 @@ case $ROBOT_TO_RUN in
     6|7|8|9|10) NUMBER_OF_WEASELBALLS=4 ;;
 esac
 
+if [ "$LARGE_ROBOT_GENERATOR" -eq 1 ]
+then
+    NUMBER_OF_WEASELBALLS=$K_LARGE
+fi
+
 #____________ECHO_TO_COMMON_H________
 
 
@@ -78,10 +83,12 @@ static const string SHELL_STRING= \"shell\";
 static const int ROBOT_TO_RUN= $ROBOT_TO_RUN;
 static const int LONGEST_WEASELBALL_SEQUENCE= $NUMBER_OF_WEASELBALLS;
 static const double DIAMETER_OF_WEASELBALLS= 0.108;
+static const int K_LARGE= $K_LARGE;
+static const bool LARGE_ROBOT_GENERATOR= $LARGE_ROBOT_GENERATOR;
+static const bool ENABLE_ENCLOSURE=$ENABLE_ENCLOSURE;
 static const int NUMBER_OF_STRUCTURES= 1; //I am keeping this as constant for now since we only want one robot running at a time.
 static const int RECORDING_TYPE= $DATA_RECORDING_TYPE;
 static const string COLLECTION_PATH= \"$WORKSPACE_PATH/data/collections/\";" >> $FILE
-                      
 
 echo "#endif // _COMMON_H_" >> $FILE
 

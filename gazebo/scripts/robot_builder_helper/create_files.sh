@@ -7,8 +7,6 @@ ENABLE_ENCLOSURE=$3
 LARGE_ROBOT_GENERATOR=$4
 N_LARGE=$5
 
-echo "$ENABLE_ENCLOSURE"
-echo "$LARGE_ROBOT_GENERATOR"
 DIR=../../src/weaselball_description/meshes/${ROBOT_ID}
 
 re='^[0-9]+$'

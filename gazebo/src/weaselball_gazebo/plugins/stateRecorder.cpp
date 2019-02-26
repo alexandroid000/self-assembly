@@ -199,9 +199,12 @@ namespace gazebo
 			//Make sure ball is within the enclosure
 			if(ballPose[0] < ENCLOSURE_MIN_X || ballPose[0] > ENCLOSURE_MAX_X || ballPose[1] < ENCLOSURE_MIN_Y || ballPose[1] > ENCLOSURE_MAX_Y)
 			{
-				ROS_INFO("Balls not in enclosure!");
-				valid = 0;
-				break;
+                if(ENABLE_ENCLOSURE)
+                {
+				    ROS_INFO("Balls not in enclosure!");
+			   	    valid = 0;
+				    break;
+                }
 			}
 
 		}
@@ -219,16 +222,24 @@ namespace gazebo
 	{
 
         int number_of_weaselballs = 0; //We will infer the number of weaselballs from the inputted structure instead of asking the user to ask for it.
-        if(is_in(ROBOT_TO_RUN,{1}))
-            number_of_weaselballs = 1;
-        else if (is_in(ROBOT_TO_RUN,{2}))
-            number_of_weaselballs = 2;
-        else if (is_in(ROBOT_TO_RUN,{3,4,5}))
-            number_of_weaselballs = 3;
-        else if (is_in(ROBOT_TO_RUN,{6,7,8,9,10}))
-            number_of_weaselballs = 4;
+        if(LARGE_ROBOT_GENERATOR)
+        {
+            number_of_weaselballs = K_LARGE;
+        }
         else
-            ROS_ERROR("[stateRecorder.cpp/checkAllModels] Robot to run should be in the range of 1 to 10");
+        {
+            if(is_in(ROBOT_TO_RUN,{1}))
+                number_of_weaselballs = 1;
+            else if (is_in(ROBOT_TO_RUN,{2}))
+                number_of_weaselballs = 2;
+            else if (is_in(ROBOT_TO_RUN,{3,4,5}))
+                number_of_weaselballs = 3;
+            else if (is_in(ROBOT_TO_RUN,{6,7,8,9,10}))
+                number_of_weaselballs = 4;
+            else
+                ROS_ERROR("[stateRecorder.cpp/checkAllModels] Robot to run should be in the range of 1 to 10");
+
+        }
         ROS_INFO("Number of weaselballs is %d", number_of_weaselballs);
 		return ((weaselballs.size() == number_of_weaselballs and structure.size() == NUMBER_OF_STRUCTURES) ? 1 : 0);
 	}
@@ -364,7 +375,7 @@ namespace gazebo
 			std::vector<physics::ModelPtr> structures = getModels(NAME_OF_MOUNTS);
 		    std::vector<physics::ModelPtr> enclosure = getModels(NAME_OF_ENCLOSURE);
 			std::vector<sensors::ContactSensorPtr> bumpSensor = getContactSensor();
-			if( checkAllModelsInit(weaselballs, structures) and bumpSensor.size() != 0 and enclosure.size() != 0)
+			if( checkAllModelsInit(weaselballs, structures) and bumpSensor.size() != 0)
 			{
 				ROS_INFO("Found all the models and Sensors!");
 				this->getModelsFlag = 0;

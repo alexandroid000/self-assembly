@@ -264,16 +264,23 @@ namespace gazebo
             std::vector<physics::ModelPtr> structures = getModels(NAME_OF_MOUNTS);
 
             int number_of_weaselballs = 0;
-            if(is_in(ROBOT_TO_RUN,{1}))
-                number_of_weaselballs = 1;
-            else if (is_in(ROBOT_TO_RUN,{2}))
-                number_of_weaselballs = 2;
-            else if (is_in(ROBOT_TO_RUN,{3,4,5}))
-                number_of_weaselballs = 3;
-            else if (is_in(ROBOT_TO_RUN,{6,7,8,9,10}))
-                number_of_weaselballs = 4;
+            if(LARGE_ROBOT_GENERATOR)
+            {
+                number_of_weaselballs = K_LARGE;
+            }
             else
-                ROS_ERROR("[initConditionHandler.cpp/checkAllModelsInit] Robot to run should be in the range of 1 to 10");
+            {
+                if(is_in(ROBOT_TO_RUN,{1}))
+                    number_of_weaselballs = 1;
+                else if (is_in(ROBOT_TO_RUN,{2}))
+                    number_of_weaselballs = 2;
+                else if (is_in(ROBOT_TO_RUN,{3,4,5}))
+                    number_of_weaselballs = 3;
+                else if (is_in(ROBOT_TO_RUN,{6,7,8,9,10}))
+                    number_of_weaselballs = 4;
+                else
+                    ROS_ERROR("[stateRecorder.cpp/checkAllModels] Robot to run should be in the range of 1 to 10");
+            }
 			return ((weaselballs.size() == number_of_weaselballs and structures.size() == NUMBER_OF_STRUCTURES) ? 1 : 0);
 		}
 		std::vector<physics::ModelPtr> getModels(std::string modelName)
