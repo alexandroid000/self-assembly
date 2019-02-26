@@ -57,6 +57,7 @@ namespace gazebo
 			this->resetStructure_ = RANDOMIZE_STRUCTURES;
 			this->resetFlag_ = 1;
 			srand (static_cast <unsigned> (time(0)));	
+			//Randomize the models that need to be randomized
 			this->world_->SetPaused(0);	
 			
 			std::cout << "Finished loading in initial state of balls" << std::endl;
@@ -64,7 +65,6 @@ namespace gazebo
 
 		void worldReset()
 		{
-
 			this->resetFlag_ = 1;
 		}
 
@@ -77,6 +77,7 @@ namespace gazebo
 				{
 					this->doneInitFlag = 1;
 					this->_updateWorldReset = event::Events::ConnectWorldReset(boost::bind( &InitCondition::worldReset, this));
+                    this->resetFlag_ = 1; //Reset world at start to randomize if needed
 				}
 			}
 			//Check that trials dont need a reset
@@ -264,16 +265,23 @@ namespace gazebo
             std::vector<physics::ModelPtr> structures = getModels(NAME_OF_MOUNTS);
 
             int number_of_weaselballs = 0;
-            if(is_in(ROBOT_TO_RUN,{1}))
-                number_of_weaselballs = 1;
-            else if (is_in(ROBOT_TO_RUN,{2}))
-                number_of_weaselballs = 2;
-            else if (is_in(ROBOT_TO_RUN,{3,4,5}))
-                number_of_weaselballs = 3;
-            else if (is_in(ROBOT_TO_RUN,{6,7,8,9,10}))
-                number_of_weaselballs = 4;
+            if(LARGE_ROBOT_GENERATOR)
+            {
+                number_of_weaselballs = K_LARGE;
+            }
             else
-                ROS_ERROR("[initConditionHandler.cpp/checkAllModelsInit] Robot to run should be in the range of 1 to 10");
+            {
+                if(is_in(ROBOT_TO_RUN,{1}))
+                    number_of_weaselballs = 1;
+                else if (is_in(ROBOT_TO_RUN,{2}))
+                    number_of_weaselballs = 2;
+                else if (is_in(ROBOT_TO_RUN,{3,4,5}))
+                    number_of_weaselballs = 3;
+                else if (is_in(ROBOT_TO_RUN,{6,7,8,9,10}))
+                    number_of_weaselballs = 4;
+                else
+                    ROS_ERROR("[stateRecorder.cpp/checkAllModels] Robot to run should be in the range of 1 to 10");
+            }
 			return ((weaselballs.size() == number_of_weaselballs and structures.size() == NUMBER_OF_STRUCTURES) ? 1 : 0);
 		}
 		std::vector<physics::ModelPtr> getModels(std::string modelName)
