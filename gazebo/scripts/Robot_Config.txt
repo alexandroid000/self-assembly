@@ -1,4 +1,4 @@
-#The point of this file is to have an easy access point to changing the settings of the simulator.
+#he point of this file is to have an easy access point to changing the settings of the simulator.
 #After editing this file to your liking please run setupEnvironment.sh in the scripts directory.
 
 MOCAP_DATA_PATH=raw_experiment/vicon/
@@ -19,6 +19,18 @@ ENABLE_GRAPHICS="True"
 
 #0 For lots of data, #1 for minimal data
 DATA_RECORDING_TYPE=1
+
+#0 to disable enclosure, 1 to enable enclosure
+ENABLE_ENCLOSURE=0
+
+#Large robot generator is the aggregate structure that forms nondeterministically from 
+#a RRT like or random walk like algorithm.
+LARGE_ROBOT_GENERATOR=0
+#If LARGE_ROBOT_GENERATOR is enabled, how many weaselbots should there be at minimum
+K_LARGE=20
+#If LARGE_ROBOT_GENERATOR is enabled, what is the maximum NxN grid that the robots can form
+#For example if N = 12, the robot generates in a 12x12 grid
+N_LARGE=12
 
 #The following are the robots that are available by ID
 # 1 = 1, 2 = 2, 3 = 3_straight, 4 = 3_L, 5 = 3_backwords_L, 6 = 4_straight, 7 = 4_L, 8 = 4_backwords_L, 9 = 4_T , 10 =4_square

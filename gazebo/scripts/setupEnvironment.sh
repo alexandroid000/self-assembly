@@ -90,4 +90,11 @@ echo "#endif // _COMMON_H_" >> $FILE
 
 #--------Create the run file and the corresponding models--------"
 cd robot_builder_helper
-./create_files.sh $ROBOT_TO_RUN $ENABLE_GRAPHICS
+if [ $LARGE_ROBOT_GENERATOR -eq 1 ]
+then
+    ./create_files.sh $K_LARGE $ENABLE_GRAPHICS $ENABLE_ENCLOSURE $LARGE_ROBOT_GENERATOR $N_LARGE
+else
+    ./create_files.sh $ROBOT_TO_RUN $ENABLE_GRAPHICS $ENABLE_ENCLOSURE $LARGE_ROBOT_GENERATOR
+fi
+
+
