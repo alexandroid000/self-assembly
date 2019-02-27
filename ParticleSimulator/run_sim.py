@@ -1,9 +1,20 @@
+from atooms.system.particle import Particle
+from atooms.system.cell import Cell
+from atooms.system import System
+from atooms.simulation import Simulation
+from atooms.trajectory import TrajectoryXYZ
+
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+import matplotlib.animation as animation
+
 from backend import *
+from configuration import cell
 
 # initialize simulation
 system = System()
-backend = WBallBackend(system)
-simulation = Simulation(backend)
+be = WBallBackend(system, sticky=False)
+simulation = Simulation(be)
 # We will execute the callback every step
 simulation.add(cbk, 1, db=pos_db)
 
@@ -76,7 +87,7 @@ particles['size'] = [size_map[t] for t in init[0]]
 fig = plt.figure()
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 ax = fig.add_subplot(111, aspect='equal', autoscale_on=False,
-                     xlim=(-0.2, L+0.2), ylim=(-0.2, L+0.2))
+                     xlim=(-L-0.2, L+0.2), ylim=(-L-0.2, L+0.2))
 
 scat = ax.scatter(particles['position'][:,0]
                 , particles['position'][:,1]
@@ -84,31 +95,29 @@ scat = ax.scatter(particles['position'][:,0]
                 , s=particles['size']
                 )
 
-# rect is the box edge
-rect = plt.Rectangle([0,0],
-                     L,
-                     L,
-                     ec='none', lw=2, fc='none')
-ax.add_patch(rect)
+outer = [v for (i,v) in cell.outer_boundary_vertices]
+
+env = Polygon(outer, ec='none', lw=2, fc='none')
+ax.add_patch(env)
 
 def init():
     """initialize animation"""
-    global rect
+    global env 
     global scat
-    rect.set_edgecolor('none')
-    return scat, rect
+    env.set_edgecolor('none')
+    return scat, env 
 
 def animate(i):
     """perform animation step"""
-    global d, rect, dt, ax, fig, particles
+    global d, env, dt, ax, fig, particles
     dat = next(d)
 
     # update pieces of the animation
-    rect.set_edgecolor('k')
+    env.set_edgecolor('k')
     scat.set_facecolors([color_map[t] for t in dat[0]])
     scat.set_sizes([size_map[t] for t in dat[0]])
     scat.set_offsets(dat[1])
-    return scat, rect
+    return scat, env
 
 ani = animation.FuncAnimation(fig, animate, frames=T-1,
                               interval=10, blit=True, init_func=init)

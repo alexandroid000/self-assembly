@@ -1,14 +1,7 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 from copy import copy
 from random import random
 
-from atooms.system.particle import Particle
-from atooms.system.cell import Cell
-from atooms.system import System
-from atooms.simulation import Simulation
-from atooms.trajectory import TrajectoryXYZ
 
 # using bounce-viz as a submodule for geometric utilities
 import sys
@@ -23,7 +16,7 @@ from configuration import *
 # http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
 def closest_edge(pt, poly):
     [x0,y0] = pt
-    vs = poly.complete_vertex_list
+    vs = [v for (i,v) in poly.outer_boundary_vertices]
     n = len(vs)
     min_d = 100000000000
     closest_edge = -1
@@ -44,13 +37,14 @@ def normalize(vector):
 
 class WBallBackend(object):
 
-    def __init__(self, system, delta=0.1, env = cell, br = border_region):
+    def __init__(self, system, delta=0.1, env = cell, br = border_region, sticky = True):
         self.system = system
         self.delta = delta
         self.env = env
         self.vs = self.env.complete_vertex_list
         self.n = len(self.vs)
         self.br = br
+        self.sticky = sticky
 
     def neighbors(self, particle):
         [x,y] = particle.position
@@ -71,7 +65,6 @@ class WBallBackend(object):
         else:
             return True, ns
 
-
     # TODO: replace this with polygon offset calculator to make more robust for
     # nonconvex polygons
     # look into pyclipper library
@@ -84,17 +77,18 @@ class WBallBackend(object):
     def take_step_boundary(self, particle):
         d, j = closest_edge(particle.position, self.env)
         p1, p2 = self.vs[j], self.vs[(j+1) % self.n]
-        # wall following
         dir = normalize(p2-p1)
         particle.position += self.delta*d*dir
 
         if random() > properties[particle.species]['wall_prob']:
             particle.species = particle.species[0]+'-free'
+            [ex,ey] = p2-p1
+            [nx, ny] = normalize(np.array([-ey, ex])) # pointing into polygon
             [vx, vy] = particle.velocity
-            # rotate particle's velocity arond 45 degrees from wall
-            th_out = np.pi/4 + (np.pi/8)*random()
-            particle.velocity = normalize([np.cos(th_out)*vx - np.sin(th_out)*vy,
-                                           np.sin(th_out)*vx + np.cos(th_out)*vy])
+            # rotate particle's velocity uniformly out from wall
+            th_out = np.pi*random() - np.pi/2
+            particle.velocity = normalize([np.cos(th_out)*nx - np.sin(th_out)*ny,
+                                           np.sin(th_out)*nx + np.cos(th_out)*ny])
 
     def take_step(self, particle):
         # stochastic update to heading theta
@@ -123,15 +117,16 @@ class WBallBackend(object):
     def run(self, steps):
         for i in range(steps):
             for p in self.system.particle:
-                val, ns = self.checkAttach(p)
-                if val:
-                    print("detected collision between",p.position,"and",[n.position for n in ns])
-                    p.radius = R*len(ns)
-                    mode = p.species[2:]
-                    p.species = 'B-'+mode
-                    for n in ns:
-                        self.system.particle.remove(n)
-                    print("there are now",len(self.system.particle),"particles")
+                if self.sticky:
+                    val, ns = self.checkAttach(p)
+                    if val:
+                        print("detected collision between",p.position,"and",[n.position for n in ns])
+                        p.radius = R*len(ns)
+                        mode = p.species[2:]
+                        p.species = 'B-'+mode
+                        for n in ns:
+                            self.system.particle.remove(n)
+                        print("there are now",len(self.system.particle),"particles")
 
                 if p.species[2:] == "wall":
                     self.take_step_boundary(p)
