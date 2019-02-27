@@ -73,6 +73,7 @@ static const int INDIVIDUAL_TRIAL_TIME= $INDIVIDUAL_TRIAL_TIME;
 static const bool RANDOMIZE_BALLS= $RANDOMIZE_BALLS;
 static const string NAME_OF_WEASELBALLS= \"swarmbot\";
 static const string NAME_OF_MOUNTS= \"mount\";
+static const string NAME_OF_ENCLOSURE= \"weazelenclosure\";
 static const string SHELL_STRING= \"shell\";
 static const int ROBOT_TO_RUN= $ROBOT_TO_RUN;
 static const int LONGEST_WEASELBALL_SEQUENCE= $NUMBER_OF_WEASELBALLS;

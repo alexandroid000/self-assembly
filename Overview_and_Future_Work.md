@@ -105,15 +105,17 @@ Deliverables
     - control equilibrium # (and type?) of agents
 - local attachment rules based on color (graph grammars)
 
-Misc
+Evaluation
 ----
 
 ### Experiments
 
+- small square (1/4 size of original area) to get more 90 degree corner data
+- small triangle (similar size) to get 90 and 45 degree corner data
+- wedge (2 bricks on each side, centered in circular-ish environment
+    - free variable: angle of wedge (4-5 different angles)
+- casimir effect: two parallel cardboard plates in an active single-agent bath
 - asymmetric gear (made of cardboard?) in active single-agent bath
-- two parallel cardboard plates in an active single-agent bath
-- wedge in single-agent bath (see if clustering occurs in corner of wedge, what
-  is dependence on angle?)
 
 ### Other possible modelling / control variables:
 

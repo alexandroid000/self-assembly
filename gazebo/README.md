@@ -62,6 +62,11 @@ If you need the Access Key ID or Secret Accesss Key here is a good tutorial on o
 
 The default region is wherever you chose to have your s3 data stored.
 
+## Creating New Enclosures
+New enclosures can be built by editing the model.sdf file in 'gazebo/src/weaselball_description/meshes/weazelenclosure/'. 
+
+(TODO) Create python file that autogenerates an enclosure.
+
 ## Data Collection
 This simulator offers 2 data collections, verbose and minimal. 
 
