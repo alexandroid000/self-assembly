@@ -16,17 +16,23 @@ from configuration import *
 # http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
 def closest_edge(pt, poly):
     [x0,y0] = pt
-    vs = [v for (i,v) in poly.outer_boundary_vertices]
-    n = len(vs)
+    vs = poly.vertex_list_per_poly
+    n = poly.size
+    components = len(vs)
     min_d = 100000000000
+    closest_component = -1
     closest_edge = -1
-    for j in range(n):
-        [x1, y1], [x2,y2] = vs[j], vs[(j+1) % n]
-        d = abs((x2-x1)*(y1-y0) - (x1-x0)*(y2-y1)) / np.sqrt((x2-x1)**2 + (y2-y1)**2)
-        if d < min_d:
-            min_d = d
-            closest_edge = j
-    return min_d, closest_edge
+    # find closest edge over external boundary and holes
+    for (i, component) in enumerate(vs):
+        m = len(component)
+        for j in range(m):
+            [x1, y1], [x2,y2] = component[j][1], component[(j+1) % m][1]
+            d = abs((x2-x1)*(y1-y0) - (x1-x0)*(y2-y1)) / np.sqrt((x2-x1)**2 + (y2-y1)**2)
+            if d < min_d:
+                min_d = d
+                closest_component = i
+                closest_edge = j
+    return min_d, closest_component, closest_edge
 
 def normalize(vector):
     norm = np.linalg.norm(vector)
@@ -41,8 +47,8 @@ class WBallBackend(object):
         self.system = system
         self.delta = delta
         self.env = env
-        self.vs = self.env.complete_vertex_list
-        self.n = len(self.vs)
+        self.vs = self.env.vertex_list_per_poly
+        self.n = len(self.vs[0]) # outer boundary
         self.br = br
         self.sticky = sticky
 
@@ -68,21 +74,23 @@ class WBallBackend(object):
     # TODO: replace this with polygon offset calculator to make more robust for
     # nonconvex polygons
     # look into pyclipper library
+    # TODO: clean up indexing for readability
     def project_to_border_region(self, pt, dr):
-        d, j = closest_edge(pt, self.env)
-        [ex,ey] = self.vs[(j + 1) % self.n] - self.vs[j]
+        d, c, j = closest_edge(pt, self.env)
+        csize = len(self.vs[c])
+        [ex,ey] = self.vs[c][(j + 1) % csize][1] - self.vs[c][j][1]
         normal_dir = normalize(np.array([-ey, ex])) # pointing into polygon
         return pt + (self.br - d) * normal_dir
 
     def take_step_boundary(self, particle):
-        d, j = closest_edge(particle.position, self.env)
-        p1, p2 = self.vs[j], self.vs[(j+1) % self.n]
-        dir = normalize(p2-p1)
-        particle.position += self.delta*d*dir
+        d, c, j = closest_edge(particle.position, self.env)
+        csize = len(self.vs[c])
+        edge_dir = self.vs[c][(j+1) % csize][1] - self.vs[c][j][1]
+        particle.position += self.delta*d*normalize(edge_dir)
 
         if random() > properties[particle.species]['wall_prob']:
             particle.species = particle.species[0]+'-free'
-            [ex,ey] = p2-p1
+            [ex,ey] = edge_dir
             [nx, ny] = normalize(np.array([-ey, ex])) # pointing into polygon
             [vx, vy] = particle.velocity
             # rotate particle's velocity uniformly out from wall

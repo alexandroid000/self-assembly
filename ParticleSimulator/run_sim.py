@@ -96,15 +96,23 @@ scat = ax.scatter(particles['position'][:,0]
                 )
 
 outer = [v for (i,v) in cell.outer_boundary_vertices]
+holes = [[v for (i,v) in h[::-1]] for h in cell.holes]
 
-env = Polygon(outer, ec='none', lw=2, fc='none')
+
+print(outer)
+env = Polygon(outer, ec='k', lw=2, fc='none')
 ax.add_patch(env)
+
+for h in holes:
+    print(h)
+    hole = Polygon(h, ec='k', lw=2, fc='none')
+    ax.add_patch(hole)
 
 def init():
     """initialize animation"""
     global env 
     global scat
-    env.set_edgecolor('none')
+    #env.set_edgecolor('none')
     return scat, env 
 
 def animate(i):
