@@ -20,7 +20,7 @@ simulation.add(cbk, 1, db=pos_db)
 
 # create N particles at random locations in the box
 for i in range(N):
-    x,y = L*random(), L*random()
+    x,y = random(), random()
     vel = np.array([random()-0.5, random()-0.5])
     norm = np.linalg.norm(vel)
     vel /= norm
@@ -87,7 +87,7 @@ particles['size'] = [size_map[t] for t in init[0]]
 fig = plt.figure()
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 ax = fig.add_subplot(111, aspect='equal', autoscale_on=False,
-                     xlim=(-L-0.2, L+0.2), ylim=(-L-0.2, L+0.2))
+                     xlim=(-0.2, 8+0.2), ylim=(-0.2, 8+0.2))
 
 scat = ax.scatter(particles['position'][:,0]
                 , particles['position'][:,1]

@@ -1,4 +1,5 @@
 from simple_polygon import Simple_Polygon
+from maps import *
 import numpy as np
 
 # System Configuration
@@ -30,7 +31,8 @@ R = 0.02
 border_region = R
 # Define square cell
 #cell = Cell(side=[L,L])
-cell = Simple_Polygon("square",np.array([[0.0,0.0], [L, 0.0],[L,L],[0.0,L]]))
+#cell = Simple_Polygon("square",np.array([[0.0,0.0], [L, 0.0],[L,L],[0.0,L]]))
+cell = Simple_Polygon("sqh",simple_holes[0], simple_holes[1])
 #cell = Simple_Polygon("spikes",np.array(mk_spiky_circle(8, 0.5*L)))
 simname = cell.name+'_'+str(L)+"_N"+str(N)+"_T"+str(T)
 
