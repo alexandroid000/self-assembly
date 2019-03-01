@@ -5,7 +5,7 @@ import random
 #This vavlue is used in creating the "Node Matrix" which I use as a higher level representation of the robot configuration
 MAX_ROBOT_SIZE = 7
 
-def create_x_script(robotID):
+def create_x_script(robotID, RRTBot):
     f = open("run.sh", "w+")
     s1 = '''#!/usr/bin/env bash
 
@@ -28,7 +28,7 @@ rm *.txt
 
 touch testUpload
 echo $(date) >> testUpload
-sh ./upload.sh s3://weaselball-data/''' + str(robotID) + '''
+sh ./upload.sh s3://weaselball-data/''' + str(robotID) + str(RRTBot) + '''
 
 cd $cwd
 export GAZEBO_MODEL_PATH=$WORKSPACE_PATH/src/weaselball_description/meshes:$GAZEBO_MODEL_PATH
@@ -39,7 +39,7 @@ roslaunch weaselball_gazebo ''' + str(robotID) + '''.launch init_cond:=$doit
 if [ "$UPLOAD_DATA" -eq "1" ]; then
     cd $WORKSPACE_PATH/data/collections
     chmod +x upload.sh
-    sh ./upload.sh s3://weaselball-data/''' + str(robotID) + '''
+    sh ./upload.sh s3://weaselball-data/''' + str(robotID) + str(RRTBot) + '''
     if [ "$DELETE_AFTER_UPLOAD" -eq "1" ]; then
         rm *.csv
     fi
@@ -398,6 +398,9 @@ if __name__ == "__main__":
     create_one_x_mount(nodeMatrix, robotID)
     create_x_model_sdf(nodeMatrix, node_positions, robotID)
     create_x_model_config(nodeMatrix, robotID)
-    create_x_script(robotID)
+    s = ""
+    if generate_large_robot:
+        s = "RRTBot"
+    create_x_script(robotID, s)
     createWorld(enclosure)
     print_nice(nodeMatrix.Matrix)
