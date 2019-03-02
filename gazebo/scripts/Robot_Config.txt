@@ -11,8 +11,8 @@ VIDEO_LED_TIME_FACTOR=20.0
 
 #In order to upload data to the AWS S3 you will need to setup AWS using "aws configure" command
 #Please contact the AWS admin to get your user account details. 
-UPLOAD_DATA=0
-DELETE_AFTER_UPLOAD=0
+UPLOAD_DATA=1
+DELETE_AFTER_UPLOAD=1
 
 #Needs to be True/False
 ENABLE_GRAPHICS="True"
@@ -27,10 +27,10 @@ ENABLE_ENCLOSURE=0
 #a RRT like algorithm.
 LARGE_ROBOT_GENERATOR=1
 #If LARGE_ROBOT_GENERATOR is enabled, how many weaselbots should there be at minimum
-K_LARGE=3
+K_LARGE=1
 #If LARGE_ROBOT_GENERATOR is enabled, what is the maximum NxN grid that the robots can form
 #For example if N = 12, the robot generates in a 12x12 grid
-N_LARGE=8
+N_LARGE=1
 
 #The following are the robots that are available by ID
 # 1 = 1, 2 = 2, 3 = 3_straight, 4 = 3_L, 5 = 3_backwords_L, 6 = 4_straight, 7 = 4_L, 8 = 4_backwords_L, 9 = 4_T , 10 =4_square
@@ -39,11 +39,11 @@ ROBOT_TO_RUN=1
 RANDOMIZE_BALLS=1
 RANDOMIZE_STRUCTURES=1
 
-RUN_TRIALS=0
+RUN_TRIALS=1
 #If you want this to run forever, set NUMBER_OF_TRIALS_CYCLES to -1
-NUMBER_OF_TRIALS_CYCLES=-1
+NUMBER_OF_TRIALS_CYCLES=8
 #The simulator has a hard time working when this is very low (below 5 or so)
-INDIVIDUAL_TRIAL_TIME=300
+INDIVIDUAL_TRIAL_TIME=5
 #This is enabled if we are running on AWS, this will shutdown the computer so that way we dont pay for it while its not running anything.
-RUNNING_ON_AWS=0
+RUNNING_ON_AWS==0
 
