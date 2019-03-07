@@ -34,6 +34,13 @@ def closest_edge(pt, poly):
                 closest_edge = j
     return min_d, closest_component, closest_edge
 
+def dist_dir_closest_edge(pt, poly):
+    d, c, j = closest_edge(pt, poly)
+    vs = poly.vertex_list_per_poly
+    csize = len(vs[c])
+    edge_vect = vs[c][(j + 1) % csize][1] - vs[c][j][1]
+    return d, edge_vect
+
 def normalize(vector):
     norm = np.linalg.norm(vector)
     return vector/norm
@@ -74,19 +81,13 @@ class WBallBackend(object):
     # TODO: replace this with polygon offset calculator to make more robust for
     # nonconvex polygons
     # look into pyclipper library
-    # TODO: clean up indexing for readability
-    def project_to_border_region(self, pt, dr):
-        d, c, j = closest_edge(pt, self.env)
-        csize = len(self.vs[c])
-        [ex,ey] = self.vs[c][(j + 1) % csize][1] - self.vs[c][j][1]
+    def project_to_border_region(self, pt):
+        d, [ex,ey] = dist_dir_closest_edge(pt, self.env)
         normal_dir = normalize(np.array([-ey, ex])) # pointing into polygon
         return pt + (self.br - d) * normal_dir
 
     def take_step_boundary(self, particle):
-        d, c, j = closest_edge(particle.position, self.env)
-        csize = len(self.vs[c])
-        edge_dir = self.vs[c][(j+1) % csize][1] - self.vs[c][j][1]
-        particle.position += self.delta*d*normalize(edge_dir)
+        d, edge_dir = dist_dir_closest_edge(particle.position, self.env)
 
         if random() > properties[particle.species]['wall_prob']:
             particle.species = particle.species[0]+'-free'
@@ -97,6 +98,9 @@ class WBallBackend(object):
             th_out = np.pi*random() - np.pi/2
             particle.velocity = normalize([np.cos(th_out)*nx - np.sin(th_out)*ny,
                                            np.sin(th_out)*nx + np.cos(th_out)*ny])
+        else:
+            particle.position += self.delta*d*normalize(edge_dir)
+
 
     def take_step(self, particle):
         # stochastic update to heading theta
@@ -119,7 +123,7 @@ class WBallBackend(object):
         if IsInPoly(particle.position + dr, self.env):
             particle.position += dr
         else:
-            particle.position = self.project_to_border_region(particle.position, dr)
+            particle.position = self.project_to_border_region(particle.position)
             particle.species = particle.species[0]+'-wall'
 
     def run(self, steps):
