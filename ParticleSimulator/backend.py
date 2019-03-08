@@ -86,20 +86,44 @@ class WBallBackend(object):
         normal_dir = normalize(np.array([-ey, ex])) # pointing into polygon
         return pt + (self.br - d) * normal_dir
 
+    # move obstacle #c in the direction of dir
+    # currently only internal obstacles can move, boundary is fixed
+    def move_obstacle(self, c, dir):
+        old_poly = [[v for (i,v) in c] for c in copy(self.env.vertex_list_per_poly)]
+        print(old_poly[c])
+        new_poly = [(v + dir) for v in old_poly[c]]
+        new_obstacles = old_poly[:c]+old_poly[(c+1):]
+        new_env = Simple_Polygon(self.env.name, old_poly[0], new_obstacles)
+        self.env = new_env
+
+    def obstacle_interaction(self, particle, edge_dir, d):
+        d, c, j = closest_edge(particle.position, self.env)
+        particle.position += self.delta*d*normalize(edge_dir)
+        [ex,ey] = edge_dir
+        push_dir = normalize(np.array([ey, -ex])) # pointing into obstacle
+        if c != 0:
+            self.move_obstacle(c, push_dir)
+
+    def scatter(self, particle, edge_dir):
+        particle.species = particle.species[0]+'-free'
+        [ex,ey] = edge_dir
+        [nx, ny] = normalize(np.array([-ey, ex])) # pointing into polygon
+        [vx, vy] = particle.velocity
+        # rotate particle's velocity uniformly out from wall
+        th_out = np.pi*random() - np.pi/2
+        particle.velocity = normalize([np.cos(th_out)*nx - np.sin(th_out)*ny,
+                                       np.sin(th_out)*nx + np.cos(th_out)*ny])
+
     def take_step_boundary(self, particle):
         d, edge_dir = dist_dir_closest_edge(particle.position, self.env)
 
+        # escape from wall
         if random() > properties[particle.species]['wall_prob']:
-            particle.species = particle.species[0]+'-free'
-            [ex,ey] = edge_dir
-            [nx, ny] = normalize(np.array([-ey, ex])) # pointing into polygon
-            [vx, vy] = particle.velocity
-            # rotate particle's velocity uniformly out from wall
-            th_out = np.pi*random() - np.pi/2
-            particle.velocity = normalize([np.cos(th_out)*nx - np.sin(th_out)*ny,
-                                           np.sin(th_out)*nx + np.cos(th_out)*ny])
+            self.scatter(particle, edge_dir)
+
+        # stay on wall, impart force
         else:
-            particle.position += self.delta*d*normalize(edge_dir)
+            self.obstacle_interaction(particle, edge_dir, d)
 
 
     def take_step(self, particle):
@@ -132,13 +156,11 @@ class WBallBackend(object):
                 if self.sticky:
                     val, ns = self.checkAttach(p)
                     if val:
-                        print("detected collision between",p.position,"and",[n.position for n in ns])
                         p.radius = R*len(ns)
                         mode = p.species[2:]
                         p.species = 'B-'+mode
                         for n in ns:
                             self.system.particle.remove(n)
-                        print("there are now",len(self.system.particle),"particles")
 
                 if p.species[2:] == "wall":
                     self.take_step_boundary(p)

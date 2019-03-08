@@ -13,14 +13,16 @@ from configuration import cell
 
 # initialize simulation
 system = System()
-be = WBallBackend(system, sticky=False)
+be = WBallBackend(system, sticky=allow_attachment)
 simulation = Simulation(be)
 # We will execute the callback every step
 simulation.add(cbk, 1, db=pos_db)
 
 # create N particles at random locations in the box
 for i in range(N):
-    x,y = random(), random()
+    [x,y] = normalize([1.0, 1.0])
+#    [x,y] = 0.5*L*normalize([random()-0.5,random()-0.5])
+#    [x,y] = 0.5*L*normalize([np.cos(3*np.pi/8),np.sin(3*np.pi/8)])
     vel = np.array([random()-0.5, random()-0.5])
     norm = np.linalg.norm(vel)
     vel /= norm
@@ -87,7 +89,7 @@ particles['size'] = [size_map[t] for t in init[0]]
 fig = plt.figure()
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 ax = fig.add_subplot(111, aspect='equal', autoscale_on=False,
-                     xlim=(-0.2, 8+0.2), ylim=(-0.2, 8+0.2))
+                     xlim=(-L-0.2, L+0.2), ylim=(-L-0.2, L+0.2))
 
 scat = ax.scatter(particles['position'][:,0]
                 , particles['position'][:,1]
@@ -99,12 +101,10 @@ outer = [v for (i,v) in cell.outer_boundary_vertices]
 holes = [[v for (i,v) in h[::-1]] for h in cell.holes]
 
 
-print(outer)
 env = Polygon(outer, ec='k', lw=2, fc='none')
 ax.add_patch(env)
 
 for h in holes:
-    print(h)
     hole = Polygon(h, ec='k', lw=2, fc='none')
     ax.add_patch(hole)
 
