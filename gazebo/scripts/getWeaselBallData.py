@@ -35,11 +35,11 @@ if __name__ == "__main__":
     #Setup initial script
     setup_robot_config()
     #Chose RRTBot size range to test over
-    robots_to_run = range(1,3) 
+    robots_to_run = range(3,8) 
     #Run Tests!
     for robot in robots_to_run:
         #Modify script to have correct number of robots
-        replace_K_large(robot)
+        replace_Robot_To_Run(robot)
         #Run the build of the environment
         subprocess.call(["./setupEnvironment.sh"])
         #Run ./run.sh
