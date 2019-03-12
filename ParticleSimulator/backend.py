@@ -1,5 +1,5 @@
 import numpy as np
-from copy import copy
+from copy import copy, deepcopy
 from random import random
 
 
@@ -50,8 +50,9 @@ def normalize(vector):
 
 class WBallBackend(object):
 
-    def __init__(self, system, delta=0.1, env = cell, br = border_region, sticky = True):
+    def __init__(self, system, database, delta=0.1, env = cell, br = border_region, sticky = True):
         self.system = system
+        self.db = database
         self.delta = delta
         self.env = env
         self.vs = self.env.vertex_list_per_poly
@@ -89,19 +90,22 @@ class WBallBackend(object):
     # move obstacle #c in the direction of dir
     # currently only internal obstacles can move, boundary is fixed
     def move_obstacle(self, c, dir):
-        old_poly = [[v for (i,v) in c] for c in copy(self.env.vertex_list_per_poly)]
-        print(old_poly[c])
-        new_poly = [(v + dir) for v in old_poly[c]]
-        new_obstacles = old_poly[:c]+old_poly[(c+1):]
-        new_env = Simple_Polygon(self.env.name, old_poly[0], new_obstacles)
+        old_poly = [[v for (i,v) in c] for c in deepcopy(self.env.vertex_list_per_poly)]
+        new_poly = [(v + 0.1*dir) for v in old_poly[c]]
+        new_obstacles = old_poly[:c]+[new_poly]+old_poly[(c+1):]
+        print("moved obstacle",c,"along vector",dir)
+        print(len(new_obstacles),"new obstacles:",new_obstacles)
+        new_env = Simple_Polygon(self.env.name, new_obstacles[0], new_obstacles[1:])
         self.env = new_env
 
     def obstacle_interaction(self, particle, edge_dir, d):
         d, c, j = closest_edge(particle.position, self.env)
-        particle.position += self.delta*d*normalize(edge_dir)
-        [ex,ey] = edge_dir
-        push_dir = normalize(np.array([ey, -ex])) # pointing into obstacle
         if c != 0:
+            dr = self.next_dr(particle)
+
+            particle.position += self.delta*d*normalize(edge_dir)
+            [ex,ey] = edge_dir
+            push_dir = normalize(np.array([ey, -ex])) # pointing into obstacle
             self.move_obstacle(c, push_dir)
 
     def scatter(self, particle, edge_dir):
@@ -126,7 +130,7 @@ class WBallBackend(object):
             self.obstacle_interaction(particle, edge_dir, d)
 
 
-    def take_step(self, particle):
+    def next_dr(self, particle):
         # stochastic update to heading theta
         # right now, uniform - TODO: change to Gaussian
         xi_x = np.random.normal(scale = L/10.) # mean zero, standard deviation L/10
@@ -144,6 +148,10 @@ class WBallBackend(object):
 
         particle.velocity = normalize(particle.velocity)
         dr = self.delta*np.array([xdot, ydot])
+        return dr
+
+    def take_step(self, particle):
+        dr = self.next_dr(particle)
         if IsInPoly(particle.position + dr, self.env):
             particle.position += dr
         else:
@@ -152,6 +160,7 @@ class WBallBackend(object):
 
     def run(self, steps):
         for i in range(steps):
+            self.log_data(i)
             for p in self.system.particle:
                 if self.sticky:
                     val, ns = self.checkAttach(p)
@@ -167,10 +176,13 @@ class WBallBackend(object):
                 else:
                     self.take_step(p)
 
+    def log_data(self, step):
+        xys = [(copy(p.species), copy(p.position)) for p in self.system.particle]
+        envs = [[v for (i,v) in c] for c in deepcopy(self.env.vertex_list_per_poly)]
+        self.db["pos"][step] = xys
+        self.db["env"][step] = envs
+
+
 # to log data while simulation is running, we create a callback function which
 # copies state to a dictionary
-pos_db = [[]]*T
-def cbk(sim, db):
-    xys = [(copy(p.species), copy(p.position)) for p in sim.system.particle]
-    pos_db[sim.current_step] = xys
 
