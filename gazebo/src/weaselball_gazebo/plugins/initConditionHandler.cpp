@@ -83,10 +83,10 @@ namespace gazebo
 			//Check that trials dont need a reset
 			if(RUN_TRIALS)
 			{
-				if( (int)(this->cycleCounter_ / 2 ) == NUMBER_OF_TRIALS_CYCLES+1)
+				if( (int)(this->cycleCounter_ / 2) == NUMBER_OF_TRIALS_CYCLES+1)
 				{
-					std::cout << "[Debug] Ending Simulator" << std::endl;
-					std::cout << "[Debug] cycleCounter = "<< this->cycleCounter_ << " NUMBER_OF_TRIALS_CYCLES = " << NUMBER_OF_TRIALS_CYCLES << std::endl; 
+					//std::cout << "[Debug] Ending Simulator" << std::endl;
+					//std::cout << "[Debug] cycleCounter = "<< this->cycleCounter_ << " NUMBER_OF_TRIALS_CYCLES = " << NUMBER_OF_TRIALS_CYCLES << std::endl; 
 					system("killall -9 gzclient & killall -9 gzserver & killall -9 rosmaster");
 					this->world_->Fini();	 
 				}
