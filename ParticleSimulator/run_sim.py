@@ -1,15 +1,27 @@
+from atooms.system.particle import Particle
+from atooms.system.cell import Cell
+from atooms.system import System
+from atooms.simulation import Simulation
+from atooms.trajectory import TrajectoryXYZ
+
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+import matplotlib.animation as animation
+
 from backend import *
+from configuration import cell
 
 # initialize simulation
 system = System()
-backend = WBallBackend(system)
-simulation = Simulation(backend)
-# We will execute the callback every step
-simulation.add(cbk, 1, db=pos_db)
+data = {"pos":[[]]*T, "env":[[]]*T}
+be = WBallBackend(system, data, sticky=allow_attachment)
+simulation = Simulation(be)
 
 # create N particles at random locations in the box
 for i in range(N):
-    x,y = L*random(), L*random()
+    [x,y] = normalize([1.0, 1.0])
+#    [x,y] = 0.5*L*normalize([random()-0.5,random()-0.5])
+#    [x,y] = 0.5*L*normalize([np.cos(3*np.pi/8),np.sin(3*np.pi/8)])
     vel = np.array([random()-0.5, random()-0.5])
     norm = np.linalg.norm(vel)
     vel /= norm
@@ -23,7 +35,7 @@ print("ran sim for ",T,"steps")
 # write data to file
 with open(simname+'.xyz','w') as th:
     for i in range(T):
-        xys = pos_db[i]
+        xys = be.db["pos"][i]
         for (_, [x,y]) in xys:
             th.write(str(x)+" "+str(y)+" ")
         th.write("\n")
@@ -34,7 +46,8 @@ print("writing video to",simname+".mp4")
 class Data:
 
     def __init__(self, db, start=0):
-        self.db = db
+        self.xy = db["pos"]
+        self.env = db["env"]
         self.num = start
 
     def __iter__(self):
@@ -46,11 +59,12 @@ class Data:
         return types, np.array(xys)
 
     def __next__(self):
-        dat = self.db[self.num]
+        dat = self.xy[self.num]
+        polys = [np.array(poly) for poly in self.env[self.num]]
         self.num += 1
-        return self.clean_system(dat)
+        return self.clean_system(dat), polys
 
-d = Data(pos_db)
+d = Data(be.db)
 
 color_map = { 'A-wall': (0, 0, 1)
             , 'A-free': (0, 0, 1)
@@ -67,16 +81,16 @@ particles = np.zeros(N, dtype=[('position', float, 2),
                                ('size',     float, 1),
                                ('color',    float, 3)])
 
-init = copy(next(d))
+initxy, initenv = copy(next(d))
 
-particles['position'] = init[1]
-particles['color'] = [color_map[t] for t in init[0]]
-particles['size'] = [size_map[t] for t in init[0]]
+particles['position'] = initxy[1]
+particles['color'] = [color_map[t] for t in initxy[0]]
+particles['size'] = [size_map[t] for t in initxy[0]]
 
 fig = plt.figure()
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 ax = fig.add_subplot(111, aspect='equal', autoscale_on=False,
-                     xlim=(-0.2, L+0.2), ylim=(-0.2, L+0.2))
+                     xlim=(-L-0.2, L+0.2), ylim=(-L-0.2, L+0.2))
 
 scat = ax.scatter(particles['position'][:,0]
                 , particles['position'][:,1]
@@ -84,34 +98,33 @@ scat = ax.scatter(particles['position'][:,0]
                 , s=particles['size']
                 )
 
-# rect is the box edge
-rect = plt.Rectangle([0,0],
-                     L,
-                     L,
-                     ec='none', lw=2, fc='none')
-ax.add_patch(rect)
+patches = []
+for poly in initenv:
+    p = Polygon(poly, ec='k', lw=2, fc='none')
+    patches.append(ax.add_patch(p))
 
 def init():
     """initialize animation"""
-    global rect
-    global scat
-    rect.set_edgecolor('none')
-    return scat, rect
+    global scat, patches
+    return patches+[scat]
 
 def animate(i):
     """perform animation step"""
-    global d, rect, dt, ax, fig, particles
-    dat = next(d)
+    global scat, patches
+    xy, polys = next(d)
+
+    for j in range(1,len(patches)):
+        patches[j].set_xy(polys[j])
+        patches[j].set_edgecolor('k')
 
     # update pieces of the animation
-    rect.set_edgecolor('k')
-    scat.set_facecolors([color_map[t] for t in dat[0]])
-    scat.set_sizes([size_map[t] for t in dat[0]])
-    scat.set_offsets(dat[1])
-    return scat, rect
+    scat.set_facecolors([color_map[t] for t in xy[0]])
+    scat.set_sizes([size_map[t] for t in xy[0]])
+    scat.set_offsets(xy[1])
+    return patches+[scat]
 
-ani = animation.FuncAnimation(fig, animate, frames=T-1,
-                              interval=10, blit=True, init_func=init)
+ani = animation.FuncAnimation(fig, animate, frames=T-2, interval=10,
+                              blit=True, init_func=init)
 
 
 # save the animation as an mp4.  This requires ffmpeg or mencoder to be

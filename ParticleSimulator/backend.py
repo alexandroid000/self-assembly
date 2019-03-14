@@ -1,14 +1,7 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-from copy import copy
+from copy import copy, deepcopy
 from random import random
 
-from atooms.system.particle import Particle
-from atooms.system.cell import Cell
-from atooms.system import System
-from atooms.simulation import Simulation
-from atooms.trajectory import TrajectoryXYZ
 
 # using bounce-viz as a submodule for geometric utilities
 import sys
@@ -23,17 +16,30 @@ from configuration import *
 # http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
 def closest_edge(pt, poly):
     [x0,y0] = pt
-    vs = poly.complete_vertex_list
-    n = len(vs)
+    vs = poly.vertex_list_per_poly
+    n = poly.size
+    components = len(vs)
     min_d = 100000000000
+    closest_component = -1
     closest_edge = -1
-    for j in range(n):
-        [x1, y1], [x2,y2] = vs[j], vs[(j+1) % n]
-        d = abs((x2-x1)*(y1-y0) - (x1-x0)*(y2-y1)) / np.sqrt((x2-x1)**2 + (y2-y1)**2)
-        if d < min_d:
-            min_d = d
-            closest_edge = j
-    return min_d, closest_edge
+    # find closest edge over external boundary and holes
+    for (i, component) in enumerate(vs):
+        m = len(component)
+        for j in range(m):
+            [x1, y1], [x2,y2] = component[j][1], component[(j+1) % m][1]
+            d = abs((x2-x1)*(y1-y0) - (x1-x0)*(y2-y1)) / np.sqrt((x2-x1)**2 + (y2-y1)**2)
+            if d < min_d:
+                min_d = d
+                closest_component = i
+                closest_edge = j
+    return min_d, closest_component, closest_edge
+
+def dist_dir_closest_edge(pt, poly):
+    d, c, j = closest_edge(pt, poly)
+    vs = poly.vertex_list_per_poly
+    csize = len(vs[c])
+    edge_vect = vs[c][(j + 1) % csize][1] - vs[c][j][1]
+    return d, edge_vect
 
 def normalize(vector):
     norm = np.linalg.norm(vector)
@@ -44,13 +50,15 @@ def normalize(vector):
 
 class WBallBackend(object):
 
-    def __init__(self, system, delta=0.1, env = cell, br = border_region):
+    def __init__(self, system, database, delta=0.1, env = cell, br = border_region, sticky = True):
         self.system = system
+        self.db = database
         self.delta = delta
         self.env = env
-        self.vs = self.env.complete_vertex_list
-        self.n = len(self.vs)
+        self.vs = self.env.vertex_list_per_poly
+        self.n = len(self.vs[0]) # outer boundary
         self.br = br
+        self.sticky = sticky
 
     def neighbors(self, particle):
         [x,y] = particle.position
@@ -71,32 +79,58 @@ class WBallBackend(object):
         else:
             return True, ns
 
-
     # TODO: replace this with polygon offset calculator to make more robust for
     # nonconvex polygons
     # look into pyclipper library
-    def project_to_border_region(self, pt, dr):
-        d, j = closest_edge(pt, self.env)
-        [ex,ey] = self.vs[(j + 1) % self.n] - self.vs[j]
+    def project_to_border_region(self, pt):
+        d, [ex,ey] = dist_dir_closest_edge(pt, self.env)
         normal_dir = normalize(np.array([-ey, ex])) # pointing into polygon
         return pt + (self.br - d) * normal_dir
 
+    # move obstacle #c in the direction of dir
+    # currently only internal obstacles can move, boundary is fixed
+    def move_obstacle(self, c, dir):
+        old_poly = [[v for (i,v) in c] for c in deepcopy(self.env.vertex_list_per_poly)]
+        new_poly = [(v + 0.1*dir) for v in old_poly[c]]
+        new_obstacles = old_poly[:c]+[new_poly]+old_poly[(c+1):]
+        print("moved obstacle",c,"along vector",dir)
+        print(len(new_obstacles),"new obstacles:",new_obstacles)
+        new_env = Simple_Polygon(self.env.name, new_obstacles[0], new_obstacles[1:])
+        self.env = new_env
+
+    def obstacle_interaction(self, particle, edge_dir, d):
+        d, c, j = closest_edge(particle.position, self.env)
+        if c != 0:
+            dr = self.next_dr(particle)
+
+            particle.position += self.delta*d*normalize(edge_dir)
+            [ex,ey] = edge_dir
+            push_dir = normalize(np.array([ey, -ex])) # pointing into obstacle
+            self.move_obstacle(c, push_dir)
+
+    def scatter(self, particle, edge_dir):
+        particle.species = particle.species[0]+'-free'
+        [ex,ey] = edge_dir
+        [nx, ny] = normalize(np.array([-ey, ex])) # pointing into polygon
+        [vx, vy] = particle.velocity
+        # rotate particle's velocity uniformly out from wall
+        th_out = np.pi*random() - np.pi/2
+        particle.velocity = normalize([np.cos(th_out)*nx - np.sin(th_out)*ny,
+                                       np.sin(th_out)*nx + np.cos(th_out)*ny])
+
     def take_step_boundary(self, particle):
-        d, j = closest_edge(particle.position, self.env)
-        p1, p2 = self.vs[j], self.vs[(j+1) % self.n]
-        # wall following
-        dir = normalize(p2-p1)
-        particle.position += self.delta*d*dir
+        d, edge_dir = dist_dir_closest_edge(particle.position, self.env)
 
+        # escape from wall
         if random() > properties[particle.species]['wall_prob']:
-            particle.species = particle.species[0]+'-free'
-            [vx, vy] = particle.velocity
-            # rotate particle's velocity arond 45 degrees from wall
-            th_out = np.pi/4 + (np.pi/8)*random()
-            particle.velocity = normalize([np.cos(th_out)*vx - np.sin(th_out)*vy,
-                                           np.sin(th_out)*vx + np.cos(th_out)*vy])
+            self.scatter(particle, edge_dir)
 
-    def take_step(self, particle):
+        # stay on wall, impart force
+        else:
+            self.obstacle_interaction(particle, edge_dir, d)
+
+
+    def next_dr(self, particle):
         # stochastic update to heading theta
         # right now, uniform - TODO: change to Gaussian
         xi_x = np.random.normal(scale = L/10.) # mean zero, standard deviation L/10
@@ -114,34 +148,41 @@ class WBallBackend(object):
 
         particle.velocity = normalize(particle.velocity)
         dr = self.delta*np.array([xdot, ydot])
+        return dr
+
+    def take_step(self, particle):
+        dr = self.next_dr(particle)
         if IsInPoly(particle.position + dr, self.env):
             particle.position += dr
         else:
-            particle.position = self.project_to_border_region(particle.position, dr)
+            particle.position = self.project_to_border_region(particle.position)
             particle.species = particle.species[0]+'-wall'
 
     def run(self, steps):
         for i in range(steps):
+            self.log_data(i)
             for p in self.system.particle:
-                val, ns = self.checkAttach(p)
-                if val:
-                    print("detected collision between",p.position,"and",[n.position for n in ns])
-                    p.radius = R*len(ns)
-                    mode = p.species[2:]
-                    p.species = 'B-'+mode
-                    for n in ns:
-                        self.system.particle.remove(n)
-                    print("there are now",len(self.system.particle),"particles")
+                if self.sticky:
+                    val, ns = self.checkAttach(p)
+                    if val:
+                        p.radius = R*len(ns)
+                        mode = p.species[2:]
+                        p.species = 'B-'+mode
+                        for n in ns:
+                            self.system.particle.remove(n)
 
                 if p.species[2:] == "wall":
                     self.take_step_boundary(p)
                 else:
                     self.take_step(p)
 
+    def log_data(self, step):
+        xys = [(copy(p.species), copy(p.position)) for p in self.system.particle]
+        envs = [[v for (i,v) in c] for c in deepcopy(self.env.vertex_list_per_poly)]
+        self.db["pos"][step] = xys
+        self.db["env"][step] = envs
+
+
 # to log data while simulation is running, we create a callback function which
 # copies state to a dictionary
-pos_db = [[]]*T
-def cbk(sim, db):
-    xys = [(copy(p.species), copy(p.position)) for p in sim.system.particle]
-    pos_db[sim.current_step] = xys
 
