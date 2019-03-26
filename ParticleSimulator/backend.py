@@ -7,50 +7,18 @@ from random import random
 import sys
 sys.path.insert(0, "./bounce-viz/src/")
 from helper.shoot_ray_helper import IsInPoly, ClosestPtAlongRay
-from helper.geometry_helper import AngleBetween 
+from helper.geometry_helper import AngleBetween
+from utilities import *
 from configuration import *
 
-# Utility Functions
-# -----------------
-
-# http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
-def closest_edge(pt, poly):
-    [x0,y0] = pt
-    vs = poly.vertex_list_per_poly
-    n = poly.size
-    components = len(vs)
-    min_d = 100000000000
-    closest_component = -1
-    closest_edge = -1
-    # find closest edge over external boundary and holes
-    for (i, component) in enumerate(vs):
-        m = len(component)
-        for j in range(m):
-            [x1, y1], [x2,y2] = component[j][1], component[(j+1) % m][1]
-            d = abs((x2-x1)*(y1-y0) - (x1-x0)*(y2-y1)) / np.sqrt((x2-x1)**2 + (y2-y1)**2)
-            if d < min_d:
-                min_d = d
-                closest_component = i
-                closest_edge = j
-    return min_d, closest_component, closest_edge
-
-def dist_dir_closest_edge(pt, poly):
-    d, c, j = closest_edge(pt, poly)
-    vs = poly.vertex_list_per_poly
-    csize = len(vs[c])
-    edge_vect = vs[c][(j + 1) % csize][1] - vs[c][j][1]
-    return d, edge_vect
-
-def normalize(vector):
-    norm = np.linalg.norm(vector)
-    return vector/norm
 
 # Simulation Backend
 # ------------------
 
 class WBallBackend(object):
 
-    def __init__(self, system, database, delta=0.1, env = cell, br = border_region, sticky = True):
+    def __init__(self, system, database, env, delta=0.1,
+                       br = 0.01, sticky = True, wires = []):
         self.system = system
         self.db = database
         self.delta = delta
@@ -59,6 +27,7 @@ class WBallBackend(object):
         self.n = len(self.vs[0]) # outer boundary
         self.br = br
         self.sticky = sticky
+        self.wires = wires
 
     def neighbors(self, particle):
         [x,y] = particle.position
@@ -111,12 +80,11 @@ class WBallBackend(object):
     def scatter(self, particle, edge_dir):
         particle.species = particle.species[0]+'-free'
         [ex,ey] = edge_dir
-        [nx, ny] = normalize(np.array([-ey, ex])) # pointing into polygon
-        [vx, vy] = particle.velocity
+        normal = normalize(np.array([-ey, ex])) # pointing into polygon
+
         # rotate particle's velocity uniformly out from wall
         th_out = np.pi*random() - np.pi/2
-        particle.velocity = normalize([np.cos(th_out)*nx - np.sin(th_out)*ny,
-                                       np.sin(th_out)*nx + np.cos(th_out)*ny])
+        particle.velocity = normalize(rotate_vector(normal, th_out))
 
     def take_step_boundary(self, particle):
         d, edge_dir = dist_dir_closest_edge(particle.position, self.env)
@@ -133,8 +101,8 @@ class WBallBackend(object):
     def next_dr(self, particle):
         # stochastic update to heading theta
         # right now, uniform - TODO: change to Gaussian
-        xi_x = np.random.normal(scale = L/10.) # mean zero, standard deviation L/10
-        xi_y = np.random.normal(scale = L/10.)
+        xi_x = np.random.normal(scale = self.delta/5.) # mean zero, standard deviation L/10
+        xi_y = np.random.normal(scale = self.delta/5.)
         theta = np.arctan2(particle.velocity[1], particle.velocity[0])
         xi_theta = np.random.normal(loc=theta) # mean at current heading, sd 1
         # velocity
@@ -143,6 +111,10 @@ class WBallBackend(object):
         ydot = v*particle.velocity[1] + xi_y
 
         beta = properties[particle.species]['beta']
+
+        if self.wires != []: 
+            particle.velocity = force_from_wires(self.wires, particle.position)
+
         particle.velocity[0] += beta*np.cos(xi_theta)
         particle.velocity[1] += beta*np.sin(xi_theta)
 
@@ -181,8 +153,4 @@ class WBallBackend(object):
         envs = [[v for (i,v) in c] for c in deepcopy(self.env.vertex_list_per_poly)]
         self.db["pos"][step] = xys
         self.db["env"][step] = envs
-
-
-# to log data while simulation is running, we create a callback function which
-# copies state to a dictionary
 

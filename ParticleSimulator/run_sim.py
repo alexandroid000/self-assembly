@@ -9,12 +9,13 @@ from matplotlib.patches import Polygon
 import matplotlib.animation as animation
 
 from backend import *
-from configuration import cell
+from configuration import *
 
 # initialize simulation
 system = System()
 data = {"pos":[[]]*T, "env":[[]]*T}
-be = WBallBackend(system, data, sticky=allow_attachment)
+be = WBallBackend(system, data, env, br = border_region,
+                  sticky=allow_attachment, wires=wires)
 simulation = Simulation(be)
 
 # create N particles at random locations in the box
