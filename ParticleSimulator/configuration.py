@@ -9,11 +9,12 @@ import numpy as np
 # define simulation parameters here
 
 L = 3.0
-N = 20
-T = 200
+N = 10
+T = 400
 R = 0.02
 border_region = R
 allow_attachment = False
+orientations = ["CW", "CW", "CW", "CCW"]
 
 
 
@@ -39,13 +40,13 @@ simname = env.name+'_'+str(L)+"_N"+str(N)+"_T"+str(T)
     # faster
     # smaller rotational drift
     # escape from walls more quickly
-A_properties = {'vel':0.3, 'wall_prob': 0.05, 'beta': 0.2}
+A_properties = {'vel':1.0, 'wall_prob': 0.05, 'beta': 0.2}
 
 # type B particles:
     # slower
     # more rotational drift
     # get stuck on walls more
-B_properties = {'vel':0.05, 'wall_prob': 0.2, 'beta': 0.5}
+B_properties = {'vel':0.3, 'wall_prob': 0.2, 'beta': 0.5}
 
 properties = { 'A-free':A_properties
              ,'B-free':B_properties

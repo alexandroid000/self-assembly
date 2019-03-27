@@ -17,7 +17,7 @@ from configuration import *
 
 class WBallBackend(object):
 
-    def __init__(self, system, database, env, delta=0.1,
+    def __init__(self, system, database, env, delta=0.05,
                        br = 0.01, sticky = True, wires = []):
         self.system = system
         self.db = database
@@ -99,26 +99,29 @@ class WBallBackend(object):
 
 
     def next_dr(self, particle):
-        # stochastic update to heading theta
-        # right now, uniform - TODO: change to Gaussian
-        xi_x = np.random.normal(scale = self.delta/5.) # mean zero, standard deviation L/10
-        xi_y = np.random.normal(scale = self.delta/5.)
-        theta = np.arctan2(particle.velocity[1], particle.velocity[0])
-        xi_theta = np.random.normal(loc=theta) # mean at current heading, sd 1
-        # velocity
+
+        # Brownian motion, random step on unit circle
+        [xi_x, xi_y] = normalize([random()-0.5, random()-0.5])
+
+        # compute direction of next step
         v = properties[particle.species]['vel']
         xdot = v*particle.velocity[0] + xi_x
         ydot = v*particle.velocity[1] + xi_y
 
-        beta = properties[particle.species]['beta']
+        # random update to velocity heading
+        # Gaussian, mean at current heading, standard deviation 1 radian
+        theta = np.arctan2(particle.velocity[1], particle.velocity[0])
+        xi_theta = np.random.normal(loc=theta)
 
+        # update velocity for next step
+        beta = properties[particle.species]['beta']
         if self.wires != []: 
             particle.velocity = force_from_wires(self.wires, particle.position)
-
         particle.velocity[0] += beta*np.cos(xi_theta)
         particle.velocity[1] += beta*np.sin(xi_theta)
-
         particle.velocity = normalize(particle.velocity)
+
+        # take step, scaled by delta
         dr = self.delta*np.array([xdot, ydot])
         return dr
 

@@ -20,8 +20,8 @@ simulation = Simulation(be)
 
 # create N particles at random locations in the box
 for i in range(N):
-    [x,y] = normalize([1.0, 1.0])
-#    [x,y] = 0.5*L*normalize([random()-0.5,random()-0.5])
+#    [x,y] = normalize([1.0, 1.0])
+    [x,y] = 0.5*L*normalize([random()-0.5,random()-0.5])
 #    [x,y] = 0.5*L*normalize([np.cos(3*np.pi/8),np.sin(3*np.pi/8)])
     vel = np.array([random()-0.5, random()-0.5])
     norm = np.linalg.norm(vel)
