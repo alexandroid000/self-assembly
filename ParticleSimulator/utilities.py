@@ -82,6 +82,9 @@ def rotate_vector(v, theta):
     return np.array( [np.cos(theta)*vx - np.sin(theta)*vy,
                      np.sin(theta)*vx + np.cos(theta)*vy])
 
+def midpoint(pt1, pt2):
+    return (pt1+pt2)/2
+
 # Magnetic flow field generation
 # ------------------------------
 

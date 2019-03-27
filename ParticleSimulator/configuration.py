@@ -26,13 +26,24 @@ spike_annulus = Simple_Polygon("spk_ring",
                                np.array(mk_spiky_circle(8, 0.5*L)),
                               [np.array(mk_obstacle(mk_regpoly(4, 0.4*L)))])
 
-oct_verts = np.array(mk_regpoly(8, 0.5*L, offset=np.pi/8.))
-wire_verts = np.array(mk_regpoly(4, 0.25*L, offset=np.pi/4))
-orientations = ["CW", "CCW", "CW", "CCW"]
+oct_verts = np.array(mk_regpoly(8, 0.8*L, offset=np.pi/8.))
+wire_verts = np.array(mk_regpoly(4, 0.4*L, offset=np.pi/4))
 wires = [Wire(v, o) for v, o in zip(wire_verts, orientations)]
+
+
+r1 = [wire_verts[0], midpoint(oct_verts[0], oct_verts[1]), oct_verts[1], oct_verts[2],
+midpoint(oct_verts[2], oct_verts[3]), wire_verts[1]]
+r2 = [wire_verts[1], midpoint(oct_verts[2], oct_verts[3]), oct_verts[3], oct_verts[4],
+midpoint(oct_verts[4], oct_verts[5]), wire_verts[2]]
+r3 = [wire_verts[2], midpoint(oct_verts[4], oct_verts[5]), oct_verts[5], oct_verts[6],
+midpoint(oct_verts[6], oct_verts[7]), wire_verts[3]]
+r4 = [wire_verts[3], midpoint(oct_verts[6], oct_verts[7]), oct_verts[7], oct_verts[0],
+midpoint(oct_verts[0], oct_verts[1]), wire_verts[0]]
+
+regions = [wire_verts, r1, r2, r3, r4]
+rs_as_obs = [mk_obstacle(r) for r in regions]
+
 octagon = Simple_Polygon("octagon", oct_verts)
-
-
 env = octagon
 simname = env.name+'_'+str(L)+"_N"+str(N)+"_T"+str(T)
 
