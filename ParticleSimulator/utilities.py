@@ -1,4 +1,7 @@
 import numpy as np
+from simple_polygon import Simple_Polygon
+from random import uniform
+from helper.shoot_ray_helper import IsInPoly, ClosestPtAlongRay
 
 # Environment Utilities
 # -----------------
@@ -41,9 +44,31 @@ def mk_regpoly(n, r, offset=0.0):
 def mk_obstacle(vertices):
     return vertices[::-1]
 
+def mk_bounding_box(poly):
+    vs = poly.vertex_list_per_poly[0]
+    xs = np.sort([v[0] for i, v in vs])
+    ys = np.sort([v[1] for i, v in vs])
+    min_x = xs[0]
+    max_x = xs[-1]
+    min_y = ys[0]
+    max_y = ys[-1]
+    bb_verts = np.array([(min_x, min_y), (max_x, min_y), (max_x, max_y), (min_x, max_y)])
+    bb = Simple_Polygon("bb"+poly.name, bb_verts)
+    return min_x, max_x, min_y, max_y, bb
+
+def uniform_sample_from_poly(poly, n):
+    min_x, max_x, min_y, max_y, bb = mk_bounding_box(poly)
+    samples = [[0,0]]*n
+    for i in range(n):
+        sample = [uniform(min_x, max_x), uniform(min_y, max_y)]
+        while not IsInPoly(sample, poly):
+            sample = uniform(min_x, max_x), uniform(min_y, max_y)
+        samples[i] = sample
+    return samples
+
+
 # Geometric Operations
 # --------------------
-
 
 # http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
 def closest_edge(pt, poly):
@@ -99,8 +124,10 @@ class Wire():
         field_strength = 1.0/np.linalg.norm(normal)
         if self.dir == "CW":
             return field_strength*normalize(rotate_vector(normal, 3.*np.pi/2.))
-        else:
+        if self.dir == "CCW":
             return field_strength*normalize(rotate_vector(normal, np.pi/2.))
+        else:
+            return np.array([0., 0.])
 
 # magnetic fields follow superposition principle
 def force_from_wires(wires, xy):

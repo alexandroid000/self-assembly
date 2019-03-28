@@ -15,14 +15,14 @@ from configuration import *
 # Simulation Backend
 # ------------------
 
-class WBallBackend(object):
+class ParticlePhysics(object):
 
-    def __init__(self, system, database, env, delta=0.05,
-                       br = 0.01, sticky = True, wires = []):
+    def __init__(self, system, env, delta=0.05,
+                       br = 0.01, sticky = True,
+                       wires = []):
         self.system = system
-        self.db = database
-        self.delta = delta
         self.env = env
+        self.delta = delta
         self.vs = self.env.vertex_list_per_poly
         self.n = len(self.vs[0]) # outer boundary
         self.br = br
@@ -97,7 +97,6 @@ class WBallBackend(object):
         else:
             self.obstacle_interaction(particle, edge_dir, d)
 
-
     def next_dr(self, particle):
 
         # Brownian motion, random step on unit circle
@@ -133,10 +132,47 @@ class WBallBackend(object):
             particle.position = self.project_to_border_region(particle.position)
             particle.species = particle.species[0]+'-wall'
 
+class ParticleSim(ParticlePhysics):
+
+    def __init__(self, system, database, env, delta=0.05,
+                       br = 0.01, sticky = True, wires = [],
+                       regions = [], policy = []):
+
+        ParticlePhysics.__init__(self, system, env, delta, br, sticky, wires)
+
+        self.system = system
+        self.db = database
+        self.delta = delta
+        self.env = env
+        self.vs = self.env.vertex_list_per_poly
+        self.n = len(self.vs[0]) # outer boundary
+        self.br = br
+        self.sticky = sticky
+        self.wires = wires
+        self.regions = regions
+        self.policy = policy
+
     def run(self, steps):
+
+        # initialize region counts
+        region_counts = [0]*len(self.regions)
+        for p in self.system.particle:
+            for i,r in enumerate(self.regions):
+                if IsInPoly(p.position, r):
+                    region_counts[i] += 1
+
+        # run sim for T steps
         for i in range(steps):
-            self.log_data(i)
+
+            # log regions; only works at beginning of loop for some reason
+            self.log_data(i, region_counts)
+            region_counts = [0]*len(self.regions)
             for p in self.system.particle:
+                for i,r in enumerate(self.regions):
+                    if IsInPoly(p.position, r):
+                        region_counts[i] += 1
+
+                # detect particle-particle collisions
                 if self.sticky:
                     val, ns = self.checkAttach(p)
                     if val:
@@ -146,14 +182,19 @@ class WBallBackend(object):
                         for n in ns:
                             self.system.particle.remove(n)
 
+                # boundary mode
                 if p.species[2:] == "wall":
                     self.take_step_boundary(p)
+                # free space mode
                 else:
                     self.take_step(p)
 
-    def log_data(self, step):
+
+    def log_data(self, step, r_counts):
         xys = [(copy(p.species), copy(p.position)) for p in self.system.particle]
         envs = [[v for (i,v) in c] for c in deepcopy(self.env.vertex_list_per_poly)]
+        rs = copy(r_counts)
         self.db["pos"][step] = xys
         self.db["env"][step] = envs
+        self.db["counts"][step] = rs
 

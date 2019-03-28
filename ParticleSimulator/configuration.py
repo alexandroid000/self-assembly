@@ -9,12 +9,13 @@ import numpy as np
 # define simulation parameters here
 
 L = 3.0
-N = 10
-T = 400
+N = 100
+T = 100
 R = 0.02
 border_region = R
 allow_attachment = False
 orientations = ["CW", "CW", "CW", "CCW"]
+#orientations = ["X", "X", "X", "X"]
 
 
 
@@ -40,8 +41,9 @@ midpoint(oct_verts[6], oct_verts[7]), wire_verts[3]]
 r4 = [wire_verts[3], midpoint(oct_verts[6], oct_verts[7]), oct_verts[7], oct_verts[0],
 midpoint(oct_verts[0], oct_verts[1]), wire_verts[0]]
 
-regions = [wire_verts, r1, r2, r3, r4]
-rs_as_obs = [mk_obstacle(r) for r in regions]
+rs = [wire_verts, r1, r2, r3, r4]
+rs_as_obs = [mk_obstacle(r) for r in rs]
+regions = [Simple_Polygon("r"+str(i), np.array(vs)) for i,vs in enumerate(rs)]
 
 octagon = Simple_Polygon("octagon", oct_verts)
 env = octagon
