@@ -30,6 +30,14 @@ class TestExamples(unittest.TestCase):
                                        pt2_test_ccw,
                                        decimal=7, verbose=True)
 
+    def test_bb(self):
+        oct = Simple_Polygon("oct",np.array(mk_regpoly(8, 5.)))
+        min_x, max_x, min_y, max_y, bb = mk_bounding_box(oct)
+        np.testing.assert_almost_equal(min_x, -5., decimal=7, verbose=True)
+        np.testing.assert_almost_equal(max_x, 5., decimal=7, verbose=True)
+        np.testing.assert_almost_equal(min_y, -5., decimal=7, verbose=True)
+        np.testing.assert_almost_equal(max_y, 5., decimal=7, verbose=True)
+
 #    def test_neighbors(self):
 #        self.assertSequenceEqual(neighbors(0, env1), [4])
 #        self.assertSequenceEqual(neighbors(10, env1), [5,14,9])
