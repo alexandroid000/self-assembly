@@ -2,7 +2,6 @@ from atooms.system.particle import Particle
 from atooms.system.cell import Cell
 from atooms.system import System
 from atooms.simulation import Simulation
-from atooms.trajectory import TrajectoryXYZ
 
 import csv
 
@@ -12,7 +11,7 @@ import matplotlib.animation as animation
 
 from backend import *
 from configuration import *
-from utilities import normalize
+from utilities import normalize, Wire
 from random import random
 
 class Data:
@@ -52,9 +51,8 @@ def write_data(database):
     # write region count data to file
     with open(simname+'_regions.csv','w') as th:
         wr = csv.writer(th, quoting=csv.QUOTE_ALL)
-        for i in range(T):
-            rs = database["counts"][i]
-            wr.writerow(rs)
+        rs = database["counts"][-1]
+        wr.writerow(rs)
 
     print("wrote data to",simname+"_regions.csv")
 
@@ -114,16 +112,23 @@ def mkAnimation():
 
 if __name__ == '__main__':
 
+    args = sys.argv[1:]
+    starting_poly = int(args[0])
+    action = int(args[1])
+    orientations = decode_policy(action)
+    wires = [Wire(v, o) for v, o in zip(wire_verts, orientations)]
+
     # initialize simulation
     system = System()
-    data = {"pos":[[]]*T, "env":[[]]*T, "counts":[[]]*T}
+    data = {"pos":[[]]*T, "env":[[]]*T, "counts":[[]]*(T-1)}
     be = ParticleSim(system, data, env, br = border_region,
                       sticky=allow_attachment, wires=wires,
                       regions=regions)
     simulation = Simulation(be)
+    simname = env.name+"_N"+str(N)+"_T"+str(T)+"_R"+str(starting_poly)+"_A"+str(action)
 
     # create N particles at random locations in the polygon
-    starting_poly = regions[0]
+    starting_poly = regions[starting_poly]
     start_pts = uniform_sample_from_poly(starting_poly, N)
     for i in range(N):
         vel = normalize(np.array([random()-0.5, random()-0.5]))

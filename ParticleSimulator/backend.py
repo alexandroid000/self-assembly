@@ -152,6 +152,7 @@ class ParticleSim(ParticlePhysics):
         self.regions = regions
         self.policy = policy
 
+
     def run(self, steps):
 
         # initialize region counts

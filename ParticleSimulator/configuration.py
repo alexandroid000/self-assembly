@@ -10,12 +10,20 @@ import numpy as np
 
 L = 3.0
 N = 100
-T = 100
+T = 31
 R = 0.02
 border_region = R
 allow_attachment = False
-orientations = ["CW", "CW", "CW", "CCW"]
-#orientations = ["X", "X", "X", "X"]
+
+#import yaml
+
+# System Configuration
+# --------------------
+
+# define simulation parameters here
+
+#with open("configuration.yaml", 'r') as f:
+#    data = yaml.load(f)
 
 
 
@@ -29,7 +37,6 @@ spike_annulus = Simple_Polygon("spk_ring",
 
 oct_verts = np.array(mk_regpoly(8, 0.8*L, offset=np.pi/8.))
 wire_verts = np.array(mk_regpoly(4, 0.4*L, offset=np.pi/4))
-wires = [Wire(v, o) for v, o in zip(wire_verts, orientations)]
 
 
 r1 = [wire_verts[0], midpoint(oct_verts[0], oct_verts[1]), oct_verts[1], oct_verts[2],
@@ -47,7 +54,6 @@ regions = [Simple_Polygon("r"+str(i), np.array(vs)) for i,vs in enumerate(rs)]
 
 octagon = Simple_Polygon("octagon", oct_verts)
 env = octagon
-simname = env.name+'_'+str(L)+"_N"+str(N)+"_T"+str(T)
 
 # type A particles:
     # faster
