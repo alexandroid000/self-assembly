@@ -135,3 +135,35 @@ def force_from_wires(wires, xy):
     for w in wires:
         force += w.force_at(xy)
     return force
+
+# running policies
+# ----------------
+
+# hardcoded: four wires, each wire is either CW, CCW, or X
+# let wires be arranged as:
+    # 0  1
+    # 2  3
+# let CW := 0
+#     CCW := 1
+#     X := 2
+#
+# encode with base-3 number system
+
+wire_to_state = {"CW":0, "CCW":1, "X":2}
+state_to_wire = {0:"CW", 1:"CCW", 2:"X"}
+
+def encode_policy(wires):
+    [w0, w1, w2, w3] = wires # TODO use pycontracts
+    policy = 0
+    for i,w in enumerate(wires):
+        policy += wire_to_state[w]*(3**i)
+    return policy
+
+def decode_policy(policy):
+    states = ["", "", "", ""]
+    for i in range(4):
+        mod_policy = policy % 3
+        states[i] = mod_policy
+        policy = policy // 3
+    str_states = [state_to_wire[s] for s in states]
+    return str_states

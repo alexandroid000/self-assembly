@@ -2,6 +2,7 @@
 
 import unittest
 from backend import *
+from utilities import *
 from random import randint, random
 import numpy as np
 
@@ -37,6 +38,15 @@ class TestExamples(unittest.TestCase):
         np.testing.assert_almost_equal(max_x, 5., decimal=7, verbose=True)
         np.testing.assert_almost_equal(min_y, -5., decimal=7, verbose=True)
         np.testing.assert_almost_equal(max_y, 5., decimal=7, verbose=True)
+
+    def test_encode_decode(self):
+        test1 = ["CCW", "X", "CW", "CW"]
+        test2 = ["X", "X", "X", "X"]
+        test3 = ["CCW", "CCW", "CCW", "CCW"]
+
+        self.assertSequenceEqual(decode_policy(encode_policy(test1)), test1)
+        self.assertSequenceEqual(decode_policy(encode_policy(test2)), test2)
+        self.assertSequenceEqual(decode_policy(encode_policy(test3)), test3)
 
 #    def test_neighbors(self):
 #        self.assertSequenceEqual(neighbors(0, env1), [4])
