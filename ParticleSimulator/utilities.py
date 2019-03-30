@@ -1,4 +1,6 @@
 import numpy as np
+import sys
+sys.path.insert(0, "./bounce-viz/src/")
 from simple_polygon import Simple_Polygon
 from random import uniform
 from helper.shoot_ray_helper import IsInPoly, ClosestPtAlongRay
@@ -63,6 +65,15 @@ def uniform_sample_from_poly(poly, n):
         sample = [uniform(min_x, max_x), uniform(min_y, max_y)]
         while not IsInPoly(sample, poly):
             sample = uniform(min_x, max_x), uniform(min_y, max_y)
+        samples[i] = sample
+    return samples
+
+def uniform_sample_along_circle(poly, n, r):
+    samples = [[0,0]]*n
+    for i in range(n):
+        sample = r*normalize([uniform(-1., 1.), uniform(-1.,1.)])
+        while not IsInPoly(sample, poly):
+            sample = r*normalize([uniform(-1., 1.), uniform(-1.,1.)])
         samples[i] = sample
     return samples
 
@@ -167,3 +178,13 @@ def decode_policy(policy):
         policy = policy // 3
     str_states = [state_to_wire[s] for s in states]
     return str_states
+
+def encodeJointState(states):
+    X = 5 # five options for state
+    joint_state = 0
+    N = len(states)-1
+    for s in states:
+        joint_state += s*(X**N)
+        N = N - 1
+    return joint_state
+

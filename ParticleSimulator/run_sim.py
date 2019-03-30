@@ -118,18 +118,26 @@ if __name__ == '__main__':
     orientations = decode_policy(action)
     wires = [Wire(v, o) for v, o in zip(wire_verts, orientations)]
 
+    # load policy from file (for 5-agent MDP solution)
+    policy = []
+    with open("policy5.txt", 'r') as p:
+        line = p.readline().strip().strip('()').split(", ")
+        policy = [int(p) for p in line]
+
+    print(policy)
+
     # initialize simulation
     system = System()
     data = {"pos":[[]]*T, "env":[[]]*T, "counts":[[]]*(T-1)}
     be = ParticleSim(system, data, env, br = border_region,
                       sticky=allow_attachment, wires=wires,
-                      regions=regions)
+                      regions=regions, policy=policy)
     simulation = Simulation(be)
     simname = env.name+"_N"+str(N)+"_T"+str(T)+"_R"+str(starting_poly)+"_A"+str(action)
 
     # create N particles at random locations in the polygon
     starting_poly = regions[starting_poly]
-    start_pts = uniform_sample_from_poly(starting_poly, N)
+    start_pts = uniform_sample_along_circle(env, N, 2.0)
     for i in range(N):
         vel = normalize(np.array([random()-0.5, random()-0.5]))
         system.particle.append(Particle(position=start_pts[i], velocity=list(vel), radius = None, species= 'A-free'))

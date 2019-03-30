@@ -157,21 +157,29 @@ class ParticleSim(ParticlePhysics):
 
         # initialize region counts
         region_counts = [0]*len(self.regions)
-        for p in self.system.particle:
+        states = [0]*len(self.system.particle)
+        for j,p in enumerate(self.system.particle):
             for i,r in enumerate(self.regions):
                 if IsInPoly(p.position, r):
                     region_counts[i] += 1
+                    states[j] = i
 
         # run sim for T steps
         for i in range(steps):
 
             # log regions; only works at beginning of loop for some reason
             self.log_data(i, region_counts)
+            joint_state = encodeJointState(states)
+            print(states,"encoded as",joint_state)
+            new_orientations = decode_policy(self.policy[joint_state])
+            self.wires = [Wire(v, o) for v, o in zip(wire_verts, new_orientations)]
+
             region_counts = [0]*len(self.regions)
-            for p in self.system.particle:
+            for j,p in enumerate(self.system.particle):
                 for i,r in enumerate(self.regions):
                     if IsInPoly(p.position, r):
                         region_counts[i] += 1
+                        states[j] = i
 
                 # detect particle-particle collisions
                 if self.sticky:
