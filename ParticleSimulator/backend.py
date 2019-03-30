@@ -7,58 +7,27 @@ from random import random
 import sys
 sys.path.insert(0, "./bounce-viz/src/")
 from helper.shoot_ray_helper import IsInPoly, ClosestPtAlongRay
-from helper.geometry_helper import AngleBetween 
+from helper.geometry_helper import AngleBetween
+from utilities import *
 from configuration import *
 
-# Utility Functions
-# -----------------
-
-# http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
-def closest_edge(pt, poly):
-    [x0,y0] = pt
-    vs = poly.vertex_list_per_poly
-    n = poly.size
-    components = len(vs)
-    min_d = 100000000000
-    closest_component = -1
-    closest_edge = -1
-    # find closest edge over external boundary and holes
-    for (i, component) in enumerate(vs):
-        m = len(component)
-        for j in range(m):
-            [x1, y1], [x2,y2] = component[j][1], component[(j+1) % m][1]
-            d = abs((x2-x1)*(y1-y0) - (x1-x0)*(y2-y1)) / np.sqrt((x2-x1)**2 + (y2-y1)**2)
-            if d < min_d:
-                min_d = d
-                closest_component = i
-                closest_edge = j
-    return min_d, closest_component, closest_edge
-
-def dist_dir_closest_edge(pt, poly):
-    d, c, j = closest_edge(pt, poly)
-    vs = poly.vertex_list_per_poly
-    csize = len(vs[c])
-    edge_vect = vs[c][(j + 1) % csize][1] - vs[c][j][1]
-    return d, edge_vect
-
-def normalize(vector):
-    norm = np.linalg.norm(vector)
-    return vector/norm
 
 # Simulation Backend
 # ------------------
 
-class WBallBackend(object):
+class ParticlePhysics(object):
 
-    def __init__(self, system, database, delta=0.1, env = cell, br = border_region, sticky = True):
+    def __init__(self, system, env, delta=0.05,
+                       br = 0.01, sticky = True,
+                       wires = []):
         self.system = system
-        self.db = database
-        self.delta = delta
         self.env = env
+        self.delta = delta
         self.vs = self.env.vertex_list_per_poly
         self.n = len(self.vs[0]) # outer boundary
         self.br = br
         self.sticky = sticky
+        self.wires = wires
 
     def neighbors(self, particle):
         [x,y] = particle.position
@@ -111,12 +80,11 @@ class WBallBackend(object):
     def scatter(self, particle, edge_dir):
         particle.species = particle.species[0]+'-free'
         [ex,ey] = edge_dir
-        [nx, ny] = normalize(np.array([-ey, ex])) # pointing into polygon
-        [vx, vy] = particle.velocity
+        normal = normalize(np.array([-ey, ex])) # pointing into polygon
+
         # rotate particle's velocity uniformly out from wall
         th_out = np.pi*random() - np.pi/2
-        particle.velocity = normalize([np.cos(th_out)*nx - np.sin(th_out)*ny,
-                                       np.sin(th_out)*nx + np.cos(th_out)*ny])
+        particle.velocity = normalize(rotate_vector(normal, th_out))
 
     def take_step_boundary(self, particle):
         d, edge_dir = dist_dir_closest_edge(particle.position, self.env)
@@ -129,24 +97,30 @@ class WBallBackend(object):
         else:
             self.obstacle_interaction(particle, edge_dir, d)
 
-
     def next_dr(self, particle):
-        # stochastic update to heading theta
-        # right now, uniform - TODO: change to Gaussian
-        xi_x = np.random.normal(scale = L/10.) # mean zero, standard deviation L/10
-        xi_y = np.random.normal(scale = L/10.)
-        theta = np.arctan2(particle.velocity[1], particle.velocity[0])
-        xi_theta = np.random.normal(loc=theta) # mean at current heading, sd 1
-        # velocity
+
+        # Brownian motion, random step on unit circle
+        [xi_x, xi_y] = normalize([random()-0.5, random()-0.5])
+
+        # compute direction of next step
         v = properties[particle.species]['vel']
         xdot = v*particle.velocity[0] + xi_x
         ydot = v*particle.velocity[1] + xi_y
 
+        # random update to velocity heading
+        # Gaussian, mean at current heading, standard deviation 1 radian
+        theta = np.arctan2(particle.velocity[1], particle.velocity[0])
+        xi_theta = np.random.normal(loc=theta)
+
+        # update velocity for next step
         beta = properties[particle.species]['beta']
+        if self.wires != []: 
+            particle.velocity = force_from_wires(self.wires, particle.position)
         particle.velocity[0] += beta*np.cos(xi_theta)
         particle.velocity[1] += beta*np.sin(xi_theta)
-
         particle.velocity = normalize(particle.velocity)
+
+        # take step, scaled by delta
         dr = self.delta*np.array([xdot, ydot])
         return dr
 
@@ -158,10 +132,56 @@ class WBallBackend(object):
             particle.position = self.project_to_border_region(particle.position)
             particle.species = particle.species[0]+'-wall'
 
+class ParticleSim(ParticlePhysics):
+
+    def __init__(self, system, database, env, delta=0.05,
+                       br = 0.01, sticky = True, wires = [],
+                       regions = [], policy = []):
+
+        ParticlePhysics.__init__(self, system, env, delta, br, sticky, wires)
+
+        self.system = system
+        self.db = database
+        self.delta = delta
+        self.env = env
+        self.vs = self.env.vertex_list_per_poly
+        self.n = len(self.vs[0]) # outer boundary
+        self.br = br
+        self.sticky = sticky
+        self.wires = wires
+        self.regions = regions
+        self.policy = policy
+
+
     def run(self, steps):
+
+        # initialize region counts
+        region_counts = [0]*len(self.regions)
+        states = [0]*len(self.system.particle)
+        for j,p in enumerate(self.system.particle):
+            for i,r in enumerate(self.regions):
+                if IsInPoly(p.position, r):
+                    region_counts[i] += 1
+                    states[j] = i
+
+        # run sim for T steps
         for i in range(steps):
-            self.log_data(i)
-            for p in self.system.particle:
+
+            # log regions; only works at beginning of loop for some reason
+            self.log_data(i, region_counts)
+            joint_state = encodeJointState(states)
+            print(states,"encoded as",joint_state)
+            new_orientations = decode_policy(self.policy[joint_state])
+            self.wires = [Wire(v, o) for v, o in zip(wire_verts, new_orientations)]
+
+            region_counts = [0]*len(self.regions)
+            for j,p in enumerate(self.system.particle):
+                for i,r in enumerate(self.regions):
+                    if IsInPoly(p.position, r):
+                        region_counts[i] += 1
+                        states[j] = i
+
+                # detect particle-particle collisions
                 if self.sticky:
                     val, ns = self.checkAttach(p)
                     if val:
@@ -171,18 +191,19 @@ class WBallBackend(object):
                         for n in ns:
                             self.system.particle.remove(n)
 
+                # boundary mode
                 if p.species[2:] == "wall":
                     self.take_step_boundary(p)
+                # free space mode
                 else:
                     self.take_step(p)
 
-    def log_data(self, step):
+
+    def log_data(self, step, r_counts):
         xys = [(copy(p.species), copy(p.position)) for p in self.system.particle]
         envs = [[v for (i,v) in c] for c in deepcopy(self.env.vertex_list_per_poly)]
+        rs = copy(r_counts)
         self.db["pos"][step] = xys
         self.db["env"][step] = envs
-
-
-# to log data while simulation is running, we create a callback function which
-# copies state to a dictionary
+        self.db["counts"][step] = rs
 

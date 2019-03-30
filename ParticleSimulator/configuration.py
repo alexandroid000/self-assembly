@@ -1,5 +1,6 @@
 from simple_polygon import Simple_Polygon
 from maps import *
+from utilities import *
 import numpy as np
 
 # System Configuration
@@ -8,65 +9,64 @@ import numpy as np
 # define simulation parameters here
 
 L = 3.0
-N = 20
-T = 200
+N = 5
+T = 500
 R = 0.02
 border_region = R
 allow_attachment = False
 
+#import yaml
 
-def mk_spiky_circle(n, r):
-    d = 2*np.pi/n
-    theta = 0
-    pts = []
-    for i in range(n):
-        pt1 = [r*np.cos(theta), r*np.sin(theta)]
-        r2 = 1.5*r
-        pt2 = [r2*np.cos(theta), r2*np.sin(theta)]
-        theta += d
-        pts.extend([pt1, pt2])
-    return pts
+# System Configuration
+# --------------------
 
-def mk_spiky_obstacle(n, r):
-    d = 2*np.pi/n
-    theta = 0.0
-    pts = []
-    for i in range(n):
-        pt1 = [r*np.cos(theta), r*np.sin(theta)]
-        r2 = 0.6*r
-        th2 = theta + 0.3*d
-        pt2 = [r2*np.cos(th2), r2*np.sin(th2)]
-        theta += d
-        pts.extend([pt1, pt2])
-    return pts[::-1]
+# define simulation parameters here
 
-def mk_regpoly_obstacle(n, r):
-    d = 2*np.pi/n
-    theta = 0.0
-    pts = []
-    for i in range(n):
-        pt = [r*np.cos(theta), r*np.sin(theta)]
-        theta += d
-        pts.append(pt)
-    return pts[::-1]
+#with open("configuration.yaml", 'r') as f:
+#    data = yaml.load(f)
 
 
-#cell = Cell(side=[L,L])
+
 #square = Simple_Polygon("square",np.array([[0.0,0.0], [L, 0.0],[L,L],[0.0,L]]))
 #square_hole = Simple_Polygon("sqh",simple_holes[0], simple_holes[1])
 #spikes = Simple_Polygon("spikes",np.array(mk_spiky_circle(8, 0.5*L)))
 
 spike_annulus = Simple_Polygon("spk_ring",
                                np.array(mk_spiky_circle(8, 0.5*L)),
-                    [np.array(mk_regpoly_obstacle(4, 0.4*L))])
+                              [np.array(mk_obstacle(mk_regpoly(4, 0.4*L)))])
 
-cell = spike_annulus
+oct_verts = np.array(mk_regpoly(8, 0.8*L, offset=np.pi/8.))
+wire_verts = np.array(mk_regpoly(4, 0.4*L, offset=np.pi/4))
 
-# Define square cell
-simname = cell.name+'_'+str(L)+"_N"+str(N)+"_T"+str(T)
 
-A_properties = {'vel':0.5, 'wall_prob': 0.05, 'beta': 1.0}
-B_properties = {'vel':0.05, 'wall_prob': 0.2, 'beta': 0.5}
+r1 = [wire_verts[0], midpoint(oct_verts[0], oct_verts[1]), oct_verts[1], oct_verts[2],
+midpoint(oct_verts[2], oct_verts[3]), wire_verts[1]]
+r2 = [wire_verts[1], midpoint(oct_verts[2], oct_verts[3]), oct_verts[3], oct_verts[4],
+midpoint(oct_verts[4], oct_verts[5]), wire_verts[2]]
+r3 = [wire_verts[2], midpoint(oct_verts[4], oct_verts[5]), oct_verts[5], oct_verts[6],
+midpoint(oct_verts[6], oct_verts[7]), wire_verts[3]]
+r4 = [wire_verts[3], midpoint(oct_verts[6], oct_verts[7]), oct_verts[7], oct_verts[0],
+midpoint(oct_verts[0], oct_verts[1]), wire_verts[0]]
+
+rs = [wire_verts, r1, r2, r3, r4]
+rs_as_obs = [mk_obstacle(r) for r in rs]
+regions = [Simple_Polygon("r"+str(i), np.array(vs)) for i,vs in enumerate(rs)]
+
+octagon = Simple_Polygon("octagon", oct_verts)
+env = octagon
+
+# type A particles:
+    # faster
+    # smaller rotational drift
+    # escape from walls more quickly
+A_properties = {'vel':1.0, 'wall_prob': 0.05, 'beta': 0.2}
+
+# type B particles:
+    # slower
+    # more rotational drift
+    # get stuck on walls more
+B_properties = {'vel':0.3, 'wall_prob': 0.2, 'beta': 0.5}
+
 properties = { 'A-free':A_properties
              ,'B-free':B_properties
              ,'A-wall':A_properties
