@@ -1,4 +1,6 @@
-<?xml version="1.0" ?>
+def createWorld(useEnclosure=True):
+    f = open('simulate.world', 'w+')
+    s1 = """<?xml version="1.0" ?>
 <sdf version="1.5">
   <world name="simulate-weazelball">
     <physics type="ode">
@@ -56,7 +58,14 @@
     </physics>
     <include>
       <uri>model://weazelsun</uri>
-    </include><include>
+    </include>"""
+
+    s2 ="""<include>
+      <uri>model://weazelenclosure</uri>
+      <pose>0 0 -0.009525 0 0 0</pose>
+    </include> 
+    """
+    s3 ="""<include>
       <uri>model://myGroundPlane</uri>
     </include> 
     <gui>
@@ -73,4 +82,11 @@
     <plugin name="bumpSensor" filename="libbumpSensor.so"> </plugin>
 
   </world>
-</sdf>
+</sdf>"""
+    if(useEnclosure):
+        f.write(s1+s2+s3)
+    else:
+        f.write(s1+s3)
+
+if __name__ == "__main__":
+    createWorld(False)
