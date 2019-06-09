@@ -153,6 +153,7 @@ class Extractor(object):
         succuess, frame = cap.read()
         if not succuess:
             raise ValueError("Failed to get frame while getting circles")
+            return None
         ff = numpy.uint8((cv2.GaussianBlur(abs(frame-self.background), (3,3), 2)))
         ff = cv2.cvtColor(ff, cv2.COLOR_BGR2GRAY)
         circles = cv2.HoughCircles(ff, cv2.HOUGH_GRADIENT, 2, 17, 
@@ -235,6 +236,8 @@ class Extractor(object):
         try:
             while cap.isOpened() and cap.get(1) < self.end_frame:
                 circles = self.get_circles(cap)
+                if circles is None:
+                    break
                 points = self.strip_radius(circles)
                 frame = self.match_labels(self.frames[-1], points)
                 self.write_frame(frame)
@@ -297,10 +300,6 @@ class Trajectory(object):
 
 
 if __name__ == "__main__":
-    t = Trajectory("../SampleVideos/4Ball-short1.mp4")
-    t.extract_trajectory()
-    print(len(t.get_frames()))
-
-    t = Trajectory("../SampleVideos/4Ball-short1.mp4", threads=1)
+    t = Trajectory("../SampleVideos/4B-ML-1.mp4", threads=4)
     t.extract_trajectory()
     print(len(t.get_frames()))
