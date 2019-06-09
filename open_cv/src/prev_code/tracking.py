@@ -132,7 +132,7 @@ def track(parameters):
                 prev = traj[-1]
                 for (x,y,r) in circles:
                     guess = (x,y)
-                    distance = ((guess[0] - prev[0])**2 + (guess[1] - prev[1])**2)**.5
+                    distance = ((guess[0] - prev[0])**2 + (guess[1] - prev[1])**2)
                     if r == 0:
                         distance = 10000
                     dist.append(distance) 
