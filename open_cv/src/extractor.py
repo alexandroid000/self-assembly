@@ -3,6 +3,7 @@ import cv2
 from scipy.spatial.distance import cdist
 from copy import deepcopy
 import multiprocessing as mp
+from tqdm import tqdm
 from itertools import repeat
 
 
@@ -14,10 +15,10 @@ STARTING_MAX_RAD = 20
 RAD_RANGE = 3
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.INFO)
 
 ch = logging.StreamHandler()
-ch.setLevel(logging.ERROR)
+ch.setLevel(logging.WARNING)
 
 fh = logging.FileHandler("debug.log")
 fh.setLevel(logging.DEBUG)
@@ -227,7 +228,7 @@ class Extractor(object):
         # generates important information about the video
         if self.ball_count is None:
             self.find_ball_count()
-        logger.warning("Generated ball count")
+        logger.info("Generated ball count")
         # create 
         
         cap = self._get_cap()
@@ -263,6 +264,8 @@ class Trajectory(object):
         self.extractors = []
         self.threads = 0.0
         self.frames = {}
+
+        self.chunks = 100
 
         if threads == 0:
             self.threads = mp.cpu_count() - 1
@@ -301,20 +304,23 @@ class Trajectory(object):
         #     self.frames += blk[1]
         
         e = Extractor(self.input_file)
+        logger.info("Now extracting background information")
         e.gen_background()
+        logger.info("Now extracting ball count information")
         ball_count, _ = e.find_ball_count()
         background = e.background
 
         parameters = []
-        for th in range(self.threads):
-            start = th / self.threads
-            end = (th + 1) / self.threads
+        for th in range(self.chunks):
+            start = th / self.chunks
+            end = (th + 1) / self.chunks
             parameters.append((self.input_file, start, end, ball_count, background))
-
+        logger.info("Done, now starting chunk workers")
         with mp.Pool(processes=self.threads) as pool:
-            for p in pool.imap_unordered(self._run_extractor, parameters):
-                self.frames.update(p)
-                print(1140 in self.frames.keys())
+            with tqdm(total=self.chunks) as pbar:
+                for data in pool.imap_unordered(self._run_extractor, parameters):
+                    self.frames.update(data)
+                    pbar.update()
 
     def get_frames(self):
         return self.frames
@@ -322,6 +328,6 @@ class Trajectory(object):
 
 
 if __name__ == "__main__":
-    t = Trajectory("../SampleVideos/4Ball-short1.mp4", threads=16)
+    t = Trajectory("../SampleVideos/4Ball-short1.mp4", )
     t.extract_trajectory()
     print(len(t.get_frames()))
