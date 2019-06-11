@@ -14,7 +14,7 @@ STARTING_MAX_RAD = 20
 RAD_RANGE = 3
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.WARNING)
 
 ch = logging.StreamHandler()
 ch.setLevel(logging.ERROR)
@@ -37,7 +37,7 @@ class Extractor(object):
     # input_clip: file location of video
     # auto_gen_background: flag for generating background on construction
     # write: file location for trajectory data (none for no save)
-    def __init__(self, input_clip, start_frame=0, end_frame=0,auto_gen_background=False, write=None, pipe=None):
+    def __init__(self, input_clip, start_frame=0, end_frame=0, background=False, write=None, ball_count=None):
         logger.info("Creating extractor with input: {}; start_frame: {}, end_frame: {}".format(input_clip, start_frame, end_frame))
         self.input_file = input_clip
         self.write = write
@@ -68,23 +68,21 @@ class Extractor(object):
         if end_frame > 0 and end_frame < 1:
             self.end_frame = int(self.total_frames * end_frame)
         else:
-            self.end_frame = self.total_frames
+            self.end_frame = self.total_frames-1
 
         if self.start_frame > self.end_frame:
             logger.warning("End frame before start frame, end defaulting to last")
-            self.end_frame = self.total_frames
+            self.end_frame = self.total_frames-1
 
         cap.release()
 
-        self.background = None
+        self.background = background
         self.min_rad = int(STARTING_MIN_RAD)
         self.max_rad = int(STARTING_MAX_RAD)
-        self.ball_count = None
+        self.ball_count = ball_count 
 
         self.frames = {}
 
-        if auto_gen_background:
-            self.gen_background()
 
     # TODO: Improve accuracy and quality of background generation
     def gen_background(self):
@@ -239,9 +237,10 @@ class Extractor(object):
 
         if len(self.frames.keys()) is 0:
             self._set_first_frame(circles)
+
         prev_frame = self.frames[self.start_frame]
         try:
-            while cap.isOpened() and cap.get(1) < self.end_frame:
+            while cap.isOpened() and (cap.get(1) < self.end_frame):
                 frame_count = cap.get(1)
                 circles = self.get_circles(cap)
                 if circles is None:
@@ -251,7 +250,7 @@ class Extractor(object):
                 self.frames[frame_count] = frame
                 prev_frame = frame
         except ValueError as error:
-            #end of file?
+            print("Extract Error!")
             pass
 
         cap.release()
@@ -272,13 +271,12 @@ class Trajectory(object):
         
         
     def _run_extractor(self, args):
-        file, start, end = args
-        print("creating extractor")
-        e = Extractor(file, start_frame=start, end_frame=end)
-        print('extracting')
-        e.extract()
-        print('done')
-        print(len(e.get_frames()))
+        f, start, end, balls, in_background = args
+        e = Extractor(f, start_frame=start, end_frame=end, ball_count=balls, background=in_background)
+        try:
+            e.extract()
+        except:
+            print("failed!")
         return e.get_frames()
 
     def extract_trajectory(self):
@@ -302,16 +300,21 @@ class Trajectory(object):
         # for blk in frame_blocks:
         #     self.frames += blk[1]
         
-
+        e = Extractor(self.input_file)
+        e.gen_background()
+        ball_count, _ = e.find_ball_count()
+        background = e.background
 
         parameters = []
         for th in range(self.threads):
             start = th / self.threads
             end = (th + 1) / self.threads
-            parameters.append((self.input_file, start, end))
+            parameters.append((self.input_file, start, end, ball_count, background))
 
         with mp.Pool(processes=self.threads) as pool:
-            self.frames.update(dict(next(pool.imap(self._run_extractor, parameters))))
+            for p in pool.imap_unordered(self._run_extractor, parameters):
+                self.frames.update(p)
+                print(1140 in self.frames.keys())
 
     def get_frames(self):
         return self.frames
@@ -319,6 +322,6 @@ class Trajectory(object):
 
 
 if __name__ == "__main__":
-    t = Trajectory("../SampleVideos/4Ball-short1.mp4", threads=2)
+    t = Trajectory("../SampleVideos/4Ball-short1.mp4", threads=16)
     t.extract_trajectory()
     print(len(t.get_frames()))
