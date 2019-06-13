@@ -6,8 +6,6 @@ import multiprocessing as mp
 from tqdm import tqdm
 from itertools import repeat
 
-
-
 import logging
 
 STARTING_MIN_RAD = 10
@@ -29,8 +27,6 @@ ch.setFormatter(formatter)
 
 logger.addHandler(fh)
 logger.addHandler(ch)
-
-
 
 
 class Extractor(object):
@@ -161,13 +157,13 @@ class Extractor(object):
     # Returns frame, and iterates to next
     # NOTE: modifies cap by advancing a frame
     def get_circles(self, cap):
-        logger.debug("Found circles on frame: {}", cap.get(1))
+        logger.debug("Finding circles on frame: {}", cap.get(1))
         succuess, frame = cap.read()
         if not succuess:
             return None
         ff = numpy.uint8((cv2.GaussianBlur(abs(frame-self.background), (3,3), 2)))
         ff = cv2.cvtColor(ff, cv2.COLOR_BGR2GRAY)
-        circles = cv2.HoughCircles(ff, cv2.HOUGH_GRADIENT, 2, 15, 
+        circles = cv2.HoughCircles(ff, cv2.HOUGH_GRADIENT, 1, 15, 
                                     param1=80, param2=25, 
                                     minRadius = STARTING_MIN_RAD,
                                     maxRadius = STARTING_MAX_RAD)
@@ -268,7 +264,7 @@ class Trajectory(object):
         self.chunks = 100
 
         if threads == 0:
-            self.threads = mp.cpu_count() - 1
+            self.threads = int(mp.cpu_count()/2)
         else:
             self.threads = threads
         
@@ -310,6 +306,8 @@ class Trajectory(object):
         ball_count, _ = e.find_ball_count()
         background = e.background
 
+        self.chunks = int(e.total_frames / 40)
+
         parameters = []
         for th in range(self.chunks):
             start = th / self.chunks
@@ -328,6 +326,5 @@ class Trajectory(object):
 
 
 if __name__ == "__main__":
-    t = Trajectory("../SampleVideos/4Ball-short1.mp4", )
+    t = Trajectory("../SampleVideos/4B-ML-1.mp4")
     t.extract_trajectory()
-    print(len(t.get_frames()))
