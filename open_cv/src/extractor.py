@@ -8,9 +8,8 @@ from itertools import repeat
 
 import logging
 
-STARTING_MIN_RAD = 10
-STARTING_MAX_RAD = 20
-RAD_RANGE = 3
+import configuration as config
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -18,14 +17,14 @@ logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()
 ch.setLevel(logging.WARNING)
 
-fh = logging.FileHandler("debug.log")
-fh.setLevel(logging.DEBUG)
+# fh = logging.FileHandler("debug.log")
+# fh.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter)
+# fh.setFormatter(formatter)
 ch.setFormatter(formatter)
 
-logger.addHandler(fh)
+# logger.addHandler(fh)
 logger.addHandler(ch)
 
 
@@ -74,8 +73,8 @@ class Extractor(object):
         cap.release()
 
         self.background = background
-        self.min_rad = int(STARTING_MIN_RAD)
-        self.max_rad = int(STARTING_MAX_RAD)
+        self.min_rad = int(config.STARTING_MIN_RAD)
+        self.max_rad = int(config.STARTING_MAX_RAD)
         self.ball_count = ball_count 
 
         self.frames = {}
@@ -148,8 +147,8 @@ class Extractor(object):
 
         self.radius = avg_r
         self.ball_count = ball_count
-        self.min_rad = int(numpy.around(avg_r) - RAD_RANGE)
-        self.max_rad = int(numpy.around(avg_r) + RAD_RANGE)
+        self.min_rad = int(numpy.around(avg_r) - config.RAD_RANGE)
+        self.max_rad = int(numpy.around(avg_r) + config.RAD_RANGE)
 
         return ball_count, avg_r
 
@@ -165,8 +164,8 @@ class Extractor(object):
         ff = cv2.cvtColor(ff, cv2.COLOR_BGR2GRAY)
         circles = cv2.HoughCircles(ff, cv2.HOUGH_GRADIENT, 1, 15, 
                                     param1=80, param2=25, 
-                                    minRadius = STARTING_MIN_RAD,
-                                    maxRadius = STARTING_MAX_RAD)
+                                    minRadius = config.STARTING_MIN_RAD,
+                                    maxRadius = config.STARTING_MAX_RAD)
 
         return circles.tolist()[0]
 
