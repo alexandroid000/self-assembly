@@ -3,9 +3,8 @@ import cv2
 from scipy.spatial.distance import cdist
 from copy import deepcopy
 import multiprocessing as mp
+from tqdm import tqdm
 from itertools import repeat
-
-
 
 import logging
 
@@ -14,10 +13,10 @@ STARTING_MAX_RAD = 20
 RAD_RANGE = 3
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 ch = logging.StreamHandler()
-ch.setLevel(logging.ERROR)
+ch.setLevel(logging.WARNING)
 
 fh = logging.FileHandler("debug.log")
 fh.setLevel(logging.DEBUG)
@@ -30,14 +29,12 @@ logger.addHandler(fh)
 logger.addHandler(ch)
 
 
-
-
 class Extractor(object):
 
     # input_clip: file location of video
     # auto_gen_background: flag for generating background on construction
     # write: file location for trajectory data (none for no save)
-    def __init__(self, input_clip, start_frame=0, end_frame=0,auto_gen_background=False, write=None, pipe=None):
+    def __init__(self, input_clip, start_frame=0, end_frame=0, background=False, write=None, ball_count=None):
         logger.info("Creating extractor with input: {}; start_frame: {}, end_frame: {}".format(input_clip, start_frame, end_frame))
         self.input_file = input_clip
         self.write = write
@@ -68,23 +65,21 @@ class Extractor(object):
         if end_frame > 0 and end_frame < 1:
             self.end_frame = int(self.total_frames * end_frame)
         else:
-            self.end_frame = self.total_frames
+            self.end_frame = self.total_frames-1
 
         if self.start_frame > self.end_frame:
             logger.warning("End frame before start frame, end defaulting to last")
-            self.end_frame = self.total_frames
+            self.end_frame = self.total_frames-1
 
         cap.release()
 
-        self.background = None
+        self.background = background
         self.min_rad = int(STARTING_MIN_RAD)
         self.max_rad = int(STARTING_MAX_RAD)
-        self.ball_count = None
+        self.ball_count = ball_count 
 
         self.frames = {}
 
-        if auto_gen_background:
-            self.gen_background()
 
     # TODO: Improve accuracy and quality of background generation
     def gen_background(self):
@@ -162,13 +157,13 @@ class Extractor(object):
     # Returns frame, and iterates to next
     # NOTE: modifies cap by advancing a frame
     def get_circles(self, cap):
-        logger.debug("Found circles on frame: {}", cap.get(1))
+        logger.debug("Finding circles on frame: {}", cap.get(1))
         succuess, frame = cap.read()
         if not succuess:
             return None
         ff = numpy.uint8((cv2.GaussianBlur(abs(frame-self.background), (3,3), 2)))
         ff = cv2.cvtColor(ff, cv2.COLOR_BGR2GRAY)
-        circles = cv2.HoughCircles(ff, cv2.HOUGH_GRADIENT, 2, 15, 
+        circles = cv2.HoughCircles(ff, cv2.HOUGH_GRADIENT, 1, 15, 
                                     param1=80, param2=25, 
                                     minRadius = STARTING_MIN_RAD,
                                     maxRadius = STARTING_MAX_RAD)
@@ -229,7 +224,7 @@ class Extractor(object):
         # generates important information about the video
         if self.ball_count is None:
             self.find_ball_count()
-        logger.warning("Generated ball count")
+        logger.info("Generated ball count")
         # create 
         
         cap = self._get_cap()
@@ -239,9 +234,10 @@ class Extractor(object):
 
         if len(self.frames.keys()) is 0:
             self._set_first_frame(circles)
+
         prev_frame = self.frames[self.start_frame]
         try:
-            while cap.isOpened() and cap.get(1) < self.end_frame:
+            while cap.isOpened() and (cap.get(1) < self.end_frame):
                 frame_count = cap.get(1)
                 circles = self.get_circles(cap)
                 if circles is None:
@@ -251,7 +247,7 @@ class Extractor(object):
                 self.frames[frame_count] = frame
                 prev_frame = frame
         except ValueError as error:
-            #end of file?
+            print("Extract Error!")
             pass
 
         cap.release()
@@ -265,20 +261,21 @@ class Trajectory(object):
         self.threads = 0.0
         self.frames = {}
 
+        self.chunks = 100
+
         if threads == 0:
-            self.threads = mp.cpu_count() - 1
+            self.threads = int(mp.cpu_count()/2)
         else:
             self.threads = threads
         
         
     def _run_extractor(self, args):
-        file, start, end = args
-        print("creating extractor")
-        e = Extractor(file, start_frame=start, end_frame=end)
-        print('extracting')
-        e.extract()
-        print('done')
-        print(len(e.get_frames()))
+        f, start, end, balls, in_background = args
+        e = Extractor(f, start_frame=start, end_frame=end, ball_count=balls, background=in_background)
+        try:
+            e.extract()
+        except:
+            print("failed!")
         return e.get_frames()
 
     def extract_trajectory(self):
@@ -302,16 +299,26 @@ class Trajectory(object):
         # for blk in frame_blocks:
         #     self.frames += blk[1]
         
+        e = Extractor(self.input_file)
+        logger.info("Now extracting background information")
+        e.gen_background()
+        logger.info("Now extracting ball count information")
+        ball_count, _ = e.find_ball_count()
+        background = e.background
 
+        self.chunks = int(e.total_frames / 40)
 
         parameters = []
-        for th in range(self.threads):
-            start = th / self.threads
-            end = (th + 1) / self.threads
-            parameters.append((self.input_file, start, end))
-
+        for th in range(self.chunks):
+            start = th / self.chunks
+            end = (th + 1) / self.chunks
+            parameters.append((self.input_file, start, end, ball_count, background))
+        logger.info("Done, now starting chunk workers")
         with mp.Pool(processes=self.threads) as pool:
-            self.frames.update(dict(next(pool.imap(self._run_extractor, parameters))))
+            with tqdm(total=self.chunks) as pbar:
+                for data in pool.imap_unordered(self._run_extractor, parameters):
+                    self.frames.update(data)
+                    pbar.update()
 
     def get_frames(self):
         return self.frames
@@ -319,6 +326,5 @@ class Trajectory(object):
 
 
 if __name__ == "__main__":
-    t = Trajectory("../SampleVideos/4Ball-short1.mp4", threads=2)
+    t = Trajectory("../SampleVideos/4B-ML-1.mp4")
     t.extract_trajectory()
-    print(len(t.get_frames()))
