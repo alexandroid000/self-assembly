@@ -1,6 +1,6 @@
 cffi==1.11.5
 filemagic==1.6
-numpy==1.15.4
+numpy==1.22.0
 opencv-python==3.4.3.18
 pycparser==2.19
 python-magic==0.4.15
